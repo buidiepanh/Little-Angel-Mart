@@ -93,7 +93,4 @@ const styles = {
   },
 };
 
-//akjhkahjsd
-//kasjhdjsad
-//jhsakdjhsk
 export default LoginForm;
