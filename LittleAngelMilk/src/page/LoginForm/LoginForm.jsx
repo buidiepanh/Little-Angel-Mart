@@ -93,6 +93,4 @@ const styles = {
   },
 };
 
-//ạhkjashkjashdkjashkjashfkjashfkjashfkjashfkjsahf
-//áhkdjhsakhsajhdkjashdkjshkjashdkjh
 export default LoginForm;
