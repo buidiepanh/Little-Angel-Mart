@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+.footer{
+    background-color: #639EE4;
+    height: 400px;
+    margin-top: 20px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+
+    &__top{
+        display: flex;
+        justify-content: center;
+        justify-content: space-between;
+        padding: 5px 25px;
+
+        h4{
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .footer__address{
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .footer__phone{
+            margin-left: -90px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .footer__mail{
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+    }
+
+    &__logo{
+        font-size: 35px;
+        cursor: pointer;
+    }
+
+    hr{
+        width: 100%;
+        height: 1.4px;
+        background-color: white;
+        border: none;
+    }
+
+    &__bot{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 70px;
+        
+        hr{
+            width: 80px;
+            height: 1px;
+            margin-top: -15px;
+            margin-inline-start: 0;
+        }
+
+        h4{
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+
+        &__logo{
+            display: flex;
+            margin-left: -50px;
+            img{
+                height: 200px;
+                width: 180px;
+                cursor: pointer;
+            }
+            .Title {
+                padding-top: 30px;
+                margin-left: -25px;
+                font-size: 25px;
+                font-weight: bold;
+                cursor: pointer;
+                color: white;
+                .Angel {
+                    color: rgb(205, 209, 93);
+                  }
+              }
+        }
+
+        &__about{
+            margin-top: -10px;
+            .op{    
+                font-size: 15px;
+                color: #F6EDB9;
+            }
+        }
+
+        &__support{
+            margin-top: -10px;
+            .op{    
+                font-size: 15px;
+                color: #F6EDB9;
+                margin-top: 20px;
+            }
+        }
+        &__convinient{
+            margin-top: -10px;
+            .op{    
+                font-size: 15px;
+                color: #F6EDB9;
+                margin-top: 20px;
+            }
+        }
+    }
+}
