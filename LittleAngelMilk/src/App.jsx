@@ -7,8 +7,11 @@ import Footer from "./component/footer/footer";
 function App() {
   return (
     <div>
-      <Carousel />
-      <Footer />
+      {/* <LoginForm /> */}
+      {/* <Register /> */}
+      {/* <Header /> */}
+      {/* <Carousel /> */}
+      {/* <Footer /> */}
     </div>
   );
 }
