@@ -30,6 +30,8 @@ var import_core = require("@keystone-6/core");
 var import_access = require("@keystone-6/core/access");
 var import_fields_document = require("@keystone-6/fields-document");
 var import_fields = require("@keystone-6/core/fields");
+var import_cloudinary = require("@keystone-6/cloudinary");
+var import_config = require("dotenv/config");
 var Product = (0, import_core.list)({
   access: import_access.allowAll,
   fields: {
@@ -53,6 +55,14 @@ var Product = (0, import_core.list)({
     productPrice: (0, import_fields.integer)({
       label: "Gi\xE1 s\u1EA3n ph\u1EA9m",
       validation: { isRequired: true }
+    }),
+    image: (0, import_cloudinary.cloudinaryImage)({
+      cloudinary: {
+        cloudName: process.env.CLOUDINARY_CLOUD_NAME ?? "",
+        apiKey: process.env.CLOUDINARY_API_KEY ?? "",
+        apiSecret: process.env.CLOUDINARY_API_SECRET ?? "",
+        folder: `/${process.env.CLOUDINARY_FOLDER ?? "little_angle_mart"}`
+      }
     })
   }
 });
@@ -79,7 +89,7 @@ var import_fields3 = require("@keystone-6/core/fields");
 var User = (0, import_core3.list)({
   access: import_access3.allowAll,
   fields: {
-    userName: (0, import_fields3.text)({
+    name: (0, import_fields3.text)({
       validation: { isRequired: true }
     }),
     userEmail: (0, import_fields3.text)({
@@ -95,12 +105,8 @@ var User = (0, import_core3.list)({
     userPhone: (0, import_fields3.text)({
       validation: { isRequired: true }
     }),
-    userAddress: (0, import_fields3.text)({
-      validation: { isRequired: true }
-    }),
-    userRole: (0, import_fields3.text)({
-      validation: { isRequired: true }
-    })
+    userAddress: (0, import_fields3.text)({}),
+    userRole: (0, import_fields3.text)({})
   }
 });
 var User_schema_default = User;
@@ -126,7 +132,7 @@ var { withAuth } = (0, import_auth.createAuth)({
   // this is a GraphQL query fragment for fetching what data will be attached to a context.session
   //   this can be helpful for when you are writing your access control functions
   //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-  sessionData: "userName",
+  sessionData: "name",
   secretField: "userPassword",
   // WARNING: remove initFirstItem functionality in production
   //   see https://keystonejs.com/docs/config/auth#init-first-item for more
@@ -134,7 +140,7 @@ var { withAuth } = (0, import_auth.createAuth)({
     // if there are no items in the database, by configuring this field
     //   you are asking the Keystone AdminUI to create a new user
     //   providing inputs for these fields
-    fields: ["userName", "userEmail", "userPassword"]
+    fields: ["name", "userEmail", "userPassword", "userPhone"]
     // it uses context.sudo() to do this, which bypasses any access control you might have
     //   you shouldn't use this in production
   }
