@@ -6,7 +6,7 @@ const User = list({
   access: allowAll,
 
   fields: {
-    userName: text({
+    name: text({
       validation: { isRequired: true },
     }),
     userEmail: text({
@@ -22,12 +22,8 @@ const User = list({
     userPhone: text({
       validation: { isRequired: true },
     }),
-    userAddress: text({
-      validation: { isRequired: true },
-    }),
-    userRole: text({
-      validation: { isRequired: true },
-    }),
+    userAddress: text({}),
+    userRole: text({}),
   },
 });
 

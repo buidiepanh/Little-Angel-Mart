@@ -17,11 +17,12 @@ model Product {
   productDescription String     @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   productCategory    Category[] @relation("Product_productCategory")
   productPrice       Int
+  image              String?
 }
 
 model User {
   id           String @id @default(cuid())
-  userName     String @default("")
+  name         String @default("")
   userEmail    String @unique @default("")
   userPassword String
   userPhone    String @default("")
