@@ -15,7 +15,7 @@ body {
 .form {
     display: flex;
     justify-content: space-between;
-    width: 560px;
+    width: 700px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
@@ -24,12 +24,12 @@ body {
 }
 
 .form_img img {
-    width: 220px;
+    width: 100px;
     height: 100%;
 }
 
 .form_login {
-    width: 336px;
+    width: 550px;
     padding: 5px 30px;
 }
 
@@ -51,7 +51,7 @@ h1 {
     position: relative;
     width: 100%;
     height: 50px;
-    margin: 15px 0;
+    margin-bottom: 20px;
 }
 
 .form_input input {
@@ -69,12 +69,12 @@ h1 {
 .form_forgot {
     display: flex;
     justify-content: space-between;
-    font-size: 10px;
-    margin: -13px 17px 15px;
+    font-size: 15px;
+    margin: 20px 17px 15px;
 }
 
 .form_forgot a {
-    color: #333;
+    color: #000000;
     text-decoration: none;
 }
 
@@ -83,15 +83,18 @@ h1 {
 }
 
 .btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    margin: 10px 0;
+    text-align: center;
+    padding: 15px;
+    border-radius: 20px;
     width: 100%;
-    height: 38px;
-    border-radius: 40px;
-    cursor: pointer;
-    color: #333;
-    font-weight: 600;
-    font-size: 16px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    margin: 5px 0;
 }
 
 .btn_login {

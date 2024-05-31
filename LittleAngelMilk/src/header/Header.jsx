@@ -4,7 +4,6 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosHome } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa";
-
 export default class Header extends Component {
   render() {
     return (
