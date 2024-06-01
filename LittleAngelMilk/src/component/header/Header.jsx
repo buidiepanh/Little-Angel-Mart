@@ -1,9 +1,11 @@
+// header.jsx
 import React, { Component } from "react";
-import { FaRegUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosHome } from "react-icons/io";
-import { FaShoppingCart } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa";
+import "./Header.css";
 
 export default class Header extends Component {
   render() {
@@ -11,47 +13,47 @@ export default class Header extends Component {
       <div className="Header">
         <div className="FirstLayer">
           <div className="logo">
-            <img src="src/images/raw_logo.png" />
+            <img src="src/image/raw_logo.png" alt="Logo" />
             <p className="Title">
               Little <span className="Angel">Angel</span> Milk
             </p>
           </div>
           <div className="FirstLayerRight">
-            <div className="HomeBtn">
-              <a href="">
-                <FaMagnifyingGlass className="HomeCircle" />
-              </a>
+            <div className="SearchBtn">
+              <Link to="/">
+                <FaMagnifyingGlass className="SearchCircle" />
+              </Link>
             </div>
 
             <div className="CartBtn">
-              <a href="">
+              <Link to="/cart">
                 <FaShoppingCart className="CartCircle" />
-              </a>
+              </Link>
             </div>
 
             <div className="LoginBtn">
-              <a href="">
+              <Link to="/login">
                 <FaRegUserCircle className="UserCircle" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
         <div className="mainNavs">
-          <a href="">Trang chủ</a>
+          <Link to="/">Trang chủ</Link>
           <div className="dropdown">
-            <a href="" className="productNav">
+            <Link to="/products" className="productNav">
               Sản phẩm <FaAngleDown />
-            </a>
+            </Link>
             <div className="dropdown-content">
               <div>
-                <a href="#">Sản phẩm 1</a>
-                <a href="#">Sản phẩm 2</a>
-                <a href="#">Sản phẩm 3</a>
+                <Link to="/product1">Sản phẩm 1</Link>
+                <Link to="/product2">Sản phẩm 2</Link>
+                <Link to="/product3">Sản phẩm 3</Link>
               </div>
             </div>
           </div>
-          <a href="">Bài viết</a>
-          <a href="">Voucher</a>
+          <Link to="/posts">Bài viết</Link>
+          <Link to="/voucher">Voucher</Link>
         </div>
       </div>
     );

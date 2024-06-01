@@ -1,19 +1,24 @@
-import LoginForm from "./page/LoginForm/LoginForm";
-import Register from "./page/RegisterForm/RegisterForm";
-import Header from "./header/Header";
-import Carousel from "./component/carousel/carousel";
-import Footer from "./component/footer/footer";
 
-function App() {
-  return (
-    <div>
-      {/* <LoginForm /> */}
-      {/* <Register /> */}
-      {/* <Header /> */}
-      {/* <Carousel /> */}
-      {/* <Footer /> */}
-    </div>
-  );
-}
+import Header from "./component/header/Header";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import LoginForm from './page/LoginForm/LoginForm';
+import RegisterForm from './page/RegisterForm/RegisterForm';
+import Home from "./page/Home/Home";
+
+const App = () => {
+    return (
+      
+        <Router>
+            <div>
+                <Routes>
+                  <Route path="/" element={<Home/>} />
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/register" element={<RegisterForm />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+};
 
 export default App;
