@@ -14,7 +14,7 @@
 .form-container {
     background-color: white;
     border-radius: 0 10px 10px 0;
-    padding: 26px; 
+    padding: 21px; 
     padding-right: 50px;
     max-width: 350px;
     display: flex;
@@ -82,7 +82,6 @@ h1 {
 }
 
 .form_input input {
-    margin-top: 3%;
     width: 76%;
     height: 35%;
     border: 2px solid;
@@ -105,7 +104,7 @@ h1 {
 .form_forgot a {
     color: #333;
     text-decoration: none;
-    margin-top: 3%;
+    margin-top: 10%;
 }
 
 .form_forgot a:hover {
@@ -124,19 +123,19 @@ h1 {
     text-align: center;
     padding: 15px;
     border-radius: 20px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    color: black;
-    border: 1px solid #ccc;
-    margin: 10px 0;
-    text-align: center;
-    padding: 15px;
-    border-radius: 20px;
     width: 100%;
+    cursor: pointer;
+    text-decoration: none;
     transition: all 0.2s ease-in-out;
+}
+
+.social-login a{
+    text-decoration: none;
+
+}
+.btn:hover{
+    background-color: #298b3f;
+    color: white;
 }
 
 .btn_login {
@@ -172,3 +171,4 @@ h1 {
     text-align: center;
     font-size: 12px;
 }
+

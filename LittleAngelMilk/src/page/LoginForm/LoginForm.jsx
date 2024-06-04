@@ -25,7 +25,7 @@ const LoginForm = () => {
               placeholder="Nhập tên đăng nhập"
               required
             />
-            <PersonIcon className="icon_above" />
+            <PersonIcon style={styles.icon_above} />
           </div>
 
           <label htmlFor="password">Mật khẩu</label>
@@ -36,7 +36,7 @@ const LoginForm = () => {
               placeholder="Mật khẩu"
               required
             />
-            <LockIcon className="icon_above" />
+            <LockIcon style={styles.icon_above} />
           </div>
 
           <div className="form_forgot">
@@ -53,20 +53,37 @@ const LoginForm = () => {
           <p>---------------OR---------------</p>
 
           <div className="social-login">
+            <a href="">
             <button type="button" className="btn">
               Đăng nhập bằng Google
               <GoogleIcon className="icon_below" />
             </button>
-
+            </a>
+            <a href="">
             <button type="button" className="btn">
               Đăng nhập bằng Facebook
               <FacebookIcon className="icon_below" />
             </button>
+            </a>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
+const styles = {
+  icon_above: {
+    fontSize: "24px",
+    position: "absolute",
+    right: "20px",
+    top: "60%",
+    transform: "translateY(-50%)",
+  },
+  icon_below: {
+    fontSize: "24px",
+    position: "absolute",
+    left: "630px",
+    transform: "translateY(-5%)",
+  },
+};
 export default LoginForm;
