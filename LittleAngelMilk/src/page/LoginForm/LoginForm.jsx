@@ -4,12 +4,13 @@ import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
-import LOGO from "../../image/Logo.jpg";
+import LOGO from "../../assets/Logo.jpg";
 import "./LoginForm.css";
 
 const LoginForm = () => {
   return (
     <div className="container">
+      <div className="formLogin">
       <div className="image-container">
         <img src={LOGO} alt="Logo" />
       </div>
@@ -67,6 +68,7 @@ const LoginForm = () => {
             </a>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

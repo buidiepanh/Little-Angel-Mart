@@ -1,3 +1,13 @@
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+      transform: translateX(-15%);
+    }
+    100% {
+        opacity: 1;
+      transform: translateX(0);
+    }
+  }
 .container {
     background-color: #7CA0F4;
     display: flex;
@@ -26,7 +36,11 @@
     height: 100%;
  
 }
-
+.registerForm{
+    display: flex;
+    flex-direction: row;
+    animation: 1s ease-out 0.2s 1 slideInLeft;
+}
 .form-container-register {
     padding: 41px; 
     background-color: white;

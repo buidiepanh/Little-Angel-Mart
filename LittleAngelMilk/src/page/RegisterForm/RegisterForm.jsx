@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
-import milkImage from '../../image/Logo.jpg';
+import milkImage from '../../assets/Logo.jpg'
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -63,6 +63,7 @@ const Register = () => {
 
     return (
         <div className="container">
+            <div className='registerForm'>
             <div className="image-container">
                 <img src={milkImage} alt="Little Angel Milk" />
             </div>
@@ -121,9 +122,10 @@ const Register = () => {
                     <button type="submit" className='registerBtn'>Tạo tài khoản</button>
                 </form>
             </div>
+            </div>
         </div>
     );
 };
 
-//hajshdkashdkhkjsahkjashksajhksajhdkjsadkjsh
+
 export default Register;

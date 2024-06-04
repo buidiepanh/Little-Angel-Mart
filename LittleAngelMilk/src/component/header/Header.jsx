@@ -13,7 +13,7 @@ export default class Header extends Component {
       <div className="Header">
         <div className="FirstLayer">
           <div className="logo">
-            <img src="src/image/raw_logo.png" alt="Logo" />
+            <img src="src/assets/image/raw_logo.png" alt="Logo" />
             <p className="Title">
               Little <span className="Angel">Angel</span> Milk
             </p>
