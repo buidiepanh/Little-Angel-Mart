@@ -39,7 +39,7 @@ function Footer() {
       <hr className="line" />
       <div className="footer__bot">
         <div className="footer__bot__logo">
-          <img src="src/image\logo\trans.png" alt="" />
+          <img src="src/image/raw_logo.png" alt="" />
           <p className="Title">
             Little <span className="Angel">Angel</span>
             <br></br> Milk
