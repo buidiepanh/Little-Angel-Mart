@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
-import milkImage from '../../image/Logo.jpg';
+import milkImage from '../../assets/Logo.jpg'
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -63,10 +63,11 @@ const Register = () => {
 
     return (
         <div className="container">
+            <div className='registerForm'>
             <div className="image-container">
                 <img src={milkImage} alt="Little Angel Milk" />
             </div>
-            <div className="form-container">
+            <div className="form-container-register">
                 <h2>Đăng ký</h2>
                 <form onSubmit={handleSubmit}>
                     <label>Địa chỉ Email</label>
@@ -75,6 +76,7 @@ const Register = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Nhập địa chỉ Email"
+                        className='registerInput'
                     />
                     {errors.email && <p className="error">{errors.email}</p>}
 
@@ -84,6 +86,7 @@ const Register = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Nhập tên đăng nhập"
+                        className='registerInput'
                     />
 
                     <label>Mật khẩu</label>
@@ -92,6 +95,7 @@ const Register = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Nhập mật khẩu"
+                        className='registerInput'
                     />
                     {errors.password && <p className="error">{errors.password}</p>}
 
@@ -101,6 +105,7 @@ const Register = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Nhập lại mật khẩu"
+                        className='registerInput'
                     />
                     {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
 
@@ -110,15 +115,17 @@ const Register = () => {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         placeholder="Nhập số điện thoại"
+                        className='registerInput'
                     />
                     {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
 
-                    <button type="submit">Tạo tài khoản</button>
+                    <button type="submit" className='registerBtn'>Tạo tài khoản</button>
                 </form>
+            </div>
             </div>
         </div>
     );
 };
 
-//hajshdkashdkhkjsahkjashksajhksajhdkjsadkjsh
+
 export default Register;

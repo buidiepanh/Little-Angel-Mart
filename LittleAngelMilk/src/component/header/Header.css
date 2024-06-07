@@ -1,11 +1,12 @@
 /* * {
   margin: 0;
   padding: 0;
+  box-sizing: initial;
   font-family: Arial, Roboto, sans-serif;
 }
 
 .Header {
-  background-color: #485f8e;
+  background-color: #5082bf;
   color: white;
   text-align: center;
 }
@@ -36,7 +37,7 @@
 }
 
 .UserCircle,
-.HomeCircle,
+.SearchCircle,
 .CartCircle {
   padding: 10px;
   background-color: rgb(251, 251, 251);
@@ -55,7 +56,7 @@
   box-shadow: -20px -22px 132px 1px rgb(87, 199, 95);
 }
 
-.HomeCircle:hover {
+.SearchCircle:hover {
   background-color: rgb(41, 200, 221);
   box-shadow: -20px -22px 132px 1px rgb(41, 200, 221);
 }
@@ -86,7 +87,7 @@
 }
 
 .mainNavs {
-  background-color: #5273b5;
+  background-color: #6898c5;
   display: flex;
   justify-content: center;
   
@@ -104,7 +105,7 @@
 
 .mainNavs a:hover {
   color: #fff;
-  box-shadow: inset 200px 0 0 0 #54b3d6;
+  box-shadow: inset 200px 0 0 0 #c6cc87;
 }
 .dropdown {
   position: relative;
