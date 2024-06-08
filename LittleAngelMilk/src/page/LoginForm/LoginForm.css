@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-/* * {
-||||||| 151d472
-* {
-=======
-<<<<<<< HEAD
-/* * {
-||||||| e4a60b5
-* {
-=======
+/*
 
 @keyframes slideInLeft {
     0% {
@@ -26,8 +17,6 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
->>>>>>> 0ec2c92d47e108d270cf3cf0152bc684f2d80ca4
->>>>>>> main
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -198,17 +187,5 @@ h1 {
 .form_below p {
     text-align: center;
     font-size: 12px;
-<<<<<<< HEAD
 } */
-||||||| 151d472
-}
-=======
-<<<<<<< HEAD
-} */
-||||||| e4a60b5
-}
-=======
-}
 
->>>>>>> 0ec2c92d47e108d270cf3cf0152bc684f2d80ca4
->>>>>>> main

@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 
 import './page/ProductionDetail/ProductionDetail.css'; 
 
@@ -21,5 +21,5 @@ const App = () => {
     );
 };
 
->>>>>>> 9347045800f666a94b7be67bf9089b82788854a8
+
 export default App;
