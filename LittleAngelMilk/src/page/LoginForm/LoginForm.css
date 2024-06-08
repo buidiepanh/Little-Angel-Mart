@@ -1,15 +1,70 @@
+<<<<<<< HEAD
+/* * {
+||||||| 151d472
 * {
+=======
+<<<<<<< HEAD
+/* * {
+||||||| e4a60b5
+* {
+=======
+
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+      transform: translateX(-100%);
+    }
+    100% {
+        opacity: 1;
+      transform: translateX(0);
+    }
+  }
+.container {
+    
+    background-image: linear-gradient(45deg,rgb(77, 77, 235), rgb(48, 196, 161));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+>>>>>>> 0ec2c92d47e108d270cf3cf0152bc684f2d80ca4
+>>>>>>> main
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
 }
-
-body {
+.form-container {
+    background-color: white;
+    border-radius: 0 10px 10px 0;
+    padding: 21px; 
+    padding-right: 50px;
+    max-width: 350px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    
+  
+}
+.formLogin{
+    display: flex;
+    flex-direction: row;
+    animation: 1s ease-out 0.2s 1 slideInLeft;
+}
+.image-container {
+   
+    padding: 0;
+    background-color: #7CA0F4;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    display: flex;
     align-items: center;
-    min-height: 100vh;
+    justify-content: center;
+}
+.image-container img {
+    width: 100%;
+    max-width: 600px; 
+    height: 100%;
+
 }
 
 .form {
@@ -24,12 +79,12 @@ body {
 }
 
 .form_img img {
-    width: 100px;
+    width: 220px;
     height: 100%;
 }
 
 .form_login {
-    width: 550px;
+    width: 336px;
     padding: 5px 30px;
 }
 
@@ -51,12 +106,12 @@ h1 {
     position: relative;
     width: 100%;
     height: 50px;
-    margin-bottom: 20px;
+    margin: 15px 0;
 }
 
 .form_input input {
-    width: 100%;
-    height: 100%;
+    width: 76%;
+    height: 35%;
     border: 2px solid;
     border-radius: 40px;
     padding: 20px 45px 20px 20px;
@@ -67,15 +122,17 @@ h1 {
 }
 
 .form_forgot {
+    
     display: flex;
     justify-content: space-between;
-    font-size: 15px;
-    margin: 20px 17px 15px;
+    font-size: 10px;
+    margin: -13px 17px 15px;
 }
 
 .form_forgot a {
-    color: #000000;
+    color: #333;
     text-decoration: none;
+    margin-top: 10%;
 }
 
 .form_forgot a:hover {
@@ -95,11 +152,27 @@ h1 {
     padding: 15px;
     border-radius: 20px;
     width: 100%;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.social-login a{
+    text-decoration: none;
+
+}
+.btn:hover{
+    background-color: #298b3f;
+    color: white;
 }
 
 .btn_login {
     background: #3B6CE8;
     color: #fff;
+    transition: all 0.2s ease-in-out;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 4%;
 }
 
 .btn_login:hover {
@@ -110,6 +183,11 @@ h1 {
 .btn_signup {
     background: #3BE861;
     color: #fff;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 4%;
 }
 
 .btn_signup:hover {
@@ -120,4 +198,17 @@ h1 {
 .form_below p {
     text-align: center;
     font-size: 12px;
+<<<<<<< HEAD
+} */
+||||||| 151d472
 }
+=======
+<<<<<<< HEAD
+} */
+||||||| e4a60b5
+}
+=======
+}
+
+>>>>>>> 0ec2c92d47e108d270cf3cf0152bc684f2d80ca4
+>>>>>>> main
