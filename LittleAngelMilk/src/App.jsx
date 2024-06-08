@@ -1,29 +1,16 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import LoginForm from './page/LoginForm/LoginForm';
+
+import './page/ProductionDetail/ProductionDetail.css'; 
+
+import ProductionDetail from './page/ProductionDetail/ProductionDetail';
 import RegisterForm from './page/RegisterForm/RegisterForm';
 
-const App = () => {
-    return (
-        <Router>
-            <div>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/login">Login</Link>
-                        </li>
-                        <li>
-                            <Link to="/register">Register</Link>
-                        </li>
-                    </ul>
-                </nav>
-                <Routes>
-                    <Route path="/login" element={<LoginForm />} />
-                    <Route path="/register" element={<RegisterForm />} />
-                </Routes>
-            </div>
-        </Router>
-    );
-};
+function App() {
+  return (
+    <div className='App'>
+
+        <RegisterForm />
+    </div>
+  );
+}
 
 export default App;
