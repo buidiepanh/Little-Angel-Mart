@@ -1,0 +1,153 @@
+.product-detail-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #EBF1F5; 
+    padding: 20px;
+    width: 100%;  
+}
+
+.product-upper {
+    display: flex;  
+    justify-content: space-between;  
+    align-items: flex-start;  
+    width: 100%;  
+}
+
+.product-image {
+    flex: 1;  
+    margin-right: 20px;  
+}
+
+.product-image img {
+    width:80%;  
+    padding-left: 30px;
+}
+
+.product-info {
+    flex: 2;  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;  
+    padding-right: 20px;
+}
+
+.product-lower {
+    width: 100%;  
+    text-align: center;  
+    margin-top: 20px;  
+}
+
+.product-description {
+    text-align: left;  
+}
+
+
+textarea {
+    width: 100%; 
+    margin-top: 10px; 
+}
+
+.product-description h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #333; 
+    font-size: 25px;  
+}
+
+.product-comments textarea {
+    width: 100%;
+    height: 100px;
+    padding: 8px; 
+    border: 1px solid #ccc; 
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);  
+    resize: none;
+    background-color: #fff;  
+    font-size: 16px;  
+}
+
+.product-recommendations h2, .product-description h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #333;  
+    font-size: 18px; 
+    text-align: left;  
+}
+.btn-buy {
+    background-color: #ff4747;
+    color: white; 
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 8px;
+}
+
+.btn-cart {
+    background-color: #343a40; 
+    color: white; 
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.btn-buy:hover, .btn-cart:hover {
+    opacity: 0.9; 
+}
+
+.btn-buy, .btn-cart {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.product-actions {
+    padding-top: 20px; 
+    justify-content: space-around;
+}
+
+.btn-buy, .btn-cart {
+    padding: 10px 20px;  
+    margin-right: 10px;  
+   
+}
+
+.product-rating span {
+    font-weight: bold;  
+    margin-right: 5px; 
+    color: #666; 
+}
+
+.product-rating {
+    margin-bottom: 10px; 
+}
+
+.product-price {
+    margin-top: 10px;  
+}
+
+.product-price {
+    font-size: 50px; 
+    font-weight: bold; 
+}
+
+.product-counter {
+    display: flex;
+    align-items: center;
+    font-size: 16px; 
+    color: #333; 
+}
+
+.product-counter span {
+    min-width: 20px; 
+    display: inline-block;
+    text-align: center;
+}
+
+.button-large {
+    padding: 15px 20px; 
+    font-size: 15px; 
+    margin: 5px; 
+  
+    cursor: pointer; 
+}
+

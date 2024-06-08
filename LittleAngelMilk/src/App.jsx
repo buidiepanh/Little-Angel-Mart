@@ -1,8 +1,8 @@
+<<<<<<< HEAD
 
-import Header from "./component/header/Header";
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import LoginForm from './page/LoginForm/LoginForm';
+import './page/ProductionDetail/ProductionDetail.css'; 
+
+import ProductionDetail from './page/ProductionDetail/ProductionDetail';
 import RegisterForm from './page/RegisterForm/RegisterForm';
 import ForgotPage from "./page/ForgotPage/ForgotPage";
 import ForgotPagePassword from "./page/ForgotPagePassword/ForgotPagePassword";
@@ -21,4 +21,5 @@ const App = () => {
     );
 };
 
+>>>>>>> 9347045800f666a94b7be67bf9089b82788854a8
 export default App;
