@@ -1,9 +1,8 @@
-/*
 
 @keyframes slideInLeft {
     0% {
         opacity: 0;
-      transform: translateX(-100%);
+      transform: translateX(-15%);
     }
     100% {
         opacity: 1;
@@ -11,7 +10,6 @@
     }
   }
 .container {
-    
     background-image: linear-gradient(45deg,rgb(77, 77, 235), rgb(48, 196, 161));
     display: flex;
     justify-content: center;
@@ -187,5 +185,5 @@ h1 {
 .form_below p {
     text-align: center;
     font-size: 12px;
-} */
+} 
 
