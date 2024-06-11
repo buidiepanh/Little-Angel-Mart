@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import './CustomerInfo.css';
+import { PiShoppingCartLight } from "react-icons/pi";
+import { RxPerson } from "react-icons/rx";
+import { GoCreditCard } from "react-icons/go";
+import { FaCheck } from "react-icons/fa";
 
 const CustomerInfo = () => {
     const [name, setName] = useState('');
@@ -36,7 +40,7 @@ const CustomerInfo = () => {
 
         if (!emailError && !phoneNumberError) {
             console.log('Form is valid. Submitting...');
-            // Handle form submission logic here
+            
         }
     };
 
@@ -45,19 +49,19 @@ const CustomerInfo = () => {
             <div className="form-container">
                 <div className="progress-container">
                     <div className="step active">
-                        <div className="icon">🛒</div>
+                        <div className="icon"><PiShoppingCartLight /></div>
                         <div className="label">Giỏ hàng</div>
                     </div>
                     <div className="step active">
-                        <div className="icon">👤</div>
+                        <div className="icon"><RxPerson /></div>
                         <div className="label">Thông tin khách hàng</div>
                     </div>
                     <div className="step">
-                        <div className="icon">💳</div>
+                        <div className="icon"><GoCreditCard /></div>
                         <div className="label">Thanh toán</div>
                     </div>
                     <div className="step">
-                        <div className="icon">✔️</div>
+                        <div className="icon"><FaCheck /></div>
                         <div className="label">Xác nhận đơn hàng</div>
                     </div>
                 </div>

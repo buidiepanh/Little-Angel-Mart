@@ -87,7 +87,7 @@
 }
 
 .input {
-    width: 100%;
+    width: 97%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 20px;
@@ -118,4 +118,11 @@
 .submit-button {
     background-color: #5cb85c;
     color: white;
+}
+
+.connector {
+    flex-grow: 1;
+    height: 2px;
+    background-color: #ddd;
+    margin: 20px 0;
 }
