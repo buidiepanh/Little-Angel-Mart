@@ -41,7 +41,7 @@ const LoginForm = () => {
           </div>
 
           <div className="form_forgot">
-            <Link to="/forgot-password">Quên mật khẩu?</Link>
+            <Link to="/ForgotPassEmail">Quên mật khẩu?</Link>
           </div>
 
           <button type="submit" className="btn btn_login">
