@@ -27,9 +27,8 @@ const Register = () => {
     };
 
     const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (password.length < 8 || password.includes(' ') || !passwordRegex.test(password)) {
-            return 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt, không chứa khoảng trắng.';
+        if (password.length < 5 || password.length > 20) {
+            return 'Mật khẩu phải có từ 5 đến 20 ký tự.';
         }
         return null;
     };
@@ -126,6 +125,5 @@ const Register = () => {
         </div>
     );
 };
-
 
 export default Register;
