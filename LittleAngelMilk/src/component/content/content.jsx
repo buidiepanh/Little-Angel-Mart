@@ -1,9 +1,14 @@
 import { RightOutlined } from "@ant-design/icons";
-import "../content/content.scss";
-
+import { Link } from "react-router-dom";
+import "./content.scss";
+import Carousel from "../carousel/carousel";
+import Header from "../header/Header";
+import Footer from "../footer/footer";
 function Content() {
   return (
     <div className="content">
+      <Header/>
+      <Carousel/>
       <div className="content__about">
         <div className="intro">
           <h3>Về Little Angel Milk</h3>
@@ -147,6 +152,7 @@ function Content() {
           </div>
         </div>
       </div>
+        <Footer/>
     </div>
   );
 }
