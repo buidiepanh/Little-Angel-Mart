@@ -1,9 +1,12 @@
 import productImage from '../../image/binhsua.jpg';
-// ShoppingCart.jsx
-// ShoppingCart.jsx
+
 import React, { useState } from 'react';
 import './CartPage.css';
-
+import { PiShoppingCartLight } from "react-icons/pi";
+import { RxPerson } from "react-icons/rx";
+import { GoCreditCard } from "react-icons/go";
+import { FaCheck } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 const ShoppingCart = () => {
   const [items, setItems] = useState([
     {
@@ -31,50 +34,56 @@ const ShoppingCart = () => {
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
+    <div className='shoppingCartPage'>
     <div className="shopping-cart-container">
       <div className="progress-bar">
         <div className="step active">
-          <div className="icon">🛒</div>
+          <div className="icon"><PiShoppingCartLight />
+          </div>
           <span>Giỏ hàng</span>
         </div>
         <div className="step">
-          <div className="icon">👤</div>
+          <div className="icon"><RxPerson /></div>
           <span>Thông tin khách hàng</span>
         </div>
         <div className="step">
-          <div className="icon">💳</div>
+          <div className="icon"><GoCreditCard /></div>
           <span>Thanh toán</span>
         </div>
         <div className="step">
-          <div className="icon">✔️</div>
+          <div className="icon"><FaCheck /></div>
           <span>Xác nhận đơn hàng</span>
         </div>
       </div>
-      <div className="content">
+      <div className="contentCart">
         <div className="shopping-cart">
-          <h2 className='titleCart'>Shopping Cart</h2>
+          <h2 className='titleCart'>Giỏ hàng</h2>
           {items.map(item => (
             <div key={item.id} className="cart-item">
               <img src={item.image} alt={item.name} className="cart-item-image" />
               <div className="cart-item-details">
                 <h3>{item.name}</h3>
-                <p className="price">Price: ${item.price.toFixed(2)}</p>
+                <p className="price">Giá: ${item.price.toFixed(2)}</p>
                 <div className="cart-item-quantity">
-                  <span>Quantity:</span>
+                  <span>Số lượng:</span>
                   <button className="quantity-btn" onClick={() => handleQuantityChange(item.id, -1)}>-</button>
                   <span>{item.quantity}</span>
                   <button className="quantity-btn" onClick={() => handleQuantityChange(item.id, 1)}>+</button>
                 </div>
-                <button className="remove-button">Remove from Cart</button>
+                <button className="remove-button">Xóa khỏi giỏ hàng</button>
               </div>
             </div>
           ))}
         </div>
         <div className="total-section">
-          <p>Total ({items.length} items): <strong>${total.toFixed(2)}</strong></p>
-          <button className="continue-button">Tiếp tục</button>
+          <p>Tổng cộng ({items.length} sản phẩm): <strong>${total.toFixed(2)}</strong></p>
+          <div className='btns'>
+          <Link  to='/CustomerCartInfo'><button className="continue-button">Tiếp tục</button></Link>
+          <Link to='/'><button className="back-button">Quay lại</button></Link>
+          </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

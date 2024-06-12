@@ -8,20 +8,24 @@ import RegisterForm from './page/RegisterForm/RegisterForm';
 import ForgotPage from "./page/ForgotPage/ForgotPage";
 import ForgotPagePassword from "./page/ForgotPagePassword/ForgotPagePassword";
 import CartPage from './page/CartPage/CartPage';
+import Content from './component/content/content'
+import CustomerInfo from './page/CustomerInfo/CustomerInfo'
 const App = () => {
     return (
-      // <ProductionDetail/>
-      <CartPage/>
-        // <Router>
-        //     <div>
-        //         <Routes>
-        //             <Route path="/ForgotPassEmail" element={<ForgotPage/>}/>
-        //             <Route path="/ForgotPass" element={<ForgotPagePassword/>}/>
-        //             <Route path="/login" element={<LoginForm />} />
-        //             <Route path="/register" element={<RegisterForm />} />
-        //         </Routes>
-        //     </div>
-        // </Router>
+      <div>
+        <Router>
+                <Routes>
+                    <Route path="/ForgotPassEmail" element={<ForgotPage/>}/>
+                    <Route path="/ForgotPass" element={<ForgotPagePassword/>}/>
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/register" element={<RegisterForm />} />
+                    <Route path="/" element={<Content />} />
+                    <Route path="/Cart" element={<CartPage/>} />
+                    <Route path="/CustomerCartInfo" element={<CustomerInfo/>} />
+                    <Route path="/ProductDetail" element={<ProductionDetail/>} />
+                </Routes>
+        </Router>
+        </div>
     );
 };
 
