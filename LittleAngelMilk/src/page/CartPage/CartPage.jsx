@@ -78,8 +78,8 @@ const ShoppingCart = () => {
         <div className="total-section">
           <p>Tổng cộng ({items.length} sản phẩm): <strong>${total.toFixed(2)}</strong></p>
           <div className='btns'>
-          <Link><button className="continue-button">Tiếp tục</button></Link>
-          <Link to=''><button className="back-button">Quay lại</button></Link>
+          <Link  to='/CustomerCartInfo'><button className="continue-button">Tiếp tục</button></Link>
+          <Link to='/'><button className="back-button">Quay lại</button></Link>
           </div>
         </div>
       </div>

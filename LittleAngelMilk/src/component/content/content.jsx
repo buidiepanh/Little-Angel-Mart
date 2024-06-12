@@ -36,6 +36,7 @@ function Content() {
           <a href="#">Dụng cụ cho bé</a>
         </div>
         <div className="top">
+          <Link to='/ProductDetail'>
           <div className="product">
             <img src="src/image\content\milk.jpg" alt="" />
             <div className="product__info">
@@ -44,7 +45,19 @@ function Content() {
               <button>Thêm vào giỏ hàng</button>
             </div>
           </div>
+          </Link>
+          <Link to='/ProductDetail'>
+          <div className="product">
+            <img src="src/image\content\milk.jpg" alt="" />
+            <div className="product__info">
+              <h4>Sữa bột</h4>
+              <div className="price">200.000đ</div>
+              <button>Thêm vào giỏ hàng</button>
+            </div>
+          </div>
+          </Link>
 
+          <Link to='/ProductDetail'>
           <div className="product">
             <img src="src/image\content\milk.jpg" alt="" />
             <div className="product__info">
@@ -53,7 +66,9 @@ function Content() {
               <button>Thêm vào giỏ hàng</button>
             </div>
           </div>
+          </Link>
 
+          <Link to='/ProductDetail'>
           <div className="product">
             <img src="src/image\content\milk.jpg" alt="" />
             <div className="product__info">
@@ -62,17 +77,10 @@ function Content() {
               <button>Thêm vào giỏ hàng</button>
             </div>
           </div>
-
-          <div className="product">
-            <img src="src/image\content\milk.jpg" alt="" />
-            <div className="product__info">
-              <h4>Sữa bột</h4>
-              <div className="price">200.000đ</div>
-              <button>Thêm vào giỏ hàng</button>
-            </div>
-          </div>
+          </Link>
         </div>
         <div className="bot">
+        <Link to='/ProductDetail'>
           <div className="product">
             <img src="src/image\content\milk.jpg" alt="" />
             <div className="product__info">
@@ -81,7 +89,9 @@ function Content() {
               <button>Thêm vào giỏ hàng</button>
             </div>
           </div>
+          </Link>
 
+          <Link to='/ProductDetail'>
           <div className="product">
             <img src="src/image\content\milk.jpg" alt="" />
             <div className="product__info">
@@ -90,7 +100,9 @@ function Content() {
               <button>Thêm vào giỏ hàng</button>
             </div>
           </div>
+          </Link>
 
+          <Link to='/ProductDetail'>
           <div className="product">
             <img src="src/image\content\milk.jpg" alt="" />
             <div className="product__info">
@@ -99,7 +111,8 @@ function Content() {
               <button>Thêm vào giỏ hàng</button>
             </div>
           </div>
-
+          </Link>
+          <Link to='/ProductDetail'>
           <div className="product">
             <img src="src/image\content\milk.jpg" alt="" />
             <div className="product__info">
@@ -108,6 +121,7 @@ function Content() {
               <button>Thêm vào giỏ hàng</button>
             </div>
           </div>
+          </Link>
         </div>
         <div className="xemthem">
           <button>Xem thêm</button>

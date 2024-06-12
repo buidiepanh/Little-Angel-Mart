@@ -9,6 +9,7 @@ import ForgotPage from "./page/ForgotPage/ForgotPage";
 import ForgotPagePassword from "./page/ForgotPagePassword/ForgotPagePassword";
 import CartPage from './page/CartPage/CartPage';
 import Content from './component/content/content'
+import CustomerInfo from './page/CustomerInfo/CustomerInfo'
 const App = () => {
     return (
       <div>
@@ -20,6 +21,8 @@ const App = () => {
                     <Route path="/register" element={<RegisterForm />} />
                     <Route path="/" element={<Content />} />
                     <Route path="/Cart" element={<CartPage/>} />
+                    <Route path="/CustomerCartInfo" element={<CustomerInfo/>} />
+                    <Route path="/ProductDetail" element={<ProductionDetail/>} />
                 </Routes>
         </Router>
         </div>

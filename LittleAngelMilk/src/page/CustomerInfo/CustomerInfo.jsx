@@ -4,6 +4,7 @@ import { PiShoppingCartLight } from "react-icons/pi";
 import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 const CustomerInfo = () => {
     const [name, setName] = useState('');
@@ -46,7 +47,7 @@ const CustomerInfo = () => {
 
     return (
         <div className="full-page-container">
-            <div className="form-container">
+            <div className="customer-info-form-container">
                 <div className="progress-container">
                     <div className="step active">
                         <div className="icon"><PiShoppingCartLight /></div>
@@ -114,8 +115,8 @@ const CustomerInfo = () => {
                     </div>
 
                     <div className="button-group">
-                        <button type="button" className="button back-button">Quay lại</button>
-                        <button type="submit" className="button submit-button">Xác nhận và tiếp tục thanh toán</button>
+                       <Link to='/cart'> <button type="button" className="button back-button">Quay lại</button></Link>
+                        <Link><button type="submit" className="button submit-button">Xác nhận và tiếp tục thanh toán</button></Link>
                     </div>
                 </form>
             </div>
