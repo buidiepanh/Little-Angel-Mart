@@ -18,10 +18,17 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const GET_PRODUCT = gql`
-  query Query {
+  query Products {
     products {
       id
       name
+      category {
+        name
+      }
+      productDescription
+      productImage {
+        publicUrl
+      }
       productPrice
     }
   }
@@ -70,7 +77,10 @@ function Content() {
                 <Item>
                   <Link to="/ProductDetail">
                     <div className="product">
-                      <img src="src/image\content\milk.jpg" alt="" />
+                      <img
+                        src={product.productImage.publicUrl}
+                        alt={product.name}
+                      />
                       <div className="product__info">
                         <h4>{product.name}</h4>
                         <div className="price">{product.productPrice}đ</div>
