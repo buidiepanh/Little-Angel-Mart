@@ -1,0 +1,152 @@
+.background-wrapper {
+    background-image: linear-gradient(45deg, rgb(77, 77, 235), rgb(48, 196, 161));
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.order-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.step-indicator {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.step-indicator div {
+    text-align: center;
+    width: 20%;
+    padding: 10px;
+}
+
+.step-indicator .active {
+    color: #4d4deb;
+    font-weight: bold;
+}
+
+.shopping-cart-section {
+    border-top: 2px solid #ccc;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.shopping-cart-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.customer-info, .order-summary {
+    margin-bottom: 20px;
+}
+
+.customer-info h3, .order-summary h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.order-summary table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.order-summary th, .order-summary td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.order-summary th {
+    background-color: #f2f2f2;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.confirmation-buttons button {
+    padding: 15px 30px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.confirmation-buttons button:hover {
+    opacity: 0.9;
+}
+
+.cancel-button {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+.confirm-button {
+    background-color: #4caf50;
+    color: white;
+}
+
+.update-button, .save-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    background-color: #ffa500;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.update-button:hover, .save-button:hover {
+    background-color: #e69500;
+}
+
+.customer-form input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+@media (max-width: 768px) {
+    .step-indicator {
+        flex-direction: column;
+    }
+
+    .step-indicator div {
+        margin-bottom: 10px;
+    }
+
+    .confirmation-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .confirmation-buttons button {
+        width: 100%;
+        max-width: 300px;
+    }
+}

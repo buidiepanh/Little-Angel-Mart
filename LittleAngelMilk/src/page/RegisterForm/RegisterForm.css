@@ -39,7 +39,7 @@
 .registerForm{
     display: flex;
     flex-direction: row;
-    animation: 1s ease-out 0.2s 1 slideInLeft;
+    animation: 1s ease-out 0s 1 slideInLeft;
 }
 .form-container-register {
     padding: 41px; 
@@ -102,4 +102,27 @@ input[type="tel"]:focus {
 }
 .error {
     color: red;
+}
+
+.registerFormBtns{
+    display: flex;
+    margin-right: 25px;
+}
+.backBtn{
+    padding: 10px;
+    background-color:  #dc3545;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 20px auto;
+    display: block;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.backLink{
+    text-decoration: none;
+    width: 100%;
+    
 }
