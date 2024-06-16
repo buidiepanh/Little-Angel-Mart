@@ -8,10 +8,11 @@ import RegisterForm from './page/RegisterForm/RegisterForm';
 import ForgotPage from "./page/ForgotPage/ForgotPage";
 import ForgotPagePassword from "./page/ForgotPagePassword/ForgotPagePassword";
 import CartPage from './page/CartPage/CartPage';
+import CustomerInfo from './page/CustomerInfo/CustomerInfo';
 const App = () => {
     return (
       // <ProductionDetail/>
-      <CartPage/>
+      <CustomerInfo/>
         // <Router>
         //     <div>
         //         <Routes>
