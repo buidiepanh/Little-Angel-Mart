@@ -4,13 +4,46 @@ import "./content.scss";
 import Carousel from "../carousel/carousel";
 import Header from "../header/Header";
 import Footer from "../footer/footer";
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
+import { useQuery, useMutation, gql } from "@apollo/client";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+
+const GET_PRODUCT = gql`
+  query Products {
+    products {
+      id
+      name
+      category {
+        name
+      }
+      productDescription
+      productImage {
+        publicUrl
+      }
+      productPrice
+    }
+  }
+`;
+
 function Content() {
+  const { data, loading, error } = useQuery(GET_PRODUCT);
+
+  if (loading) return <p>loading...</p>;
+  if (error) return <p>ERROR</p>;
+
   return (
     <div className="content">
-      <Header/>
-      <Carousel/>
+      <Header />
+      <Carousel />
       <div className="content__about">
         <div className="intro">
           <h3>Về Little Angel Milk</h3>
@@ -37,160 +70,28 @@ function Content() {
           <a href="#">Vệ sinh cho bé</a>
           <a href="#">Dụng cụ cho bé</a>
         </div>
-        <div className="top">
-        <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-
-          <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-
-          <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-
-          <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-        </div>
-        <div className="bot">
-        <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-
-          <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-
-          <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-
-          <Link to='/ProductDetail' className="LinkProductDetail" style={{textDecoration:'none', color:'black'}}>
-          <Card style={{ width: '18rem', 
-                        border:  '1.5px solid rgb(195, 193, 193)',
-                        padding: '5px 7px',
-                        borderRadius: '5px',
-                        display: 'flex',
-                        flexDirection: 'column'
-             }}>
-          <Card.Img variant="top" src="src/image\content\milk.jpg" />
-          <Card.Body>
-            <Card.Title>Sữa bột</Card.Title>
-            <Card.Text>
-              <div className="price">200.000đ</div>
-            </Card.Text>
-          <Button variant="primary" className='goToCartBtn' style={{width:'50%' }}>Thêm vào giỏ hàng</Button>
-          </Card.Body>
-          </Card>
-          </Link>
-        </div>
+        <Grid container spacing={2}>
+          {data &&
+            data.products.map((product) => (
+              <Grid key={product.id} item xs={3}>
+                <Item>
+                  <Link to="/ProductDetail">
+                    <div className="product">
+                      <img
+                        src={product.productImage.publicUrl}
+                        alt={product.name}
+                      />
+                      <div className="product__info">
+                        <h4>{product.name}</h4>
+                        <div className="price">{product.productPrice}đ</div>
+                        <button>Thêm vào giỏ hàng</button>
+                      </div>
+                    </div>
+                  </Link>
+                </Item>
+              </Grid>
+            ))}
+        </Grid>
         <div className="xemthem">
           <button>Xem thêm</button>
           <div className="icon">
@@ -234,7 +135,7 @@ function Content() {
           </div>
         </div>
       </div>
-        <Footer/>
+      <Footer />
     </div>
   );
 }
