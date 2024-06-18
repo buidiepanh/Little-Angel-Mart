@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./CustomerInfo.css";
 import { PiShoppingCartLight } from "react-icons/pi";
+import Header from "../../component/header/Header";
+import Footer from "../../component/footer/footer";
 import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";

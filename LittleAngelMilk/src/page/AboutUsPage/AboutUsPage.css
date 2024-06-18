@@ -1,0 +1,59 @@
+.aboutUs {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    line-height: 1.6;
+    background-image: url('../../assets/aboutus.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    color: #000;
+    padding-top: 80px;
+}
+  
+.aboutUs h1 {
+    color: #2A5D78;
+}
+
+.aboutDetails h2 {
+    color: #333;
+}
+
+.aboutDetails p {
+    margin: 10px 0;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    background-color: #4CAF50;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+  
+.back-button:hover {
+    background-color: #45a049;
+}
+
+.link-button {
+    display: inline-block;
+  padding: 10px 20px; 
+  color: white;
+  background-color: #4CAF50; 
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px; 
+  cursor: pointer;
+}
+  
+.link-button:hover {
+    background-color: #45a049;
+}
+  

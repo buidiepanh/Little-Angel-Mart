@@ -53,10 +53,12 @@ function Content() {
             vào năm 2022.
           </span>
           <div className="intro__but">
-            <button>Xem thêm</button>
-            <div className="icon">
-              <RightOutlined />
-            </div>
+            <Link to="/about" className="link-button">
+              Xem thêm
+              <div className="icon">
+                <RightOutlined />
+              </div>
+            </Link>
           </div>
         </div>
         <img src="src/image\content\milk.jpg"></img>
@@ -78,6 +80,10 @@ function Content() {
                   <Link to="/ProductDetail">
                     <div className="product">
                       <img src="src\image\binhsua.jpg" alt={product.name} />
+                      {/* <img
+                        src={product.productImage.publicUrl}
+                        alt={product.name}
+                      /> */}
                       <div className="product__info">
                         <h4>{product.name}</h4>
                         <div className="price">{product.productPrice}đ</div>

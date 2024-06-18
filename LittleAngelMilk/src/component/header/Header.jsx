@@ -5,6 +5,7 @@ import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosHome } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
+import { BsCartCheck } from "react-icons/bs";
 import "./Header.css";
 
 export default class Header extends Component {
@@ -18,23 +19,40 @@ export default class Header extends Component {
               Little <span className="Angel">Angel</span> Milk
             </p>
           </div>
-          <div className="FirstLayerRight">
+          <div className="SearchBar">
+            <input type="text" placeholder="Search..." />
             <div className="SearchBtn">
               <Link to="/">
                 <FaMagnifyingGlass className="SearchCircle" />
               </Link>
             </div>
+          </div>
+          <div className="FirstLayerRight">
+            <div className="OrderListBtn">
+              <div>
+                <Link to="/orderList">
+                  <BsCartCheck className="UserCircle" />
+                </Link>
+              </div>
+              <div className="btnDesc">Đơn hàng</div>
+            </div>
 
             <div className="CartBtn">
-              <Link to="/Cart">
-                <FaShoppingCart className="CartCircle" />
-              </Link>
+              <div>
+                <Link to="/Cart">
+                  <FaShoppingCart className="CartCircle" />
+                </Link>
+              </div>
+              <div className="btnDesc">Giỏ hàng</div>
             </div>
 
             <div className="LoginBtn">
-              <Link to="/login">
-                <FaRegUserCircle className="UserCircle" />
-              </Link>
+              <div>
+                <Link to="/login">
+                  <FaRegUserCircle className="UserCircle" />
+                </Link>
+              </div>
+              <div className="btnDesc">Đăng nhập</div>
             </div>
           </div>
         </div>

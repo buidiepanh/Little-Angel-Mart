@@ -1,5 +1,6 @@
 import productImage from '../../image/binhsua.jpg';
-
+import Header from "../../component/header/Header";
+import Footer from "../../component/footer/footer";
 import React, { useState } from 'react';
 import './CartPage.css';
 import { PiShoppingCartLight } from "react-icons/pi";
@@ -35,6 +36,7 @@ const ShoppingCart = () => {
 
   return (
     <div className='shoppingCartPage'>
+      <Header/>
     <div className="shopping-cart-container">
       <div className="progress-bar">
         <div className="step active">
@@ -84,6 +86,7 @@ const ShoppingCart = () => {
         </div>
       </div>
     </div>
+    <Footer/>
     </div>
   );
 };

@@ -11,7 +11,7 @@
 .ForgotPassEmailForm{
     display: flex;
     flex-direction: row;
-    animation: 1s ease-out 0.2s 1 slideInLeft;
+    animation: 1s ease-out 0s 1 slideInLeft;
 }
 
 .FormTitle{

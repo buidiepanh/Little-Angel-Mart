@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
 import milkImage from '../../assets/Logo.jpg'
+import { Link } from 'react-router-dom';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -117,8 +118,10 @@ const Register = () => {
                         className='registerInput'
                     />
                     {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
-
+                    <div className='registerFormBtns'>
+                    <Link to='/login' className='backLink'><button type='submit' className='backBtn'>Quay lại</button></Link>
                     <button type="submit" className='registerBtn'>Tạo tài khoản</button>
+                    </div>
                 </form>
             </div>
             </div>
