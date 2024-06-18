@@ -7,6 +7,7 @@ import ForgotPagePassword from "./page/ForgotPagePassword/ForgotPagePassword";
 import CartPage from "./page/CartPage/CartPage";
 import Content from "./component/content/content";
 import CustomerInfo from "./page/CustomerInfo/CustomerInfo";
+import Payment from "./page/PaymentPage/payment";
 const App = () => {
   return (
     <div>
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/Cart" element={<CartPage />} />
           <Route path="/CustomerCartInfo" element={<CustomerInfo />} />
           <Route path="/ProductDetail" element={<ProductionDetail />} />
+          <Route path="/PaymentPage" element={<Payment />} />
         </Routes>
       </Router>
     </div>

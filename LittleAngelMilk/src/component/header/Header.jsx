@@ -26,7 +26,7 @@ export default class Header extends Component {
             </div>
 
             <div className="CartBtn">
-              <Link to="/cart">
+              <Link to="/Cart">
                 <FaShoppingCart className="CartCircle" />
               </Link>
             </div>
