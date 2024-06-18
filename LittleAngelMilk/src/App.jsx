@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginForm from "./page/LoginForm/LoginForm";
 import ProductionDetail from "./page/ProductionDetail/ProductionDetail";
 import RegisterForm from "./page/RegisterForm/RegisterForm";
@@ -7,6 +7,8 @@ import ForgotPagePassword from "./page/ForgotPagePassword/ForgotPagePassword";
 import CartPage from "./page/CartPage/CartPage";
 import Content from "./component/content/content";
 import CustomerInfo from "./page/CustomerInfo/CustomerInfo";
+import AboutUsPage from './page/AboutUsPage/AboutUsPage'; 
+
 const App = () => {
   return (
     <div>
@@ -20,6 +22,7 @@ const App = () => {
           <Route path="/Cart" element={<CartPage />} />
           <Route path="/CustomerCartInfo" element={<CustomerInfo />} />
           <Route path="/ProductDetail" element={<ProductionDetail />} />
+          <Route path="/about" element={<AboutUsPage />} /> 
         </Routes>
       </Router>
     </div>
