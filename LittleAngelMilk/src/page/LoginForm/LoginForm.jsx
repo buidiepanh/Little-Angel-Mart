@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { Link, useRoutes } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GoogleIcon from "@mui/icons-material/Google";
 import LOGO from "../../assets/Logo.jpg";
 import "./LoginForm.css";
 import { useMutation, gql } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
-
 
 const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
@@ -39,25 +35,15 @@ const LoginForm = () => {
   const [errorMess, setErrorMess] = useState("");
 
   const handleChange = (e) => {
-    // if (e.target.name === "password") {
-    // const newInput = {...input};
-    // newInput.password = value;
-    // setInput(newInput);
-    //   setInput({ ...input, password: value });
-    // } else {
-    //   setInput({ ...input, email: value });
-    // }
     const { name, value } = e.target;
-    const newInput = {
+    setInput({
       ...input,
-    };
-    newInput[name] = value;
-    setInput(newInput);
+      [name]: value,
+    });
   };
 
-  const [login, { data, loading }] = useMutation(LOGIN_MUTATION, {
+  const [login] = useMutation(LOGIN_MUTATION, {
     variables: input,
-    // refetchQueries: [{query: }]
   });
 
   async function handleSubmit(e) {
@@ -65,18 +51,17 @@ const LoginForm = () => {
     try {
       const res = await login();
       if (res.data.authenticateUserWithPassword.sessionToken) {
-        // save token for later use
-        // reset errorMess
+        const { sessionToken, item } = res.data.authenticateUserWithPassword;
         localStorage.setItem("sessionToken", sessionToken);
+        localStorage.setItem("username", item.name);
         setErrorMess("");
-        // redirect to homepage
         navigate("/");
-      }
-      if (res.data.authenticateUserWithPassword.message) {
+      } else if (res.data.authenticateUserWithPassword.message) {
         setErrorMess(res.data.authenticateUserWithPassword.message);
       }
     } catch (err) {
       console.error(err);
+      setErrorMess("An error occurred. Please try again.");
     }
   }
 
@@ -129,33 +114,15 @@ const LoginForm = () => {
             Đăng ký
           </Link>
           </form>
-         
+          
 
           {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
-
-          {/* <div className="form_below">
-            <p>---------------OR---------------</p>
-
-            <div className="social-login">
-              <a href="">
-                <button type="button" className="btn">
-                  Đăng nhập bằng Google
-                  <GoogleIcon className="icon_below" />
-                </button>
-              </a>
-              <a href="">
-                <button type="button" className="btn">
-                  Đăng nhập bằng Facebook
-                  <FacebookIcon className="icon_below" />
-                </button>
-              </a>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>
   );
 };
+
 const styles = {
   icon_above: {
     fontSize: "24px",
@@ -164,11 +131,6 @@ const styles = {
     top: "60%",
     transform: "translateY(-50%)",
   },
-  icon_below: {
-    fontSize: "24px",
-    position: "absolute",
-    left: "630px",
-    transform: "translateY(-5%)",
-  },
 };
+
 export default LoginForm;
