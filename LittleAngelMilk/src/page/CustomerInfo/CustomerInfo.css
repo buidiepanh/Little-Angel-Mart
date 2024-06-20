@@ -114,10 +114,16 @@
     background-color: #d9534f;
     color: white;
 }
+.back-button:hover{
+    background-color: darkred;
+}
 
 .submit-button {
     background-color: #5cb85c;
     color: white;
+}
+.submit-button:hover{
+    background-color: darkgreen;
 }
 
 .connector {

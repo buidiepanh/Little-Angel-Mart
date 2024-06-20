@@ -1,0 +1,71 @@
+.payment {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    background-image: linear-gradient(45deg,rgb(77, 77, 235), rgb(48, 196, 161));
+    .wrapper{
+        margin-top: 100px;
+        gap: 15px;
+        border-radius: 10px;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 100px ;
+        border: 1px solid gray;
+        background-color: white;
+        position: absolute;
+
+        &__header{
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &__button{
+            display: flex;
+            gap: 100px;
+            margin-top: 40px;
+        }
+        input{
+            width: 100%;
+            border: 1px solid black;
+            padding: 10px 15px;
+            background-color: transparent;
+            color: black;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        button{
+            font-size: 17px;
+            font-weight: 500;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            outline: none;
+            border: 0;
+            border-radius: 10px;
+            padding: 15px 25px;
+            color: white;
+            cursor: pointer;
+            width: 345px;
+        }
+        .back{
+            background-color: #d9534f;
+        }
+        .back:hover{
+            background-color: darkred;
+        }
+        .confirm{
+            background-color: #5cb85c;
+        }
+        .confirm:hover{
+            background-color: rgb(5, 144, 5);
+        }
+    }
+}

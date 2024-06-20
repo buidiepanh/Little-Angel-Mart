@@ -87,6 +87,9 @@ const Header = () => {
                 <Link to="/login">
                   <FaRegUserCircle className="UserCircle" />
                 </Link>
+                <Link to="/login">
+                  <FaRegUserCircle className="UserCircle" />
+                </Link>
               </div>
               <div className="btnDesc">Đăng nhập</div>
             </div>
