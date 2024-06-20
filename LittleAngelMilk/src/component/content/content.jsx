@@ -150,6 +150,7 @@ function Content() {
                           rel="noopener noreferrer"
                         >
                           <div className="article">
+                            <img src="src/image\content\article.jpg" alt="" />
                             <img src={post.image.publicUrl} alt={post.title} />
                             <div className="article__info">
                               <h4>{post.title}</h4>
