@@ -9,12 +9,12 @@ const REGISTER_MUTATION = gql`
   mutation Mutation($data: UserCreateInput!) {
     createUser(data: $data) {
       name
-      userEmail
-      userPassword {
-        isSet
-      }
-      userPhone
       userAddress
+      userEmail
+      userPhone
+      userPassword {
+      isSet
+    }    
     }
   }
 `;
@@ -28,7 +28,19 @@ const Register = () => {
   const [userPassword, setUserPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
-  const [register, { data, loading, error }] = useMutation(REGISTER_MUTATION);
+  const [register, { loading }] = useMutation(REGISTER_MUTATION, {
+    onError: (error) => {
+      console.error('error:', error);
+      setErrors({ api: error.message || 'An error occurred. Please try again.' });
+    },
+    onCompleted: (data) => {
+      if (data.createUser.id) {
+        navigate('/login');
+      } else {
+        setErrors({ api: 'An unexpected error occurred. Please try again.' });
+      }
+    }
+  });
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -77,24 +89,19 @@ const Register = () => {
 
     if (!emailError && !passwordError && !confirmPasswordError && !phoneNumberError) {
       try {
-        const response = await register({ 
-          variables: { 
-            data: { 
-              name, 
-              userAddress, 
-              userEmail, 
-              userPhone, 
-              userPassword 
-            } 
-          } 
+        await register({
+          variables: {
+            data: {
+              name,
+              userAddress,
+              userEmail,
+              userPhone,
+              userPassword,
+            },
+          },
         });
-        if (response.data.createUser.id) {
-          navigate('/login');
-        } else {
-          setErrors({ api: 'An error occurred. Please try again.' });
-        }
       } catch (err) {
-        console.error(err);
+        console.error('Mutation error:', err);
         setErrors({ api: 'An error occurred. Please try again.' });
       }
     }
@@ -173,7 +180,9 @@ const Register = () => {
               <Link to='/login' className='backLink'>
                 <button type='button' className='backBtn'>Quay lại</button>
               </Link>
-              <button type="submit" className='registerBtn'>Tạo tài khoản</button>
+              <button type="submit" className='registerBtn'>
+                {loading ? 'Đang xử lý...' : 'Tạo tài khoản'}
+              </button>
             </div>
           </form>
         </div>
