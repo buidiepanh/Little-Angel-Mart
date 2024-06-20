@@ -103,7 +103,7 @@ function Content() {
             productData.products.map((product) => (
               <Grid key={product.id} item xs={3}>
                 <Item>
-                  <Link to={`/ProductDetail/${product.id}`}>
+                  <Link to="/ProductDetail">
                     <div className="product">
                       {/* <img src="src\image\binhsua.jpg" alt={product.name} /> */}
                       <img
