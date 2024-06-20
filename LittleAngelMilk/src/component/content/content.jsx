@@ -78,7 +78,7 @@ function Content() {
                   <Link to="/ProductDetail">
                     <div className="product">
                       <img
-                        src={product.productImage.publicUrl}
+                        
                         alt={product.name}
                       />
                       <div className="product__info">

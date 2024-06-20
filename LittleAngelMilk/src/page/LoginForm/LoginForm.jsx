@@ -9,6 +9,7 @@ import "./LoginForm.css";
 import { useMutation, gql } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
+
 const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
     authenticateUserWithPassword(userEmail: $email, userPassword: $password) {
@@ -66,6 +67,7 @@ const LoginForm = () => {
       if (res.data.authenticateUserWithPassword.sessionToken) {
         // save token for later use
         // reset errorMess
+        localStorage.setItem("sessionToken", sessionToken);
         setErrorMess("");
         // redirect to homepage
         navigate("/");
@@ -85,8 +87,9 @@ const LoginForm = () => {
           <img src={LOGO} alt="Logo" />
         </div>
         <div className="form-container">
-          <h2>Login</h2>
+          
           <form method="POST" className="loginForm" onSubmit={handleSubmit}>
+          <h2>Login</h2>
             <label htmlFor="username">Email đăng nhập</label>
             <div className="form_input">
               <input
@@ -122,10 +125,11 @@ const LoginForm = () => {
             <button type="submit" className="btn btn_login">
               Đăng nhập
             </button>
-          </form>
-          <Link to="/register" className="btn btn_signup">
+            <Link to="/register" className="btn btn_signup">
             Đăng ký
           </Link>
+          </form>
+         
 
           {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
 

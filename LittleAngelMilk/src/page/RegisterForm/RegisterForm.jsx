@@ -68,8 +68,9 @@ const Register = () => {
                 <img src={milkImage} alt="Little Angel Milk" />
             </div>
             <div className="form-container-register">
+                
+                <form onSubmit={handleSubmit} className='regForm'>
                 <h2>Đăng ký</h2>
-                <form onSubmit={handleSubmit}>
                     <label>Địa chỉ Email</label>
                     <input
                         type="email"
