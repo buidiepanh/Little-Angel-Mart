@@ -8,6 +8,7 @@ import { useQuery, useMutation, gql } from "@apollo/client";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -81,7 +82,7 @@ function Content() {
             vào năm 2022.
           </span>
           <div className="intro__but">
-            <button>Xem thêm</button>
+          <Link to="/about"><button>Xem thêm</button></Link>
             <div className="icon">
               <RightOutlined />
             </div>
@@ -103,17 +104,17 @@ function Content() {
             productData.products.map((product) => (
               <Grid key={product.id} item xs={3}>
                 <Item>
-                  <Link to="/ProductDetail">
+                  <Link to={`/ProductDetail/${product.id}`}>
                     <div className="product">
-                      {/* <img src="src\image\binhsua.jpg" alt={product.name} /> */}
-                      <img
+                      <img src="src\image\binhsua.jpg" alt={product.name} />
+                      {/* <img
                         src={product.productImage.publicUrl}
                         alt={product.name}
-                      />
+                      /> */}
                       <div className="product__info">
                         <h4>{product.name}</h4>
                         <div className="price">{product.productPrice}đ</div>
-                        <button>Thêm vào giỏ hàng</button>
+                        <button>Xem thêm</button>
                       </div>
                     </div>
                   </Link>
@@ -122,7 +123,8 @@ function Content() {
             ))}
         </Grid>
         <div className="xemthem">
-          <button>Xem thêm</button>
+          <Link to="/product-list"><button>Xem thêm</button></Link>
+            
           <div className="icon">
             <RightOutlined />
           </div>
@@ -150,8 +152,8 @@ function Content() {
                           rel="noopener noreferrer"
                         >
                           <div className="article">
-                            {/* <img src="src/image\content\article.jpg" alt="" /> */}
-                            <img src={post.image.publicUrl} alt={post.title} />
+                            <img src="src/image\content\article.jpg" alt="" />
+                            {/* <img src={post.image.publicUrl} alt={post.title} /> */}
                             <div className="article__info">
                               <h4>{post.title}</h4>
                               <div>{post.content}</div>
@@ -160,7 +162,9 @@ function Content() {
                         </a>
                       ) : (
                         <div className="article">
-                          <img src={post.image.publicUrl} alt={post.title} />
+                            <img src="src/image\content\article.jpg" alt="" />
+
+                          {/* <img src={post.image.publicUrl} alt={post.title} /> */}
                           <div className="article__info">
                             <h4>{post.title}</h4>
                             <div>{post.content}</div>

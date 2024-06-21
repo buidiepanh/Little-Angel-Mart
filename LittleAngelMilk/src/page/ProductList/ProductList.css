@@ -1,0 +1,77 @@
+
+.product-list-container {
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 20px; 
+    background-color: #c9eff9; 
+    margin-top: 40px;
+    border-radius: 10px;
+    margin-top: 200px;
+  }
+  
+  .products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    grid-gap: 20px;
+    justify-content: space-around; 
+    align-items: center; 
+    width: 100%; 
+    margin: auto; 
+    
+  }
+  
+  
+  
+  @media (max-width: 768px) {
+    .products {
+      grid-template-columns: repeat(2, 1fr); 
+      grid-gap: 20px; 
+    }
+    .product-card {
+      margin: 10px; 
+    }
+  }
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    height: 80%;
+    margin: 10px;
+  }
+  
+  .product-card img {
+    width: 100%; 
+    height: auto; 
+    object-fit: contain; 
+    max-height: 120px; 
+  }
+  
+  .product-card div { 
+    font-size: 0.9rem; 
+    text-align: center; 
+    margin-top: 5px; 
+  }
+  
+
+  .sort-container select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 10px;
+  }
+  
+  .sort-container select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .product-list-page {
+    background-color: #80e2f8; /* Màu nền chỉ dành cho ProductList */
+    padding: 20px; /* Padding tùy chỉnh */
+}
