@@ -18,7 +18,7 @@ function Payment() {
           <Link to="/CustomerCartInfo">
             <button className="back">Quay lại</button>
           </Link>
-          <Link>
+          <Link to="/OrderConfirmation">
             <button className="confirm">Xác nhận và tạo đơn hàng</button>
           </Link>
         </div>

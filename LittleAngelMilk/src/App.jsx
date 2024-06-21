@@ -9,6 +9,7 @@ import Content from "./component/content/content";
 import CustomerInfo from "./page/CustomerInfo/CustomerInfo";
 import Payment from "./page/PaymentPage/payment";
 import AboutUsPage from "./page/AboutUsPage/AboutUsPage";
+import OrderConfirmation from "./page/OrderConfirmation/OrderConfirmation";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/ProductDetail" element={<ProductionDetail />} />
           <Route path="/PaymentPage" element={<Payment />} />
           <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/OrderConfirmation" element={<OrderConfirmation/>} />
         </Routes>
       </Router>
     </div>
