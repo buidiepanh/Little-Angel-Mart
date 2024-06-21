@@ -2,11 +2,16 @@ import React, { Component } from "react";
 import "./ProductionDetail.css";
 import productImage from "../../image/binhsua.jpg";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
-
+import Header from "../../component/header/Header";
+import Footer from "../../component/footer/footer";
 class ProductionDetail extends Component {
   render() {
     return (
+      <div className="productDetail">
       <div className="product-detail-container">
+        <div>
+        <Header/>
+        </div>
         <div className="product-upper">
           <div className="product-image">
             <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" />
@@ -46,6 +51,9 @@ class ProductionDetail extends Component {
             <button>Submit Comment</button>
           </div>
         </div>
+        
+      </div>
+      <Footer/>
       </div>
     );
   }

@@ -51,18 +51,28 @@ const Header = () => {
         <div className="FirstLayerRight">
           <div className="OrderListBtn">
             <div>
+              
+              {username ? (
               <Link to="/orderList">
-                <BsCartCheck className="UserCircle" />
-              </Link>
+              <BsCartCheck className="UserCircle" />
+            </Link>): (
+                <Link to="/login">
+                <BsCartCheck  className="UserCircle" />
+              </Link>)}
             </div>
             <div className="btnDesc">Đơn hàng</div>
           </div>
 
           <div className="CartBtn">
             <div>
+              {username ? (
               <Link to="/cart">
                 <FaShoppingCart className="CartCircle" />
-              </Link>
+              </Link>): (
+                <Link to="/login">
+                <FaShoppingCart className="CartCircle" />
+              </Link>)}
+              
             </div>
             <div className="btnDesc">Giỏ hàng</div>
           </div>

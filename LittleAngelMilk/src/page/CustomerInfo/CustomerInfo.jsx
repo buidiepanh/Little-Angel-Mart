@@ -85,6 +85,7 @@ const CustomerInfo = () => {
               onChange={(e) => setName(e.target.value)}
               placeholder="Nhập họ và tên"
               className="input"
+              required
             />
           </div>
 
@@ -96,6 +97,7 @@ const CustomerInfo = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Nhập địa chỉ Email"
               className="input"
+              required
             />
             {errors.email && <p className="error">{errors.email}</p>}
           </div>
@@ -108,6 +110,7 @@ const CustomerInfo = () => {
               onChange={(e) => setPhoneNumber(e.target.value)}
               placeholder="Nhập số điện thoại"
               className="input"
+              required
             />
             {errors.phoneNumber && (
               <p className="error">{errors.phoneNumber}</p>
@@ -122,6 +125,7 @@ const CustomerInfo = () => {
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Nhập địa chỉ"
               className="input"
+              required 
             />
           </div>
 
