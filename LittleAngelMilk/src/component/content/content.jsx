@@ -8,6 +8,7 @@ import { useQuery, useMutation, gql } from "@apollo/client";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -103,7 +104,7 @@ function Content() {
             productData.products.map((product) => (
               <Grid key={product.id} item xs={3}>
                 <Item>
-                  <Link to="/ProductDetail">
+                  <Link to={`/ProductDetail/${product.id}`}>
                     <div className="product">
                       <img src="src\image\binhsua.jpg" alt={product.name} />
                       {/* <img
@@ -113,7 +114,7 @@ function Content() {
                       <div className="product__info">
                         <h4>{product.name}</h4>
                         <div className="price">{product.productPrice}đ</div>
-                        <button>Thêm vào giỏ hàng</button>
+                        <button>Xem thêm</button>
                       </div>
                     </div>
                   </Link>

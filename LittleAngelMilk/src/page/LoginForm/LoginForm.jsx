@@ -32,6 +32,16 @@ const LoginForm = () => {
     email: "",
   });
 
+  const handleLoginGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        console.log(credential);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const [errorMess, setErrorMess] = useState("");
 
   const handleChange = (e) => {
