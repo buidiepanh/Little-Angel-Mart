@@ -8,6 +8,8 @@ import LOGO from "../../assets/Logo.jpg";
 import "./LoginForm.css";
 import { useMutation, gql } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
+import { auth, googleProvider } from "../../config/firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
@@ -35,6 +37,16 @@ const LoginForm = () => {
     email: "",
   });
 
+  const handleLoginGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        console.log(credential);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const [errorMess, setErrorMess] = useState("");
 
   const handleChange = (e) => {
@@ -129,24 +141,22 @@ const LoginForm = () => {
 
           {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
 
-          {/* <div className="form_below">
+          <div className="form_below">
             <p>---------------OR---------------</p>
 
             <div className="social-login">
-              <a href="">
-                <button type="button" className="btn">
-                  Đăng nhập bằng Google
-                  <GoogleIcon className="icon_below" />
-                </button>
-              </a>
-              <a href="">
+              <button type="button" className="btn" onClick={handleLoginGoogle}>
+                Đăng nhập bằng Google
+                <GoogleIcon className="icon_below" />
+              </button>
+              {/* <a href="">
                 <button type="button" className="btn">
                   Đăng nhập bằng Facebook
                   <FacebookIcon className="icon_below" />
                 </button>
-              </a>
+              </a> */}
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>
