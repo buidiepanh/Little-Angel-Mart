@@ -105,7 +105,7 @@ function Content() {
                 <Item>
                   <Link to="/ProductDetail">
                     <div className="product">
-                      {/* <img src="src\image\binhsua.jpg" alt={product.name} /> */}
+                      <img src="src\image\binhsua.jpg" alt={product.name} />
                       {/* <img
                         src={product.productImage.publicUrl}
                         alt={product.name}
