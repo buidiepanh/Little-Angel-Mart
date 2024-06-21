@@ -141,7 +141,9 @@
         background-color: #F5FBFF;
         margin-top: 30px;
         padding: 30px 20px;
-
+        .content__articles a{
+            text-decoration: none;
+        }
         .content__articles{
             display: flex;
             gap: 80px;
@@ -163,6 +165,7 @@
         .article{
             width: 430px;
             height: 425px;
+
             border: solid 1px gray;
             cursor: pointer;
             img{
@@ -174,6 +177,17 @@
                     padding: 0px;
                 }
             }
+        }
+        .article__info div{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;         /* Use old model of webkit to create container */
+            -webkit-line-clamp: 3;  
+            -webkit-box-orient: vertical; /* Arrange child component: veritical*/
+            line-height: 1.5;
+        }
+        .article__info a{
+            text-decoration: none;
         }
     }
 }

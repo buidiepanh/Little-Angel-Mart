@@ -35,10 +35,39 @@ const GET_PRODUCT = gql`
   }
 `;
 
+const GET_POST = gql`
+  query Query {
+    posts {
+      id
+      title
+      image {
+        publicUrl
+      }
+      link {
+        document
+      }
+      content
+    }
+  }
+`;
+
 function Content() {
-  const { data, loading, error } = useQuery(GET_PRODUCT);
-  if (loading) return <p>loading...</p>;
-  if (error) return <p>ERROR</p>;
+  const {
+    data: productData,
+    loading: productLoading,
+    error: productError,
+  } = useQuery(GET_PRODUCT);
+  const {
+    data: postData,
+    loading: postLoading,
+    error: postError,
+  } = useQuery(GET_POST);
+
+  if (productLoading || postLoading) return <p>Loading</p>;
+  if (productError || postError) return <p>Error</p>;
+
+  console.log(productData);
+  console.log(postData);
 
   return (
     <div className="content">
@@ -53,12 +82,10 @@ function Content() {
             vào năm 2022.
           </span>
           <div className="intro__but">
-            <Link to="/about" className="link-button">
-              Xem thêm
-              <div className="icon">
-                <RightOutlined />
-              </div>
-            </Link>
+            <button>Xem thêm</button>
+            <div className="icon">
+              <RightOutlined />
+            </div>
           </div>
         </div>
         <img src="src/image\content\milk.jpg"></img>
@@ -73,17 +100,17 @@ function Content() {
           <a href="#">Dụng cụ cho bé</a>
         </div>
         <Grid container spacing={2}>
-          {data &&
-            data.products.map((product) => (
+          {productData &&
+            productData.products.map((product) => (
               <Grid key={product.id} item xs={3}>
                 <Item>
                   <Link to={`/ProductDetail/${product.id}`}>
                     <div className="product">
-                      <img src="src\image\binhsua.jpg" alt={product.name} />
-                      {/* <img
+                      {/* <img src="src\image\binhsua.jpg" alt={product.name} /> */}
+                      <img
                         src={product.productImage.publicUrl}
                         alt={product.name}
-                      /> */}
+                      />
                       <div className="product__info">
                         <h4>{product.name}</h4>
                         <div className="price">{product.productPrice}đ</div>
@@ -108,7 +135,46 @@ function Content() {
           <a href="#">Xem thêm</a>
         </div>
         <div className="content__articles">
-          <div className="article">
+          <Grid container spacing={2}>
+            {postData &&
+              postData.posts.map((post) => {
+                const link = post.link?.document?.[0]?.children?.find(
+                  (child) => child.href
+                )?.href;
+                return (
+                  <Grid key={post.id} item xs={4}>
+                    <Item>
+                      {link ? (
+                        <a
+                          href={link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <div className="article">
+                            {/* <img src="src/image\content\article.jpg" alt="" /> */}
+                            <img src={post.image.publicUrl} alt={post.title} />
+                            <div className="article__info">
+                              <h4>{post.title}</h4>
+                              <div>{post.content}</div>
+                            </div>
+                          </div>
+                        </a>
+                      ) : (
+                        <div className="article">
+                          <img src={post.image.publicUrl} alt={post.title} />
+                          <div className="article__info">
+                            <h4>{post.title}</h4>
+                            <div>{post.content}</div>
+                          </div>
+                        </div>
+                      )}
+                    </Item>
+                  </Grid>
+                );
+              })}
+          </Grid>
+
+          {/* <div className="article">
             <img src="src/image\content\article.jpg" alt="" />
             <div className="article__info">
               <h4>
@@ -121,21 +187,7 @@ function Content() {
                 Bản,…
               </div>
             </div>
-          </div>
-          <div className="article">
-            <img src="src/image\content\article.jpg" alt="" />
-            <div className="article__info">
-              <h4>
-                Sữa Hàn Quốc cho bé loại nào tốt? Mách mẹ địa chỉ mua sữa bột
-                Hàn Quốc uy tín
-              </h4>
-              <div>
-                Trên thị trường hiện nay, bên cạnh nhiều dòng sữa bột trẻ em đến
-                từ các cường quốc hàng đầu về dinh dưỡng như Mỹ, Đức, Anh, Nhật
-                Bản,…
-              </div>
-            </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <Footer />
