@@ -19,7 +19,11 @@
     "@mui/material": "^5.15.20",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "antd": "^5.17.4",
+<<<<<<< HEAD
     "bootstrap": "^5.3.3",
+=======
+    "firebase": "^10.12.2",
+>>>>>>> 1340673c82eda3aad33339fbb757090b43e14f88
     "graphql": "^16.8.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
