@@ -66,9 +66,9 @@ const Register = () => {
   };
 
   const validatePhoneNumber = (phoneNumber) => {
-    const phoneNumberRegex = /^\d+$/;
+    const phoneNumberRegex = /^\d{10}$/;
     if (!phoneNumberRegex.test(phoneNumber)) {
-      return 'Số điện thoại chỉ chứa chữ số.';
+      return 'Số điện thoại phải có đúng 10 chữ số.';
     }
     return null;
   };

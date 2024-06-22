@@ -4,6 +4,9 @@ import productImage from "../../image/binhsua.jpg";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
 import { useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
+import Header from "../../component/header/Header"
+import Footer from "../../component/footer/footer";;
+
 
 function ProductionDetail() {
   const GET_PRODUCT = gql`
@@ -28,6 +31,8 @@ function ProductionDetail() {
   const selectedProduct = data.products.find((product) => product.id === id);
   console.log(selectedProduct);
   return (
+    <div>
+      <Header />
     <div className="product-detail-container">
       <div className="product-upper">
         <div className="product-image">
@@ -61,6 +66,9 @@ function ProductionDetail() {
         </div>
       </div>
     </div>
+    <Footer />
+    </div>
+    
   );
 }
 
