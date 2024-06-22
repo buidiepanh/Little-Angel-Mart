@@ -70,10 +70,8 @@ function Payment() {
           <Link to="/CustomerCartInfo">
             <button className="back">Quay lại</button>
           </Link>
-          <Link>
-            <button className="confirm" onClick={handleSubmit}>
-              Xác nhận và tạo đơn hàng
-            </button>
+          <Link to="/OrderConfirmation">
+            <button className="confirm">Xác nhận và tạo đơn hàng</button>
           </Link>
         </div>
       </div>

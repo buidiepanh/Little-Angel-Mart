@@ -82,7 +82,7 @@ function Content() {
             vào năm 2022.
           </span>
           <div className="intro__but">
-            <button>Xem thêm</button>
+          <Link to="/about"><button>Xem thêm</button></Link>
             <div className="icon">
               <RightOutlined />
             </div>
@@ -123,7 +123,8 @@ function Content() {
             ))}
         </Grid>
         <div className="xemthem">
-          <button>Xem thêm</button>
+          <Link to="/product-list"><button>Xem thêm</button></Link>
+            
           <div className="icon">
             <RightOutlined />
           </div>

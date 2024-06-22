@@ -9,6 +9,9 @@ import Content from "./component/content/content";
 import CustomerInfo from "./page/CustomerInfo/CustomerInfo";
 import Payment from "./page/PaymentPage/payment";
 import AboutUsPage from "./page/AboutUsPage/AboutUsPage";
+import ProductList from './page/ProductList/ProductList';
+
+import OrderConfirmation from "./page/OrderConfirmation/OrderConfirmation";
 
 const App = () => {
   return (
@@ -25,6 +28,9 @@ const App = () => {
           <Route path="/ProductDetail/:id" element={<ProductionDetail />} />
           <Route path="/PaymentPage" element={<Payment />} />
           <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/product-list" element={<ProductList />} />
+
+          <Route path="/OrderConfirmation" element={<OrderConfirmation/>} />
         </Routes>
       </Router>
     </div>

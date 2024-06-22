@@ -35,7 +35,7 @@
 .formLogin{
     display: flex;
     flex-direction: row;
-    animation: 1s ease-out 0s 1 slideInLeft;
+    
 }
 .image-container {
    
@@ -187,3 +187,6 @@ h1 {
     font-size: 12px;
 } 
 
+.loginForm{
+    animation: 1s ease-out 0s 1 slideInLeft;
+}

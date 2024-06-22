@@ -1,4 +1,13 @@
+@keyframes appears {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+  }
 .content{
+    animation: .5s ease-in-out 0s 1 appears;
     &__about{
         display: flex;
         justify-content: space-between;

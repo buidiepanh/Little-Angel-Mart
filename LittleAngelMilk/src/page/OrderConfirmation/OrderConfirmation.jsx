@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import './OrderConfirmation.css';
-
+import { RxPerson } from "react-icons/rx";
+import { GoCreditCard } from "react-icons/go";
+import { FaCheck } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { PiShoppingCartLight } from "react-icons/pi";
 const OrderConfirmation = () => {
   const initialCustomer = {
     name: 'Nguyen Van A',
@@ -38,11 +42,31 @@ const OrderConfirmation = () => {
   return (
     <div className="background-wrapper">
       <div className="order-container">
-        <div className="step-indicator">
-          <div>Giỏ hàng</div>
-          <div>Thông tin khách hàng</div>
-          <div>Thanh toán</div>
-          <div className="active">Xác nhận đơn hàng</div>
+      <div className="progress-container">
+          <div className="step active">
+            <div className="icon">
+              <PiShoppingCartLight />
+            </div>
+            <div className="label">Giỏ hàng</div>
+          </div>
+          <div className="step active">
+            <div className="icon">
+              <RxPerson />
+            </div>
+            <div className="label">Thông tin khách hàng</div>
+          </div>
+          <div className="step active">
+            <div className="icon">
+              <GoCreditCard />
+            </div>
+            <div className="label">Thanh toán</div>
+          </div>
+          <div className="step active">
+            <div className="icon">
+              <FaCheck />
+            </div>
+            <div className="label">Xác nhận đơn hàng</div>
+          </div>
         </div>
         <div className="shopping-cart-section">
           <h2>Xác nhận đơn hàng</h2>
