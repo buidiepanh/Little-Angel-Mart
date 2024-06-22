@@ -128,7 +128,8 @@ function Content() {
             ))}
         </Grid>
         <div className="xemthem">
-          <button>Xem thêm</button>
+          <Link to="/product-list"><button>Xem thêm</button></Link>
+            
           <div className="icon">
             <RightOutlined />
           </div>
