@@ -82,7 +82,9 @@ function Content() {
             vào năm 2022.
           </span>
           <div className="intro__but">
-          <Link to="/about"><button>Xem thêm</button></Link>
+            <Link to="/about">
+              <button>Xem thêm</button>
+            </Link>
             <div className="icon">
               <RightOutlined />
             </div>
@@ -106,11 +108,14 @@ function Content() {
                 <Item>
                   <Link to={`/ProductDetail/${product.id}`}>
                     <div className="product">
-                      <img src="src\image\binhsua.jpg" alt={product.name} />
-                      {/* <img
-                        src={product.productImage.publicUrl}
-                        alt={product.name}
-                      /> */}
+                      {/* <img src="src\image\binhsua.jpg" alt={product.name} /> */}
+                      {product.productImage?.publicUrl && (
+                        <img
+                          src={product.productImage.publicUrl}
+                          alt={product.name}
+                        />
+                      )}
+
                       <div className="product__info">
                         <h4>{product.name}</h4>
                         <div className="price">{product.productPrice}đ</div>
@@ -151,8 +156,8 @@ function Content() {
                           rel="noopener noreferrer"
                         >
                           <div className="article">
-                            <img src="src/image\content\article.jpg" alt="" />
-                            {/* <img src={post.image.publicUrl} alt={post.title} /> */}
+                            {/* <img src="src/image\content\article.jpg" alt="" /> */}
+                            <img src={post.image.publicUrl} alt={post.title} />
                             <div className="article__info">
                               <h4>{post.title}</h4>
                               <div>{post.content}</div>
@@ -161,9 +166,9 @@ function Content() {
                         </a>
                       ) : (
                         <div className="article">
-                            <img src="src/image\content\article.jpg" alt="" />
+                          {/* <img src="src/image\content\article.jpg" alt="" /> */}
 
-                          {/* <img src={post.image.publicUrl} alt={post.title} /> */}
+                          <img src={post.image.publicUrl} alt={post.title} />
                           <div className="article__info">
                             <h4>{post.title}</h4>
                             <div>{post.content}</div>
