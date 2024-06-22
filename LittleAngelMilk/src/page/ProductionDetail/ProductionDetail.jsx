@@ -36,7 +36,8 @@ function ProductionDetail() {
     <div className="product-detail-container">
       <div className="product-upper">
         <div className="product-image">
-          <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" />
+          {/* <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" /> */}
+          <img src={selectedProduct.productImage.publicUrl} />
         </div>
         <div className="product-info">
           <h1>{selectedProduct.name}</h1>
