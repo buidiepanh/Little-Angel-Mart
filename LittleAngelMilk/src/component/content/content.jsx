@@ -9,8 +9,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
-import toast, { Toaster } from 'react-hot-toast';
-
+import toast, { Toaster } from "react-hot-toast";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -58,15 +57,15 @@ function Content() {
 
   useEffect(() => {
     if (location.state?.fromLogin) {
-      toast.success('Đăng nhập thành công!', {
+      toast.success("Đăng nhập thành công!", {
         style: {
-          border: '1px solid #713200',
-          padding: '16px',
-          color: '#713200',
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
         },
         iconTheme: {
-          primary: '#713200',
-          secondary: '#FFFAEE',
+          primary: "#713200",
+          secondary: "#FFFAEE",
         },
       });
     }
@@ -136,7 +135,9 @@ function Content() {
                       )}
                       <div className="product__info">
                         <h4>{product.name}</h4>
-                        <div className="price">{product.productPrice.toLocaleString("vi-VN")}đ</div>
+                        <div className="price">
+                          {product.productPrice.toLocaleString("vi-VN")}đ
+                        </div>
                         <button>Xem thêm</button>
                       </div>
                     </div>
@@ -146,13 +147,15 @@ function Content() {
             ))}
         </Grid>
         <div className="xemthem">
-          <Link to="/product-list"><button>Xem thêm</button></Link>
+          <Link to="/product-list">
+            <button>Xem thêm</button>
+          </Link>
           <div className="icon">
             <RightOutlined />
           </div>
         </div>
       </div>
-      
+
       <div className="content__article">
         <div className="title">
           <h3>Các bài viết mới</h3>
@@ -175,6 +178,12 @@ function Content() {
                           rel="noopener noreferrer"
                         >
                           <div className="article">
+                            {post.image?.publicUrl && (
+                              <img
+                                src={post.image.publicUrl}
+                                alt={post.title}
+                              />
+                            )}
                             <div className="article__info">
                               <h4>{post.title}</h4>
                               <div>{post.content}</div>
@@ -183,6 +192,9 @@ function Content() {
                         </a>
                       ) : (
                         <div className="article">
+                          {post.image?.publicUrl && (
+                            <img src={post.image.publicUrl} alt={post.title} />
+                          )}
                           <div className="article__info">
                             <h4>{post.title}</h4>
                             <div>{post.content}</div>
@@ -196,9 +208,7 @@ function Content() {
           </Grid>
         </div>
       </div>
-      <Toaster 
-      position="bottom-right"
-  reverseOrder={false}/>
+      <Toaster position="bottom-right" reverseOrder={false} />
       <Footer />
     </div>
   );
