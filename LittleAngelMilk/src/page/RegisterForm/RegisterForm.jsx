@@ -4,6 +4,7 @@ import { gql, useMutation } from "@apollo/client";
 import "./RegisterForm.css";
 import milkImage from "../../assets/Logo.jpg";
 import { Link } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
 
 const REGISTER_MUTATION = gql`
   mutation Mutation($data: UserCreateInput!) {
@@ -95,13 +96,10 @@ const Register = () => {
           },
         });
         if (res.data) {
-          // nav qua trang product
-          navigate("/");
+          navigate("/login", { state: { fromRegister: true } });
         }
-        debugger;
       } catch (err) {
-        console.error("Mutation error:", err);
-        setErrors({ api: "An error occurred. Please try again." });
+        toast.error("Đã có lỗi xảy ra trong quá trình đăng ký!");
       }
     }
   };
@@ -192,6 +190,7 @@ const Register = () => {
           </form>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
