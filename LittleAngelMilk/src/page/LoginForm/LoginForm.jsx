@@ -136,15 +136,14 @@ const LoginForm = () => {
           <Link to="/" className="btn_icon_back">
             <IoReturnDownBackOutline /> Quay lại trang chủ
           </Link>
-
-              Đăng ký
-            </Link>
           </form>
 
           {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
         </div>
-        <Toaster />
-      </div>    
+       
+      </div>
+      <Toaster />   
+      </div> 
   );
 };
 
