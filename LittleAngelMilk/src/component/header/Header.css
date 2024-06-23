@@ -236,3 +236,18 @@
     position: static;
   }
 }
+
+.logo a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo img {
+  margin-right: 10px;
+}
+
+.logo .Title {
+  margin: 0;
+}

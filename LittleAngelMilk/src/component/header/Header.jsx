@@ -7,6 +7,7 @@ import { FaAngleDown } from "react-icons/fa";
 import { BsCartCheck } from "react-icons/bs";
 import "./Header.css";
 
+
 const Header = () => {
   const navigate = useNavigate();
   const [menuVisible, setMenuVisible] = useState(false);
@@ -36,11 +37,12 @@ const Header = () => {
     <div className="Header">
       <div className="FirstLayer">
         <div className="logo">
-          <img src="src/assets/raw_logo.png" alt="Logo" />
-          <p className="Title">
-            Little <span className="Angel">Angel</span> Milk
-          </p>
+          <Link to="/">
+            <img src="src/assets/raw_logo.png" alt="Logo" />
+            <p className="Title">Little <span className="Angel">Angel</span> Milk</p>
+          </Link>
         </div>
+
         <div className="SearchBar">
           <input type="text" placeholder="Search..." />
           <div className="SearchBtn">
@@ -118,7 +120,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <Link to="/posts">Bài viết</Link>
+        <Link to="/#articles">Bài viết</Link>
         <Link to="/voucher">Voucher</Link>
         
       </div>

@@ -7,7 +7,6 @@ import { useQuery, gql } from "@apollo/client";
 import Header from "../../component/header/Header"
 import Footer from "../../component/footer/footer";;
 
-
 function ProductionDetail() {
   const GET_PRODUCT = gql`
     query Products {
@@ -36,8 +35,8 @@ function ProductionDetail() {
     <div className="product-detail-container">
       <div className="product-upper">
         <div className="product-image">
-          {/* <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" /> */}
-          <img src={selectedProduct.productImage.publicUrl} />
+          <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" />
+          
         </div>
         <div className="product-info">
           <h1>{selectedProduct.name}</h1>

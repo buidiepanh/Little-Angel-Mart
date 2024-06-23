@@ -29,8 +29,8 @@ const App = () => {
           <Route path="/PaymentPage" element={<Payment />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/product-list" element={<ProductList />} />
-
           <Route path="/OrderConfirmation" element={<OrderConfirmation/>} />
+          
         </Routes>
       </Router>
     </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import './AboutUsPage.css'; 
 import backgroundImage from '../../assets/aboutus.jpg';
 import Header from "../../component/header/Header";
+import Footer from "../../component/footer/footer";
 
 function AboutUsPage() {
   return (
@@ -24,8 +25,9 @@ function AboutUsPage() {
         <li>Phone: 0123 456 789</li>
         <li>Địa chỉ: 123 Đường ABC, Quận 1, TP. HCM</li>
       </ul>
-      <Link to="/" className="back-button">Quay Lại</Link>
+      <Link to="/" className="back-button2">Quay Lại</Link>
      </div>
+      <Footer />
     </div>
   );
 }
