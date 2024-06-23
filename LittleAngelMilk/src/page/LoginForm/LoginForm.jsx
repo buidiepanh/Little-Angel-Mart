@@ -5,6 +5,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LOGO from "../../assets/Logo.jpg";
 import "./LoginForm.css";
 import { useMutation, gql } from "@apollo/client";
+import { IoReturnDownBackOutline } from "react-icons/io5";
 import toast, { Toaster } from 'react-hot-toast';
 
 const LOGIN_MUTATION = gql`
@@ -129,15 +130,21 @@ const LoginForm = () => {
               Đăng nhập
             </button>
             <Link to="/register" className="btn btn_signup">
+            Đăng ký
+          </Link>
+
+          <Link to="/" className="btn_icon_back">
+            <IoReturnDownBackOutline /> Quay lại trang chủ
+          </Link>
+
               Đăng ký
             </Link>
           </form>
 
           {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
         </div>
-      </div>
-      <Toaster />
-    </div>
+        <Toaster />
+      </div>    
   );
 };
 
