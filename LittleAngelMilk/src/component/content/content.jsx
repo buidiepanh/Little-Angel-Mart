@@ -19,8 +19,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-
-
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -84,15 +82,13 @@ function Content() {
     error: postError,
   } = useQuery(GET_POST);
 
-
   const { pathname, hash } = location;
 
-
   useEffect(() => {
-    if (hash === '#articles') {
-      const element = document.getElementById('articles-section');
+    if (hash === "#articles") {
+      const element = document.getElementById("articles-section");
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: "smooth" });
       }
     }
   }, [pathname, hash]);
@@ -102,8 +98,6 @@ function Content() {
 
   console.log(productData);
   console.log(postData);
-
-  
 
   return (
     <div className="content">
@@ -118,7 +112,9 @@ function Content() {
             vào năm 2022.
           </span>
           <div className="intro__but">
-          <Link to="/about"><button>Xem thêm</button></Link>
+            <Link to="/about">
+              <button>Xem thêm</button>
+            </Link>
             <div className="icon">
               <RightOutlined />
             </div>
@@ -161,8 +157,7 @@ function Content() {
               </Grid>
             ))}
         </Grid>
-        <div id="articles-section" className="content__articles">  
-        </div>
+        <div id="articles-section" className="content__articles"></div>
         <div className="xemthem">
           <Link to="/product-list">
             <button>Xem thêm</button>
@@ -171,7 +166,6 @@ function Content() {
             <RightOutlined />
           </div>
         </div>
-
       </div>
 
       <div className="content__article">
@@ -179,7 +173,7 @@ function Content() {
           <h3>Các bài viết mới</h3>
           <a href="#">Xem thêm</a>
         </div>
-        
+
         <div className="content__articles">
           <Grid container spacing={2}>
             {postData &&
