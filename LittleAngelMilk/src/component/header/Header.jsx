@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { IoIosHome } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
 import { BsCartCheck } from "react-icons/bs";
+import { useQuery, gql } from "@apollo/client";
 import "./Header.css";
-
 const Header = () => {
   const navigate = useNavigate();
   const [menuVisible, setMenuVisible] = useState(false);
   const [username, setUsername] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [productList, setProductList] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
@@ -31,6 +32,37 @@ const Header = () => {
     navigate("/login");
   };
 
+  const handleSearchValue = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const GET_PRODUCT = gql`
+    query Products {
+      products {
+        id
+        name
+        category {
+          name
+        }
+        productDescription
+        productImage {
+          publicUrl
+        }
+        productPrice
+      }
+    }
+  `;
+
+  const { data } = useQuery(GET_PRODUCT);
+
+  const handleSearch = () => {
+    const availableProducts = data.products.filter((product) =>
+      product.name.toLowerCase().includes(searchValue)
+    );
+    setProductList([...productList, availableProducts]);
+    console.log(availableProducts);
+  };
+
   return (
     <div className="Header">
       <div className="FirstLayer">
@@ -41,24 +73,32 @@ const Header = () => {
           </p>
         </div>
         <div className="SearchBar">
-          <input type="text" placeholder="Search..." />
+          <input
+            type="text"
+            placeholder="Search..."
+            onChange={handleSearchValue}
+          />
           <div className="SearchBtn">
-            <Link to="/">
-              <FaMagnifyingGlass className="SearchCircle" />
+            <Link to={`/product-list/:${productList}`}>
+              <FaMagnifyingGlass
+                className="SearchCircle"
+                onClick={handleSearch}
+              />
             </Link>
           </div>
         </div>
         <div className="FirstLayerRight">
           <div className="OrderListBtn">
             <div>
-              
               {username ? (
-              <Link to="/orderList">
-              <BsCartCheck className="UserCircle" />
-            </Link>): (
+                <Link to="/orderList">
+                  <BsCartCheck className="UserCircle" />
+                </Link>
+              ) : (
                 <Link to="/login">
-                <BsCartCheck  className="UserCircle" />
-              </Link>)}
+                  <BsCartCheck className="UserCircle" />
+                </Link>
+              )}
             </div>
             <div className="btnDesc">Đơn hàng</div>
           </div>
@@ -66,13 +106,14 @@ const Header = () => {
           <div className="CartBtn">
             <div>
               {username ? (
-              <Link to="/cart">
-                <FaShoppingCart className="CartCircle" />
-              </Link>): (
+                <Link to="/cart">
+                  <FaShoppingCart className="CartCircle" />
+                </Link>
+              ) : (
                 <Link to="/login">
-                <FaShoppingCart className="CartCircle" />
-              </Link>)}
-              
+                  <FaShoppingCart className="CartCircle" />
+                </Link>
+              )}
             </div>
             <div className="btnDesc">Giỏ hàng</div>
           </div>
@@ -119,7 +160,6 @@ const Header = () => {
         </div>
         <Link to="/posts">Bài viết</Link>
         <Link to="/voucher">Voucher</Link>
-        
       </div>
     </div>
   );

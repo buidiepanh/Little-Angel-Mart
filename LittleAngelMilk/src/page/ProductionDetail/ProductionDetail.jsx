@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./ProductionDetail.css";
 import productImage from "../../image/binhsua.jpg";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 
 function ProductionDetail() {
@@ -41,7 +41,11 @@ function ProductionDetail() {
           <ProductCounter />
           <div className="product-actions">
             <button className="button-large btn-buy">Mua ngay</button>
-            <button className="button-large btn-cart">Thêm vào giỏ hàng</button>
+            <Link to="/cart">
+              <button className="button-large btn-cart">
+                Thêm vào giỏ hàng
+              </button>
+            </Link>
           </div>
         </div>
       </div>

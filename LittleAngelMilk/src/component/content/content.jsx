@@ -82,7 +82,9 @@ function Content() {
             vào năm 2022.
           </span>
           <div className="intro__but">
-          <Link to="/about"><button>Xem thêm</button></Link>
+            <Link to="/about">
+              <button>Xem thêm</button>
+            </Link>
             <div className="icon">
               <RightOutlined />
             </div>
@@ -113,7 +115,9 @@ function Content() {
                       /> */}
                       <div className="product__info">
                         <h4>{product.name}</h4>
-                        <div className="price">{product.productPrice}đ</div>
+                        <div className="price">
+                          {product.productPrice.toLocaleString("vi-VN")}đ
+                        </div>
                         <button>Xem thêm</button>
                       </div>
                     </div>
@@ -123,8 +127,10 @@ function Content() {
             ))}
         </Grid>
         <div className="xemthem">
-          <Link to="/product-list"><button>Xem thêm</button></Link>
-            
+          <Link to="/product-list">
+            <button>Xem thêm</button>
+          </Link>
+
           <div className="icon">
             <RightOutlined />
           </div>
