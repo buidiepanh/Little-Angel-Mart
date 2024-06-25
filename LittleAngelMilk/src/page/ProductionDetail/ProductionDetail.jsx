@@ -43,21 +43,6 @@ function ProductionDetail() {
             )}
             {/* <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" /> */}
           </div>
-<<<<<<< HEAD
-          <ProductCounter />
-          <div className="product-actions">
-            <button className="button-large btn-buy">Mua ngay</button>
-            <Link to="/cart">
-              <button className="button-large btn-cart">
-                Thêm vào giỏ hàng
-              </button>
-            </Link>
-||||||| 4e0d5db
-          <ProductCounter />
-          <div className="product-actions">
-            <button className="button-large btn-buy">Mua ngay</button>
-            <button className="button-large btn-cart">Thêm vào giỏ hàng</button>
-=======
           <div className="product-info">
             <h1>{selectedProduct.name}</h1>
             <div className="product-price">
@@ -85,7 +70,6 @@ function ProductionDetail() {
             <h2>Bình luận</h2>
             <textarea placeholder="Hãy viết nội dung..."></textarea>
             <button>Submit Comment</button>
->>>>>>> main
           </div>
         </div>
       </div>

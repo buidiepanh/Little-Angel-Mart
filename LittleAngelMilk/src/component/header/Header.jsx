@@ -12,7 +12,6 @@ const Header = () => {
   const [username, setUsername] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [productList, setProductList] = useState([]);
-
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
     const user = localStorage.getItem("username");

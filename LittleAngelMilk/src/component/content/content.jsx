@@ -124,13 +124,6 @@ function Content() {
       </div>
       <div className="content__foryou">
         <h3>Dành cho bạn</h3>
-        <div className="navbar">
-          <a href="#">Sữa cho bé</a>
-          <a href="#">Đồ chơi cho bé</a>
-          <a href="#">Quần áo cho bé</a>
-          <a href="#">Vệ sinh cho bé</a>
-          <a href="#">Dụng cụ cho bé</a>
-        </div>
         <Grid container spacing={2}>
           {productData &&
             productData.products.map((product) => (
