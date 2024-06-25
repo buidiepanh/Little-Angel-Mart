@@ -1,4 +1,16 @@
 
+.sort-container{
+  position: fixed;
+  left: 0;
+  top: 170px;
+  height: 260px;
+  width: 160px;
+  background-color: #5082bf;
+  z-index: 2;
+  padding: 20px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
 .product-list-container {
     max-width: 1000px; 
     margin: 0 auto; 
@@ -8,7 +20,7 @@
     border-radius: 10px;
     margin-top: 200px;
   }
-  
+    
   .products {
     display: grid;
     grid-template-columns: repeat(4, 1fr); 
@@ -60,15 +72,18 @@
 
   .sort-container select {
     padding: 5px;
+    width: 159px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-left: 10px;
+    margin-top: 7px;
+    margin-bottom: 10px;
+    background-color: white;
   }
-  
-  .sort-container select {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+
+  .sort-container label{
+    margin-top: 7px;
+    font-family: 'Roboto', sans-serif;
+    color: white;
   }
 
   .product-list-page {

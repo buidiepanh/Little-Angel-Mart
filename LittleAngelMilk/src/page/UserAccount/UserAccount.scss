@@ -1,0 +1,60 @@
+.layer{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+
+    .user{
+        width: 300px;
+        background-color: rgb(139, 207, 229);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 10px;
+        gap: 20px;
+        padding: 30px;
+        &__ava{
+            font-size: 100px;
+            color: white;
+        }
+    }
+    .info{
+        width: 400px;
+        background-color: lightblue;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        border-radius: 10px;
+        padding: 30px;
+        &__form{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+
+    button{
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+        background-color: #5082bf;
+        color: white;
+        cursor: pointer;
+    }
+    button:hover{
+        background-color: #23528c;
+    }
+    input{
+        padding: 10px 20px;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        outline: none;
+    }
+    span{
+        font-weight: 600;
+    }
+}

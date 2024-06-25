@@ -9,9 +9,10 @@ import Content from "./component/content/content";
 import CustomerInfo from "./page/CustomerInfo/CustomerInfo";
 import Payment from "./page/PaymentPage/payment";
 import AboutUsPage from "./page/AboutUsPage/AboutUsPage";
-import ProductList from './page/ProductList/ProductList';
+import ProductList from "./page/ProductList/ProductList";
 
 import OrderConfirmation from "./page/OrderConfirmation/OrderConfirmation";
+import UserAccount from "./page/UserAccount/UserAccount";
 
 const App = () => {
   return (
@@ -23,14 +24,15 @@ const App = () => {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/" element={<Content />} />
-          <Route path="/Cart" element={<CartPage />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/CustomerCartInfo" element={<CustomerInfo />} />
           <Route path="/ProductDetail/:id" element={<ProductionDetail />} />
           <Route path="/PaymentPage" element={<Payment />} />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/product-list" element={<ProductList />} />
-          <Route path="/OrderConfirmation" element={<OrderConfirmation/>} />
-          
+          <Route path="/product-list/:search" element={<ProductList />} />
+          <Route path="/profile" element={<UserAccount />} />
+          <Route path="/OrderConfirmation" element={<OrderConfirmation />} />
         </Routes>
       </Router>
     </div>
