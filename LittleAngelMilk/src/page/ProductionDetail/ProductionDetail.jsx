@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import "./ProductionDetail.css";
 import productImage from "../../image/binhsua.jpg";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
-import { useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
@@ -29,7 +30,19 @@ function ProductionDetail() {
   const { data } = useQuery(GET_PRODUCT);
   const selectedProduct = data.products.find((product) => product.id === id);
   console.log(selectedProduct);
+  const navigate = useNavigate();
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("sessionToken");
+    const user = localStorage.getItem("username");
+    if (token && user) {
+      setUsername(user);
+    }
+  }, []);
   return (
+    
     <div>
       <Header />
       <div className="product-detail-container">
@@ -49,12 +62,20 @@ function ProductionDetail() {
               {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
             </div>
             <ProductCounter />
-            <div className="product-actions">
+            {username ? (<div className="product-actions">
               <button className="button-large btn-buy">Mua ngay</button>
               <button className="button-large btn-cart">
                 Thêm vào giỏ hàng
               </button>
+            </div>):(
+              <div className="product-actions">
+              <Link to='/Login'><button className="button-large btn-buy">Mua ngay</button></Link>
+              <Link to ='/Login'><button className="button-large btn-cart">
+                Thêm vào giỏ hàng
+              </button></Link>
             </div>
+            )}
+            
           </div>
         </div>
         <div className="product-lower">
