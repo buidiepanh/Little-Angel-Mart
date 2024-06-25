@@ -1,14 +1,15 @@
 import { RightOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./content.scss";
 import Carousel from "../carousel/carousel";
 import Header from "../header/Header";
 import Footer from "../footer/footer";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, gql } from "@apollo/client";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -52,6 +53,24 @@ const GET_POST = gql`
 `;
 
 function Content() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.fromLogin) {
+      toast.success("Đăng nhập thành công!", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+        iconTheme: {
+          primary: "#713200",
+          secondary: "#FFFAEE",
+        },
+      });
+    }
+  }, [location.state]);
+
   const {
     data: productData,
     loading: productLoading,
@@ -62,6 +81,17 @@ function Content() {
     loading: postLoading,
     error: postError,
   } = useQuery(GET_POST);
+
+  const { pathname, hash } = location;
+
+  useEffect(() => {
+    if (hash === "#articles") {
+      const element = document.getElementById("articles-section");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [pathname, hash]);
 
   if (productLoading || postLoading) return <p>Loading</p>;
   if (productError || postError) return <p>Error</p>;
@@ -90,7 +120,7 @@ function Content() {
             </div>
           </div>
         </div>
-        <img src="src/image\content\milk.jpg"></img>
+        <img src="src/image\content\milk.jpg" alt="Little Angel Milk"></img>
       </div>
       <div className="content__foryou">
         <h3>Dành cho bạn</h3>
@@ -108,11 +138,12 @@ function Content() {
                 <Item>
                   <Link to={`/ProductDetail/${product.id}`}>
                     <div className="product">
-                      <img src="src\image\binhsua.jpg" alt={product.name} />
-                      {/* <img
-                        src={product.productImage.publicUrl}
-                        alt={product.name}
-                      /> */}
+                      {product.productImage?.publicUrl && (
+                        <img
+                          src={product.productImage.publicUrl}
+                          alt={product.name}
+                        />
+                      )}
                       <div className="product__info">
                         <h4>{product.name}</h4>
                         <div className="price">
@@ -126,21 +157,23 @@ function Content() {
               </Grid>
             ))}
         </Grid>
+        <div id="articles-section" className="content__articles"></div>
         <div className="xemthem">
           <Link to="/product-list">
             <button>Xem thêm</button>
           </Link>
-
           <div className="icon">
             <RightOutlined />
           </div>
         </div>
       </div>
+
       <div className="content__article">
         <div className="title">
           <h3>Các bài viết mới</h3>
           <a href="#">Xem thêm</a>
         </div>
+
         <div className="content__articles">
           <Grid container spacing={2}>
             {postData &&
@@ -158,8 +191,12 @@ function Content() {
                           rel="noopener noreferrer"
                         >
                           <div className="article">
-                            <img src="src/image\content\article.jpg" alt="" />
-                            {/* <img src={post.image.publicUrl} alt={post.title} /> */}
+                            {post.image?.publicUrl && (
+                              <img
+                                src={post.image.publicUrl}
+                                alt={post.title}
+                              />
+                            )}
                             <div className="article__info">
                               <h4>{post.title}</h4>
                               <div>{post.content}</div>
@@ -168,8 +205,9 @@ function Content() {
                         </a>
                       ) : (
                         <div className="article">
-                          <img src="src/image\content\article.jpg" alt="" />
-                          {/* <img src={post.image.publicUrl} alt={post.title} /> */}
+                          {post.image?.publicUrl && (
+                            <img src={post.image.publicUrl} alt={post.title} />
+                          )}
                           <div className="article__info">
                             <h4>{post.title}</h4>
                             <div>{post.content}</div>
@@ -181,23 +219,9 @@ function Content() {
                 );
               })}
           </Grid>
-
-          {/* <div className="article">
-            <img src="src/image\content\article.jpg" alt="" />
-            <div className="article__info">
-              <h4>
-                Sữa Hàn Quốc cho bé loại nào tốt? Mách mẹ địa chỉ mua sữa bột
-                Hàn Quốc uy tín
-              </h4>
-              <div>
-                Trên thị trường hiện nay, bên cạnh nhiều dòng sữa bột trẻ em đến
-                từ các cường quốc hàng đầu về dinh dưỡng như Mỹ, Đức, Anh, Nhật
-                Bản,…
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
+      <Toaster position="bottom-right" reverseOrder={false} />
       <Footer />
     </div>
   );

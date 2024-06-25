@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
 import LOGO from "../../assets/Logo.jpg";
 import "./LoginForm.css";
 import { useMutation, gql } from "@apollo/client";
+import { IoReturnDownBackOutline } from "react-icons/io5";
+import toast, { Toaster } from 'react-hot-toast';
 
 const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
@@ -27,6 +29,7 @@ const LOGIN_MUTATION = gql`
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [input, setInput] = useState({
     password: "",
     email: "",
@@ -42,6 +45,7 @@ const LoginForm = () => {
         console.log(error);
       });
   };
+
   const [errorMess, setErrorMess] = useState("");
 
   const handleChange = (e) => {
@@ -65,7 +69,7 @@ const LoginForm = () => {
         localStorage.setItem("sessionToken", sessionToken);
         localStorage.setItem("username", item.name);
         setErrorMess("");
-        navigate("/");
+        navigate("/", { state: { fromLogin: true } });
       } else if (res.data.authenticateUserWithPassword.message) {
         setErrorMess(res.data.authenticateUserWithPassword.message);
       }
@@ -75,6 +79,12 @@ const LoginForm = () => {
     }
   }
 
+  useEffect(() => {
+    if (location.state?.fromRegister) {
+      toast.success('Đăng ký thành công!');
+    }
+  }, [location.state]);
+
   return (
     <div className="container">
       <div className="formLogin">
@@ -82,9 +92,8 @@ const LoginForm = () => {
           <img src={LOGO} alt="Logo" />
         </div>
         <div className="form-container">
-          
           <form method="POST" className="loginForm" onSubmit={handleSubmit}>
-          <h2>Login</h2>
+            <h2>Login</h2>
             <label htmlFor="username">Email đăng nhập</label>
             <div className="form_input">
               <input
@@ -123,13 +132,18 @@ const LoginForm = () => {
             <Link to="/register" className="btn btn_signup">
             Đăng ký
           </Link>
+
+          <Link to="/" className="btn_icon_back">
+            <IoReturnDownBackOutline /> Quay lại trang chủ
+          </Link>
           </form>
-          
 
           {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
         </div>
+       
       </div>
-    </div>
+      <Toaster />   
+      </div> 
   );
 };
 

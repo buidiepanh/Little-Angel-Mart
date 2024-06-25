@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
-import './RegisterForm.css';
-import milkImage from '../../assets/Logo.jpg';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+import "./RegisterForm.css";
+import milkImage from "../../assets/Logo.jpg";
+import { Link } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
 
 const REGISTER_MUTATION = gql`
   mutation Mutation($data: UserCreateInput!) {
@@ -13,62 +14,50 @@ const REGISTER_MUTATION = gql`
       userEmail
       userPhone
       userPassword {
-      isSet
-    }    
+        isSet
+      }
     }
   }
 `;
 
 const Register = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [userAddress, setUserAddress] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userPhone, setUserPhone] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [userAddress, setUserAddress] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [register, { loading }] = useMutation(REGISTER_MUTATION, {
-    onError: (error) => {
-      console.error('error:', error);
-      setErrors({ api: error.message || 'An error occurred. Please try again.' });
-    },
-    onCompleted: (data) => {
-      if (data.createUser.id) {
-        navigate('/login');
-      } else {
-        setErrors({ api: 'An unexpected error occurred. Please try again.' });
-      }
-    }
-  });
+  const [register, { loading }] = useMutation(REGISTER_MUTATION);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const forbiddenWords = ['cấm'];
+    const forbiddenWords = ["cấm"];
     if (
       email.length > 254 ||
       !emailRegex.test(email) ||
-      email.includes(' ') ||
-      forbiddenWords.some(word => email.includes(word)) ||
-      email.startsWith('.') ||
-      email.endsWith('.')
+      email.includes(" ") ||
+      forbiddenWords.some((word) => email.includes(word)) ||
+      email.startsWith(".") ||
+      email.endsWith(".")
     ) {
-      return 'Địa chỉ email không hợp lệ.';
+      return "Địa chỉ email không hợp lệ.";
     }
     return null;
   };
 
   const validatePassword = (password) => {
     if (password.length < 5 || password.length > 20) {
-      return 'Mật khẩu phải có từ 5 đến 20 ký tự.';
+      return "Mật khẩu phải có từ 5 đến 20 ký tự.";
     }
     return null;
   };
 
   const validatePhoneNumber = (phoneNumber) => {
-    const phoneNumberRegex = /^\d+$/;
+    const phoneNumberRegex = /^\d{10}$/;
     if (!phoneNumberRegex.test(phoneNumber)) {
-      return 'Số điện thoại chỉ chứa chữ số.';
+      return 'Số điện thoại phải có đúng 10 chữ số.';
     }
     return null;
   };
@@ -77,7 +66,8 @@ const Register = () => {
     e.preventDefault();
     const emailError = validateEmail(userEmail);
     const passwordError = validatePassword(userPassword);
-    const confirmPasswordError = userPassword !== confirmPassword ? 'Mật khẩu xác nhận không khớp.' : null;
+    const confirmPasswordError =
+      userPassword !== confirmPassword ? "Mật khẩu xác nhận không khớp." : null;
     const phoneNumberError = validatePhoneNumber(userPhone);
 
     setErrors({
@@ -87,9 +77,14 @@ const Register = () => {
       userPhone: phoneNumberError,
     });
 
-    if (!emailError && !passwordError && !confirmPasswordError && !phoneNumberError) {
+    if (
+      !emailError &&
+      !passwordError &&
+      !confirmPasswordError &&
+      !phoneNumberError
+    ) {
       try {
-        await register({
+        const res = await register({
           variables: {
             data: {
               name,
@@ -100,21 +95,23 @@ const Register = () => {
             },
           },
         });
+        if (res.data) {
+          navigate("/login", { state: { fromRegister: true } });
+        }
       } catch (err) {
-        console.error('Mutation error:', err);
-        setErrors({ api: 'An error occurred. Please try again.' });
+        toast.error("Đã có lỗi xảy ra trong quá trình đăng ký!");
       }
     }
   };
 
   return (
     <div className="container">
-      <div className='registerForm'>
+      <div className="registerForm">
         <div className="image-container">
           <img src={milkImage} alt="Little Angel Milk" />
         </div>
         <div className="form-container-register">
-          <form onSubmit={handleSubmit} className='regForm'>
+          <form onSubmit={handleSubmit} className="regForm">
             <h2>Đăng ký</h2>
             <label>Họ tên</label>
             <input
@@ -122,7 +119,7 @@ const Register = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Nhập họ tên"
-              className='registerInput'
+              className="registerInput"
             />
 
             <label>Địa chỉ</label>
@@ -131,7 +128,7 @@ const Register = () => {
               value={userAddress}
               onChange={(e) => setUserAddress(e.target.value)}
               placeholder="Nhập địa chỉ"
-              className='registerInput'
+              className="registerInput"
             />
 
             <label>Địa chỉ Email</label>
@@ -140,7 +137,7 @@ const Register = () => {
               value={userEmail}
               onChange={(e) => setUserEmail(e.target.value)}
               placeholder="Nhập địa chỉ Email"
-              className='registerInput'
+              className="registerInput"
             />
             {errors.userEmail && <p className="error">{errors.userEmail}</p>}
 
@@ -150,7 +147,7 @@ const Register = () => {
               value={userPhone}
               onChange={(e) => setUserPhone(e.target.value)}
               placeholder="Nhập số điện thoại"
-              className='registerInput'
+              className="registerInput"
             />
             {errors.userPhone && <p className="error">{errors.userPhone}</p>}
 
@@ -160,9 +157,11 @@ const Register = () => {
               value={userPassword}
               onChange={(e) => setUserPassword(e.target.value)}
               placeholder="Nhập mật khẩu"
-              className='registerInput'
+              className="registerInput"
             />
-            {errors.userPassword && <p className="error">{errors.userPassword}</p>}
+            {errors.userPassword && (
+              <p className="error">{errors.userPassword}</p>
+            )}
 
             <label>Xác nhận mật khẩu</label>
             <input
@@ -170,23 +169,28 @@ const Register = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Nhập lại mật khẩu"
-              className='registerInput'
+              className="registerInput"
             />
-            {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+            {errors.confirmPassword && (
+              <p className="error">{errors.confirmPassword}</p>
+            )}
 
             {errors.api && <p className="error">{errors.api}</p>}
 
-            <div className='registerFormBtns'>
-              <Link to='/login' className='backLink'>
-                <button type='button' className='backBtn'>Quay lại</button>
+            <div className="registerFormBtns">
+              <Link to="/login" className="backLink">
+                <button type="button" className="backBtn">
+                  Quay lại
+                </button>
               </Link>
-              <button type="submit" className='registerBtn'>
-                {loading ? 'Đang xử lý...' : 'Tạo tài khoản'}
+              <button type="submit" className="registerBtn">
+                {loading ? "Đang xử lý..." : "Tạo tài khoản"}
               </button>
             </div>
           </form>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
