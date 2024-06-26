@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import "./ProductionDetail.css";
 import productImage from "../../image/binhsua.jpg";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
@@ -30,7 +31,6 @@ function ProductionDetail() {
   const selectedProduct = data.products.find((product) => product.id === id);
   console.log(selectedProduct);
   const navigate = useNavigate();
-  const [menuVisible, setMenuVisible] = useState(false);
   const [username, setUsername] = useState("");
 
   useEffect(() => {
