@@ -2,8 +2,12 @@ import React, { Component, useState } from "react";
 import "./ProductionDetail.css";
 import productImage from "../../image/binhsua.jpg";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
-import { Link, useParams } from "react-router-dom";
-import { useQuery, gql, useMutation } from "@apollo/client";
+
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useQuery, gql } from "@apollo/client";
+
+
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 
@@ -49,6 +53,18 @@ function ProductionDetail() {
   const selectedProduct = data.products.find((product) => product.id === id);
   console.log(selectedProduct);
 
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("sessionToken");
+    const user = localStorage.getItem("username");
+    if (token && user) {
+      setUsername(user);
+    }
+  }, []);
+
+
   //Feedback
   const [inputFeedback, setInput] = useState({
     comment: "",
@@ -88,7 +104,9 @@ function ProductionDetail() {
 
   console.log(inputFeedback);
 
+
   return (
+    
     <div>
       <Header />
       <div className="product-detail-container">
@@ -108,12 +126,20 @@ function ProductionDetail() {
               {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
             </div>
             <ProductCounter />
-            <div className="product-actions">
+            {username ? (<div className="product-actions">
               <button className="button-large btn-buy">Mua ngay</button>
               <button className="button-large btn-cart">
                 Thêm vào giỏ hàng
               </button>
+            </div>):(
+              <div className="product-actions">
+              <Link to='/Login'><button className="button-large btn-buy">Mua ngay</button></Link>
+              <Link to ='/Login'><button className="button-large btn-cart">
+                Thêm vào giỏ hàng
+              </button></Link>
             </div>
+            )}
+            
           </div>
         </div>
         <div className="product-lower">
