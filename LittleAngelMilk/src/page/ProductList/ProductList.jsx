@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import "./ProductList.css";
-import Header from "../../component/header/Header";
 import { useQuery, gql } from "@apollo/client";
 import img1 from "/src/assets/anh1.png";
 import { Link, useParams } from "react-router-dom";
+import Header from "../../component/header/Header";
 // import img2 from "/src/assets/anh2.png";
 // import img3 from "/src/assets/anh3.png";
 // import img4 from "/src/assets/anh4.png";
@@ -75,8 +75,8 @@ function ProductsList() {
     return priceCondition && categoryCondition && searchCondition;
   });
   useEffect(() => {
-    console.log(productCategory);
-  }, [productCategory]);
+    console.log(searchValue);
+  }, [searchValue]);
   return (
     <div>
       <Header />

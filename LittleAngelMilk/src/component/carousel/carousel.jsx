@@ -16,22 +16,22 @@ function Carousel() {
       className="carousel"
     >
       <SwiperSlide>
-        <img src="src/image\carousel_images\img1.jpg"></img>
+        <img src="src/image\carousel_images\banner1.jpg"></img>
       </SwiperSlide>
       <SwiperSlide>
-        <img src="src/image\carousel_images\img2.jpg"></img>
+        <img src="src/image\carousel_images\banner2.jpg"></img>
       </SwiperSlide>
       <SwiperSlide>
-        <img src="src/image\carousel_images\img3.jpg"></img>
+        <img src="src/image\carousel_images\banner3.jpg"></img>
       </SwiperSlide>
       <SwiperSlide>
-        <img src="src/image\carousel_images\img4.jpg"></img>
+        <img src="src/image\carousel_images\banner4.jpg"></img>
       </SwiperSlide>
       <SwiperSlide>
-        <img src="src/image\carousel_images\img5.jpg"></img>
+        <img src="src/image\carousel_images\banner5.jpg"></img>
       </SwiperSlide>
       <SwiperSlide>
-        <img src="src/image\carousel_images\img6.jpg"></img>
+        <img src="src/image\carousel_images\banner6.jpg"></img>
       </SwiperSlide>
     </Swiper>
   );
