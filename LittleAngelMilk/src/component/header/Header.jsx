@@ -60,7 +60,8 @@ const Header = () => {
     const availableProducts = data.products.filter((product) =>
       product.name.toLowerCase().includes(searchValue)
     );
-    setProductList(availableProducts);
+    setProductList([...productList, availableProducts]);
+    console.log(productList);
   };
   useEffect(() => {
     console.log(productList);

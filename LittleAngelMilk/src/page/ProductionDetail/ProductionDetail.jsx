@@ -1,35 +1,112 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import "./ProductionDetail.css";
 import productImage from "../../image/binhsua.jpg";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
-import { Link, useParams } from "react-router-dom";
+
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
+
+
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 
-function ProductionDetail() {
-  const GET_PRODUCT = gql`
-    query Products {
-      products {
-        id
+const GET_PRODUCT = gql`
+  query Products {
+    products {
+      id
+      name
+      category {
         name
-        category {
-          name
-        }
-        productDescription
-        productImage {
-          publicUrl
-        }
-        productPrice
       }
+      productDescription
+      productImage {
+        publicUrl
+      }
+      productPrice
     }
-  `;
+  }
+`;
 
+// mutation Mutation(
+//   $user: UserWhereUniqueInput
+//   $product: ProductWhereUniqueInput
+//   $comment: String
+// ) {
+//   createFeedback(user: $user, product: $product, comment: $comment) {
+//     comment
+//   }
+// }
+
+const FEEDBACK_MUTATION = gql`
+  mutation Mutation($data: FeedbackCreateInput!) {
+    createFeedback(data: $data) {
+      comment
+    }
+  }
+`;
+
+function ProductionDetail() {
+  //Product
   const { id } = useParams();
   const { data } = useQuery(GET_PRODUCT);
   const selectedProduct = data.products.find((product) => product.id === id);
   console.log(selectedProduct);
+
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("sessionToken");
+    const user = localStorage.getItem("username");
+    if (token && user) {
+      setUsername(user);
+    }
+  }, []);
+
+
+  //Feedback
+  const [inputFeedback, setInput] = useState({
+    comment: "",
+  });
+
+  const userId = localStorage.getItem("userId"); //Get userId from localStorage
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInput({
+      [name]: value,
+    });
+  };
+
+  async function handleSubmit(e) {
+    try {
+      const feedback = await createFeedback({
+        variables: {
+          data: {
+            product: { connect: { id: selectedProduct.id } },
+            user: { connect: { id: userId } },
+            comment: inputFeedback.comment,
+          },
+        },
+      });
+      alert("Feedback submitted successfully!");
+      setInput({ comment: "" });
+    } catch (err) {
+      console.error("Error submitting feedback:", err);
+      alert(`Error submitting feedback: ${err.message}`);
+    }
+  }
+
+  const [createFeedback] = useMutation(FEEDBACK_MUTATION, {
+    variables: inputFeedback,
+  });
+
+  console.log(inputFeedback);
+
+
   return (
+    
     <div>
       <Header />
       <div className="product-detail-container">
@@ -49,12 +126,20 @@ function ProductionDetail() {
               {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
             </div>
             <ProductCounter />
-            <div className="product-actions">
+            {username ? (<div className="product-actions">
               <button className="button-large btn-buy">Mua ngay</button>
               <button className="button-large btn-cart">
                 Thêm vào giỏ hàng
               </button>
+            </div>):(
+              <div className="product-actions">
+              <Link to='/Login'><button className="button-large btn-buy">Mua ngay</button></Link>
+              <Link to ='/Login'><button className="button-large btn-cart">
+                Thêm vào giỏ hàng
+              </button></Link>
             </div>
+            )}
+            
           </div>
         </div>
         <div className="product-lower">
@@ -68,8 +153,13 @@ function ProductionDetail() {
           </div>
           <div className="product-comments">
             <h2>Bình luận</h2>
-            <textarea placeholder="Hãy viết nội dung..."></textarea>
-            <button>Submit Comment</button>
+            <textarea
+              name="comment"
+              value={inputFeedback.comment}
+              onChange={handleChange}
+              placeholder="Hãy viết nội dung..."
+            ></textarea>
+            <button onClick={handleSubmit}>Submit Comment</button>
           </div>
         </div>
       </div>
