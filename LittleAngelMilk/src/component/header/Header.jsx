@@ -59,7 +59,7 @@ const Header = () => {
       product.name.toLowerCase().includes(searchValue)
     );
     setProductList([...productList, availableProducts]);
-    console.log(availableProducts);
+    console.log(productList);
   };
 
   return (

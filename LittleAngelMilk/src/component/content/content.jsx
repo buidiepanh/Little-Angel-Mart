@@ -76,6 +76,7 @@ function Content() {
     loading: productLoading,
     error: productError,
   } = useQuery(GET_PRODUCT);
+
   const {
     data: postData,
     loading: postLoading,
