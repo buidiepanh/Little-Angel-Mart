@@ -130,7 +130,11 @@ function ProductsList() {
             {filteredProducts.map((product) => (
               <div key={product.id} className="product-card">
                 <Link to={`/ProductDetail/${product.id}`}>
-                  <img src={img1} alt={product.name} />
+                  {/* <img src={img1} alt={product.name} /> */}
+                  <img
+                    src={product.productImage.publicUrl}
+                    alt={product.name}
+                  />
                   <div>{product.name}</div>
                   <div>{product.price}</div>
                 </Link>
