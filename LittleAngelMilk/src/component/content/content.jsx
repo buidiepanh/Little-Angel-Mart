@@ -128,7 +128,7 @@ function Content() {
         <h3>Dành cho bạn</h3>
         <Grid container spacing={2}>
           {productData &&
-            productData.products.map((product) => (
+            productData.products.slice(0, 8).map((product) => (
               <Grid key={product.id} item xs={3}>
                 <Item>
                   <Link to={`/ProductDetail/${product.id}`}>
