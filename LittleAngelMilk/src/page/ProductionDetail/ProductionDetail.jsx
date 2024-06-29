@@ -1,16 +1,11 @@
-import React, { Component, useState } from "react";
-import "./ProductionDetail.css";
-import productImage from "../../image/binhsua.jpg";
-import ProductCounter from "../../component/ProductionDetail/ProductCounter";
-
+import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
-
-
+import { useQuery, useMutation, gql } from "@apollo/client";
+import "./ProductionDetail.css";
+import ProductCounter from "../../component/ProductionDetail/ProductCounter";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
-
+import toast, { Toaster } from "react-hot-toast";
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -28,16 +23,6 @@ const GET_PRODUCT = gql`
   }
 `;
 
-// mutation Mutation(
-//   $user: UserWhereUniqueInput
-//   $product: ProductWhereUniqueInput
-//   $comment: String
-// ) {
-//   createFeedback(user: $user, product: $product, comment: $comment) {
-//     comment
-//   }
-// }
-
 const FEEDBACK_MUTATION = gql`
   mutation Mutation($data: FeedbackCreateInput!) {
     createFeedback(data: $data) {
@@ -47,12 +32,8 @@ const FEEDBACK_MUTATION = gql`
 `;
 
 function ProductionDetail() {
-  //Product
   const { id } = useParams();
-  const { data } = useQuery(GET_PRODUCT);
-  const selectedProduct = data.products.find((product) => product.id === id);
-  console.log(selectedProduct);
-
+  const { data, loading, error } = useQuery(GET_PRODUCT);
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
 
@@ -64,24 +45,27 @@ function ProductionDetail() {
     }
   }, []);
 
-
-  //Feedback
+  // Feedback
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
 
-  const userId = localStorage.getItem("userId"); //Get userId from localStorage
+  const userId = localStorage.getItem("userId");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInput({
+    setInput((prevInput) => ({
+      ...prevInput,
       [name]: value,
-    });
+    }));
   };
 
-  async function handleSubmit(e) {
+  const [createFeedback] = useMutation(FEEDBACK_MUTATION);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const feedback = await createFeedback({
+      await createFeedback({
         variables: {
           data: {
             product: { connect: { id: selectedProduct.id } },
@@ -96,18 +80,34 @@ function ProductionDetail() {
       console.error("Error submitting feedback:", err);
       alert(`Error submitting feedback: ${err.message}`);
     }
-  }
+  };
 
-  const [createFeedback] = useMutation(FEEDBACK_MUTATION, {
-    variables: inputFeedback,
-  });
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading product details</div>;
 
-  console.log(inputFeedback);
+  const selectedProduct = data?.products?.find((product) => product.id === id);
 
+  if (!selectedProduct) return <div>Product not found</div>;
+
+  const handleAddToCart = () => {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const productInCart = cartItems.find(item => item.id === selectedProduct.id);
+
+    if (productInCart) {
+      productInCart.quantity += 1;
+    } else {
+      cartItems.push({ ...selectedProduct, quantity: 1 });
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    toast('Đã thêm vào giỏ hàng!', {
+      icon: '🛒',
+    });
+  };
 
   return (
-    
     <div>
+      <Toaster />
       <Header />
       <div className="product-detail-container">
         <div className="product-upper">
@@ -118,7 +118,6 @@ function ProductionDetail() {
                 alt={selectedProduct.name}
               />
             )}
-            {/* <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" /> */}
           </div>
           <div className="product-info">
             <h1>{selectedProduct.name}</h1>
@@ -126,20 +125,21 @@ function ProductionDetail() {
               {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
             </div>
             <ProductCounter />
-            {username ? (<div className="product-actions">
-              <button className="button-large btn-buy">Mua ngay</button>
-              <button className="button-large btn-cart">
-                Thêm vào giỏ hàng
-              </button>
-            </div>):(
+            {username ? (
               <div className="product-actions">
-              <Link to='/Login'><button className="button-large btn-buy">Mua ngay</button></Link>
-              <Link to ='/Login'><button className="button-large btn-cart">
-                Thêm vào giỏ hàng
-              </button></Link>
-            </div>
+                <button className="button-large btn-buy">Mua ngay</button>
+                <button className="button-large btn-cart" onClick={handleAddToCart}>Thêm vào giỏ hàng</button>
+              </div>
+            ) : (
+              <div className="product-actions">
+                <Link to='/Login'>
+                  <button className="button-large btn-buy">Mua ngay</button>
+                </Link>
+                <Link to='/Login'>
+                  <button className="button-large btn-cart">Thêm vào giỏ hàng</button>
+                </Link>
+              </div>
             )}
-            
           </div>
         </div>
         <div className="product-lower">
@@ -149,7 +149,6 @@ function ProductionDetail() {
           </div>
           <div className="product-recommendations">
             <h2>Các sản phẩm tương tự</h2>
-            {/* Implement recommendations */}
           </div>
           <div className="product-comments">
             <h2>Bình luận</h2>
