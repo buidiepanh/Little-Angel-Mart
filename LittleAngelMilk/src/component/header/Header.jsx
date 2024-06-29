@@ -16,7 +16,7 @@ const Header = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
-    const user = localStorage.getItem("username");
+    const user = localStorage.getItem("userName");
     if (token && user) {
       setUsername(user);
     }
@@ -28,7 +28,9 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("sessionToken");
-    localStorage.removeItem("username");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("cartItems");
     setUsername("");
     navigate("/login");
   };
@@ -60,8 +62,7 @@ const Header = () => {
     const availableProducts = data.products.filter((product) =>
       product.name.toLowerCase().includes(searchValue)
     );
-    setProductList([...productList, availableProducts]);
-    console.log(productList);
+    setProductList(availableProducts);
   };
   useEffect(() => {
     console.log(productList);

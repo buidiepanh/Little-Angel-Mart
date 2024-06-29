@@ -39,7 +39,7 @@ function ProductionDetail() {
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
-    const user = localStorage.getItem("username");
+    const user = localStorage.getItem("userName");
     if (token && user) {
       setUsername(user);
     }
@@ -91,7 +91,9 @@ function ProductionDetail() {
 
   const handleAddToCart = () => {
     const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const productInCart = cartItems.find(item => item.id === selectedProduct.id);
+    const productInCart = cartItems.find(
+      (item) => item.id === selectedProduct.id
+    );
 
     if (productInCart) {
       productInCart.quantity += 1;
@@ -100,8 +102,8 @@ function ProductionDetail() {
     }
 
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    toast('Đã thêm vào giỏ hàng!', {
-      icon: '🛒',
+    toast("Đã thêm vào giỏ hàng!", {
+      icon: "🛒",
     });
   };
 
@@ -128,15 +130,22 @@ function ProductionDetail() {
             {username ? (
               <div className="product-actions">
                 <button className="button-large btn-buy">Mua ngay</button>
-                <button className="button-large btn-cart" onClick={handleAddToCart}>Thêm vào giỏ hàng</button>
+                <button
+                  className="button-large btn-cart"
+                  onClick={handleAddToCart}
+                >
+                  Thêm vào giỏ hàng
+                </button>
               </div>
             ) : (
               <div className="product-actions">
-                <Link to='/Login'>
+                <Link to="/Login">
                   <button className="button-large btn-buy">Mua ngay</button>
                 </Link>
-                <Link to='/Login'>
-                  <button className="button-large btn-cart">Thêm vào giỏ hàng</button>
+                <Link to="/Login">
+                  <button className="button-large btn-cart">
+                    Thêm vào giỏ hàng
+                  </button>
                 </Link>
               </div>
             )}
