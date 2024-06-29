@@ -49,6 +49,16 @@ function ProductsList() {
     }
   `;
 
+  const GET_CATEGORY = gql`
+  query Categories {
+    categories {
+      name
+    }
+  }
+`;
+
+    
+
   const { data } = useQuery(GET_PRODUCT);
   const { searchUrl } = useParams();
   const searchValue = (searchUrl || "").toLowerCase();
@@ -77,6 +87,18 @@ function ProductsList() {
   useEffect(() => {
     console.log(productCategory);
   }, [productCategory]);
+
+  const {
+    data: categoryData,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useQuery(GET_CATEGORY);
+
+  console.log(categoryData);
+
+  if (categoryLoading) return <p>Loading</p>;
+  if (categoryError) return <p>Error</p>;
+
   return (
     <div>
       <Header />
@@ -84,12 +106,12 @@ function ProductsList() {
         <div className="sort-container">
           <label>Loại sản phẩm</label>
           <select name="category" onChange={handleCategoryChange}>
-            <option value=""></option>
-            <option value="Đồ dùng, Vật dụng">Đồ dùng, Vật dụng</option>
-            <option value="Thời trang, Phụ kiện<">Thời trang, Phụ kiện</option>
-            <option value="Bỉm, Tã">Bỉm, Tã</option>
-            <option value="Sữa bột pha sẵn">Sữa bột pha sẵn</option>
-            <option value="Bột, Bánh ăn dặm">Bột, Bánh ăn dặm</option>
+            <option value="">Tất cả</option>
+            {categoryData.categories.map((category, index) => (
+              <option key={index} value={category.name}>
+                {category.name}
+              </option>
+            ))}
           </select>
           <label>Giá sản phẩm</label>
           <select name="category" onChange={handlePriceChange}>
@@ -108,7 +130,11 @@ function ProductsList() {
             {filteredProducts.map((product) => (
               <div key={product.id} className="product-card">
                 <Link to={`/ProductDetail/${product.id}`}>
-                  <img src={img1} alt={product.name} />
+                  {/* <img src={img1} alt={product.name} /> */}
+                  <img
+                    src={product.productImage.publicUrl}
+                    alt={product.name}
+                  />
                   <div>{product.name}</div>
                   <div>{product.price}</div>
                 </Link>

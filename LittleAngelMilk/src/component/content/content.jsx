@@ -76,6 +76,7 @@ function Content() {
     loading: productLoading,
     error: productError,
   } = useQuery(GET_PRODUCT);
+
   const {
     data: postData,
     loading: postLoading,
@@ -96,8 +97,8 @@ function Content() {
   if (productLoading || postLoading) return <p>Loading</p>;
   if (productError || postError) return <p>Error</p>;
 
-  console.log(productData);
-  console.log(postData);
+  // console.log(productData);
+  // console.log(postData);
 
   return (
     <div className="content">
