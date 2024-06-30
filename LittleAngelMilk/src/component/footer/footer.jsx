@@ -1,6 +1,7 @@
 import Link from "antd/es/typography/Link";
 import "./footer.scss";
 import { MailOutlined, PhoneOutlined, TeamOutlined } from "@ant-design/icons";
+import logo from '/src/assets/raw_logo.png';
 
 function Footer() {
   return (
@@ -39,7 +40,7 @@ function Footer() {
       <hr className="line" />
       <div className="footer__bot">
         <div className="footer__bot__logo">
-          <img src="src/assets/raw_logo.png" alt="" />
+         <img src={logo} alt="Logo" />
           <p className="Title">
             Little <span className="Angel">Angel</span>
             <br></br> Milk

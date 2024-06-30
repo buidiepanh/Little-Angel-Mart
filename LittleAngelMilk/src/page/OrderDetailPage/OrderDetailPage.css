@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #e0f7fa;
+  }
+  
+  .order-detail-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 220px;
+    margin-bottom: 140px;
+  }
+  
+  .order-detail-header {
+    color: #1976d2;
+  }
+  
+  .order-info {
+    margin-bottom: 30px;
+  }
+  
+  .order-info h6 {
+    color: #1976d2;
+  }
+  
+  .order-detail-table th, .order-detail-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .order-detail-table th {
+    background-color: #1976d2;
+    color: white;
+  }
+  
+  .order-summary {
+    margin-top: 30px;
+  }
+  
+  .order-summary h6 {
+    color: #1976d2;
+  }
+  
+  .order-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .cancel-button {
+    background-color: #dc004e;
+    color: white;
+  }
+  
+  .home-button {
+    background-color: #1976d2;
+    color: white;
+  }
+  
