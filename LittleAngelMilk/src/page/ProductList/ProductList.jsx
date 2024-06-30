@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import "./ProductList.css";
-import Header from "../../component/header/Header";
 import { useQuery, gql } from "@apollo/client";
 import img1 from "/src/assets/anh1.png";
 import { Link, useParams } from "react-router-dom";
+import Header from "../../component/header/Header";
 // import img2 from "/src/assets/anh2.png";
 // import img3 from "/src/assets/anh3.png";
 // import img4 from "/src/assets/anh4.png";
@@ -50,14 +50,12 @@ function ProductsList() {
   `;
 
   const GET_CATEGORY = gql`
-  query Categories {
-    categories {
-      name
+    query Categories {
+      categories {
+        name
+      }
     }
-  }
-`;
-
-    
+  `;
 
   const { data } = useQuery(GET_PRODUCT);
   const { searchUrl } = useParams();
@@ -130,7 +128,13 @@ function ProductsList() {
             {filteredProducts.map((product) => (
               <div key={product.id} className="product-card">
                 <Link to={`/ProductDetail/${product.id}`}>
-                  <img src={img1} alt={product.name} />
+                  {/* <img src={img1} alt={product.name} /> */}
+                  {product.productImage?.publicUrl && (
+                    <img
+                      src={product.productImage.publicUrl}
+                      alt={product.name}
+                    />
+                  )}
                   <div>{product.name}</div>
                   <div>{product.price}</div>
                 </Link>

@@ -4,7 +4,7 @@ import { gql, useMutation } from "@apollo/client";
 import "./RegisterForm.css";
 import milkImage from "../../assets/Logo.jpg";
 import { Link } from "react-router-dom";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 
 const REGISTER_MUTATION = gql`
   mutation Mutation($data: UserCreateInput!) {
@@ -31,7 +31,35 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [register, { loading }] = useMutation(REGISTER_MUTATION);
 
+  const validateName = (name) => {
+    if (!name) {
+      return "Tên không được để trống.";
+    }
+
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(name)) {
+      return "Không chứa ký tự đặc biệt.";
+    }
+    return null;
+  };
+
+  const validateAddress = (address) => {
+    if (!address) {
+      return "Địa chỉ không được để trống.";
+    }
+
+    const addressRegex = /^[a-zA-Z0-9\s;,:]+$/;
+    if (!addressRegex.test(address)) {
+      return "Không chứa ký tự đặc biệt.";
+    }
+    return null;
+  };
+
   const validateEmail = (email) => {
+    if (!email) {
+      return "Email không được để trống.";
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const forbiddenWords = ["cấm"];
     if (
@@ -48,6 +76,10 @@ const Register = () => {
   };
 
   const validatePassword = (password) => {
+    if (!password) {
+      return "Mật khẩu không được để trống";
+    }
+
     if (password.length < 5 || password.length > 20) {
       return "Mật khẩu phải có từ 5 đến 20 ký tự.";
     }
@@ -55,9 +87,13 @@ const Register = () => {
   };
 
   const validatePhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) {
+      return "Số điện thoại không được để trống.";
+    }
+
     const phoneNumberRegex = /^\d{10}$/;
     if (!phoneNumberRegex.test(phoneNumber)) {
-      return 'Số điện thoại phải có đúng 10 chữ số.';
+      return "Số điện thoại phải có đúng 10 chữ số.";
     }
     return null;
   };
@@ -69,19 +105,25 @@ const Register = () => {
     const confirmPasswordError =
       userPassword !== confirmPassword ? "Mật khẩu xác nhận không khớp." : null;
     const phoneNumberError = validatePhoneNumber(userPhone);
+    const nameError = validateName(name);
+    const addressError = validateAddress(userAddress);
 
     setErrors({
       userEmail: emailError,
       userPassword: passwordError,
       confirmPassword: confirmPasswordError,
       userPhone: phoneNumberError,
+      name: nameError,
+      userAddress: addressError,
     });
 
     if (
       !emailError &&
       !passwordError &&
       !confirmPasswordError &&
-      !phoneNumberError
+      !phoneNumberError &&
+      !nameError &&
+      !addressError
     ) {
       try {
         const res = await register({
@@ -121,6 +163,7 @@ const Register = () => {
               placeholder="Nhập họ tên"
               className="registerInput"
             />
+            {errors.name && <p className="error">{errors.name}</p>}
 
             <label>Địa chỉ</label>
             <input
@@ -130,6 +173,9 @@ const Register = () => {
               placeholder="Nhập địa chỉ"
               className="registerInput"
             />
+            {errors.userAddress && (
+              <p className="error">{errors.userAddress}</p>
+            )}
 
             <label>Địa chỉ Email</label>
             <input

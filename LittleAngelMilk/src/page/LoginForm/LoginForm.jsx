@@ -6,7 +6,7 @@ import LOGO from "../../assets/Logo.jpg";
 import "./LoginForm.css";
 import { useMutation, gql } from "@apollo/client";
 import { IoReturnDownBackOutline } from "react-icons/io5";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 
 const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
@@ -14,6 +14,7 @@ const LOGIN_MUTATION = gql`
       ... on UserAuthenticationWithPasswordSuccess {
         sessionToken
         item {
+          id
           userPhone
           userEmail
           userAddress
@@ -30,6 +31,7 @@ const LOGIN_MUTATION = gql`
 const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [input, setInput] = useState({
     password: "",
     email: "",
@@ -67,7 +69,8 @@ const LoginForm = () => {
       if (res.data.authenticateUserWithPassword.sessionToken) {
         const { sessionToken, item } = res.data.authenticateUserWithPassword;
         localStorage.setItem("sessionToken", sessionToken);
-        localStorage.setItem("username", item.name);
+        localStorage.setItem("userName", item.name);
+        localStorage.setItem("userId", item.id);
         setErrorMess("");
         navigate("/", { state: { fromLogin: true } });
       } else if (res.data.authenticateUserWithPassword.message) {
@@ -81,7 +84,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (location.state?.fromRegister) {
-      toast.success('Đăng ký thành công!');
+      toast.success("Đăng ký thành công!");
     }
   }, [location.state]);
 
@@ -130,20 +133,19 @@ const LoginForm = () => {
               Đăng nhập
             </button>
             <Link to="/register" className="btn btn_signup">
-            Đăng ký
-          </Link>
+              Đăng ký
+            </Link>
 
-          <Link to="/" className="btn_icon_back">
-            <IoReturnDownBackOutline /> Quay lại trang chủ
-          </Link>
+            <Link to="/" className="btn_icon_back">
+              <IoReturnDownBackOutline /> Quay lại trang chủ
+            </Link>
           </form>
 
           {errorMess && <p style={{ color: "red" }}>{errorMess}</p>}
         </div>
-       
       </div>
-      <Toaster />   
-      </div> 
+      <Toaster />
+    </div>
   );
 };
 

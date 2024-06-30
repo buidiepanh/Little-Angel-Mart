@@ -1,48 +1,187 @@
-import React, { Component } from "react";
-import "./ProductionDetail.css";
-import productImage from "../../image/binhsua.jpg";
-import ProductCounter from "../../component/ProductionDetail/ProductCounter";
+import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from "@apollo/client";
+import "./ProductionDetail.css";
+import ProductCounter from "../../component/ProductionDetail/ProductCounter";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
+import toast, { Toaster } from "react-hot-toast";
 
-function ProductionDetail() {
-  const GET_PRODUCT = gql`
-    query Products {
-      products {
-        id
+const GET_PRODUCT = gql`
+  query Products {
+    products {
+      id
+      name
+      category {
         name
-        category {
-          name
-        }
-        productDescription
-        productImage {
-          publicUrl
-        }
-        productPrice
+      }
+      productDescription
+      productImage {
+        publicUrl
+      }
+      productPrice
+    }
+  }
+`;
+
+const CREATE_CART = gql`
+  mutation Mutation($data: CartCreateInput!) {
+    createCart(data: $data) {
+      createdAt
+      id
+      user {
+        id
       }
     }
-  `;
+  }
+`;
 
+const CREATE_CART_DETAIL = gql`
+  mutation Mutation($where: ProductWhereInput!, $data: CartDetailCreateInput!) {
+    createCartDetail(data: $data) {
+      cartId {
+        id
+      }
+      id
+      price
+      productId(where: $where) {
+        id
+      }
+      quantity
+    }
+  }
+`;
+
+const FEEDBACK_MUTATION = gql`
+  mutation Mutation($data: FeedbackCreateInput!) {
+    createFeedback(data: $data) {
+      comment
+    }
+  }
+`;
+
+function ProductionDetail() {
   const { id } = useParams();
-  const { data } = useQuery(GET_PRODUCT);
-  const selectedProduct = data.products.find((product) => product.id === id);
-  console.log(selectedProduct);
+  const { data, loading, error } = useQuery(GET_PRODUCT);
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [createCart] = useMutation(CREATE_CART);
+  const [createCartDetail] = useMutation(CREATE_CART_DETAIL);
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
-    const user = localStorage.getItem("username");
+    const user = localStorage.getItem("userName");
     if (token && user) {
       setUsername(user);
     }
   }, []);
+
+  const [inputFeedback, setInput] = useState({
+    comment: "",
+  });
+
+  const userId = localStorage.getItem("userId");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInput((prevInput) => ({
+      ...prevInput,
+      [name]: value,
+    }));
+  };
+
+  const [createFeedback] = useMutation(FEEDBACK_MUTATION);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await createFeedback({
+        variables: {
+          data: {
+            product: { connect: { id: selectedProduct.id } },
+            user: { connect: { id: userId } },
+            comment: inputFeedback.comment,
+          },
+        },
+      });
+      alert("Feedback submitted successfully!");
+      setInput({ comment: "" });
+    } catch (err) {
+      console.error("Error submitting feedback:", err);
+      alert(`Error submitting feedback: ${err.message}`);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading product details</div>;
+
+  const selectedProduct = data?.products?.find((product) => product.id === id);
+
+  if (!selectedProduct) return <div>Product not found</div>;
+
+  const handleAddToCart = () => {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const productInCart = cartItems.find(
+      (item) => item.id === selectedProduct.id
+    );
+
+    if (productInCart) {
+      productInCart.quantity += 1;
+    } else {
+      cartItems.push({ ...selectedProduct, quantity: 1 });
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    toast("Đã thêm vào giỏ hàng!", {
+      icon: "🛒",
+    });
+  const handleAddToCart = async () => {
+    let cartId = localStorage.getItem("cartId");
+
+    if (!cartId) {
+      try {
+        const { data } = await createCart({
+          variables: {
+            data: {
+              createdAt: new Date().toISOString(),
+              user: { connect: { id: userId } },
+            },
+          },
+        });
+        cartId = data.createCart.id;
+        localStorage.setItem("cartId", cartId);
+      } catch (err) {
+        console.error("Error creating cart:", err);
+        toast.error(`Error creating cart: ${err.message}`);
+        return;
+      }
+    }
+
+    try {
+      await createCartDetail({
+        variables: {
+          where: { id: { equals: selectedProduct.id } },
+          data: {
+            cartId: { connect: { id: cartId } },
+            price: selectedProduct.productPrice,
+            productId: { connect: { id: selectedProduct.id } },
+            quantity: 1,
+          },
+        },
+      });
+
+      toast('Đã thêm vào giỏ hàng!', {
+        icon: '🛒',
+      });
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+      toast.error(`Error adding to cart: ${err.message}`);
+    }
+  };
+
   return (
-    
     <div>
+      <Toaster />
       <Header />
       <div className="product-detail-container">
         <div className="product-upper">
@@ -53,7 +192,6 @@ function ProductionDetail() {
                 alt={selectedProduct.name}
               />
             )}
-            {/* <img src={productImage} alt="Hộp chia sữa 3 tầng tiện lợi" /> */}
           </div>
           <div className="product-info">
             <h1>{selectedProduct.name}</h1>
@@ -61,20 +199,28 @@ function ProductionDetail() {
               {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
             </div>
             <ProductCounter />
-            {username ? (<div className="product-actions">
-              <button className="button-large btn-buy">Mua ngay</button>
-              <button className="button-large btn-cart">
-                Thêm vào giỏ hàng
-              </button>
-            </div>):(
+            {username ? (
               <div className="product-actions">
-              <Link to='/Login'><button className="button-large btn-buy">Mua ngay</button></Link>
-              <Link to ='/Login'><button className="button-large btn-cart">
-                Thêm vào giỏ hàng
-              </button></Link>
-            </div>
+                <button className="button-large btn-buy">Mua ngay</button>
+                <button
+                  className="button-large btn-cart"
+                  onClick={handleAddToCart}
+                >
+                  Thêm vào giỏ hàng
+                </button>
+              </div>
+            ) : (
+              <div className="product-actions">
+                <Link to="/Login">
+                  <button className="button-large btn-buy">Mua ngay</button>
+                </Link>
+                <Link to="/Login">
+                  <button className="button-large btn-cart">
+                    Thêm vào giỏ hàng
+                  </button>
+                </Link>
+              </div>
             )}
-            
           </div>
         </div>
         <div className="product-lower">
@@ -84,12 +230,16 @@ function ProductionDetail() {
           </div>
           <div className="product-recommendations">
             <h2>Các sản phẩm tương tự</h2>
-            {/* Implement recommendations */}
           </div>
           <div className="product-comments">
             <h2>Bình luận</h2>
-            <textarea placeholder="Hãy viết nội dung..."></textarea>
-            <button>Submit Comment</button>
+            <textarea
+              name="comment"
+              value={inputFeedback.comment}
+              onChange={handleChange}
+              placeholder="Hãy viết nội dung..."
+            ></textarea>
+            <button onClick={handleSubmit}>Submit Comment</button>
           </div>
         </div>
       </div>
@@ -97,5 +247,6 @@ function ProductionDetail() {
     </div>
   );
 }
-
+}
 export default ProductionDetail;
+

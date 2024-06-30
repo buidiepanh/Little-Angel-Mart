@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -8,15 +8,17 @@ import { useQuery, gql } from "@apollo/client";
 import "./Header.css";
 import logo from '/src/assets/raw_logo.png';
 
+export const ProductContext = createContext();
 const Header = () => {
   const navigate = useNavigate();
   const [menuVisible, setMenuVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [productList, setProductList] = useState([]);
+
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
-    const user = localStorage.getItem("username");
+    const user = localStorage.getItem("userName");
     if (token && user) {
       setUsername(user);
     }
@@ -28,7 +30,9 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("sessionToken");
-    localStorage.removeItem("username");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("cartItems");
     setUsername("");
     navigate("/login");
   };
@@ -60,9 +64,11 @@ const Header = () => {
     const availableProducts = data.products.filter((product) =>
       product.name.toLowerCase().includes(searchValue)
     );
-    setProductList([...productList, availableProducts]);
-    console.log(productList);
+    setProductList(availableProducts);
   };
+  useEffect(() => {
+    console.log(productList);
+  }, [productList]);
 
   return (
     <div className="Header">
