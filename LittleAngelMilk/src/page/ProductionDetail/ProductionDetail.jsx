@@ -6,6 +6,7 @@ import ProductCounter from "../../component/ProductionDetail/ProductCounter";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
+
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -23,6 +24,34 @@ const GET_PRODUCT = gql`
   }
 `;
 
+const CREATE_CART = gql`
+  mutation Mutation($data: CartCreateInput!) {
+    createCart(data: $data) {
+      createdAt
+      id
+      user {
+        id
+      }
+    }
+  }
+`;
+
+const CREATE_CART_DETAIL = gql`
+  mutation Mutation($where: ProductWhereInput!, $data: CartDetailCreateInput!) {
+    createCartDetail(data: $data) {
+      cartId {
+        id
+      }
+      id
+      price
+      productId(where: $where) {
+        id
+      }
+      quantity
+    }
+  }
+`;
+
 const FEEDBACK_MUTATION = gql`
   mutation Mutation($data: FeedbackCreateInput!) {
     createFeedback(data: $data) {
@@ -36,6 +65,8 @@ function ProductionDetail() {
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [createCart] = useMutation(CREATE_CART);
+  const [createCartDetail] = useMutation(CREATE_CART_DETAIL);
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
@@ -45,7 +76,6 @@ function ProductionDetail() {
     }
   }, []);
 
-  // Feedback
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
@@ -89,20 +119,48 @@ function ProductionDetail() {
 
   if (!selectedProduct) return <div>Product not found</div>;
 
-  const handleAddToCart = () => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const productInCart = cartItems.find(item => item.id === selectedProduct.id);
+  const handleAddToCart = async () => {
+    let cartId = localStorage.getItem("cartId");
 
-    if (productInCart) {
-      productInCart.quantity += 1;
-    } else {
-      cartItems.push({ ...selectedProduct, quantity: 1 });
+    if (!cartId) {
+      try {
+        const { data } = await createCart({
+          variables: {
+            data: {
+              createdAt: new Date().toISOString(),
+              user: { connect: { id: userId } },
+            },
+          },
+        });
+        cartId = data.createCart.id;
+        localStorage.setItem("cartId", cartId);
+      } catch (err) {
+        console.error("Error creating cart:", err);
+        toast.error(`Error creating cart: ${err.message}`);
+        return;
+      }
     }
 
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    toast('Đã thêm vào giỏ hàng!', {
-      icon: '🛒',
-    });
+    try {
+      await createCartDetail({
+        variables: {
+          where: { id: { equals: selectedProduct.id } },
+          data: {
+            cartId: { connect: { id: cartId } },
+            price: selectedProduct.productPrice,
+            productId: { connect: { id: selectedProduct.id } },
+            quantity: 1,
+          },
+        },
+      });
+
+      toast('Đã thêm vào giỏ hàng!', {
+        icon: '🛒',
+      });
+    } catch (err) {
+      console.error("Error adding to cart:", err);
+      toast.error(`Error adding to cart: ${err.message}`);
+    }
   };
 
   return (
