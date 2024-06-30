@@ -36,7 +36,7 @@ const Register = () => {
       return "Tên không được để trống.";
     }
 
-    const nameRegex = /^[a-zA-Z\s]+$/;
+    const nameRegex = /^[a-zA-Z0-9\s]+$/;
     if (!nameRegex.test(name)) {
       return "Không chứa ký tự đặc biệt.";
     }
