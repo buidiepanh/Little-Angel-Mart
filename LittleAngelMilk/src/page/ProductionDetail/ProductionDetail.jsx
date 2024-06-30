@@ -247,6 +247,6 @@ function ProductionDetail() {
     </div>
   );
 }
-
+}
 export default ProductionDetail;
 
