@@ -69,7 +69,7 @@ const LoginForm = () => {
       if (res.data.authenticateUserWithPassword.sessionToken) {
         const { sessionToken, item } = res.data.authenticateUserWithPassword;
         localStorage.setItem("sessionToken", sessionToken);
-        localStorage.setItem("username", item.name);
+        localStorage.setItem("userName", item.name);
         localStorage.setItem("userId", item.id);
         setErrorMess("");
         navigate("/", { state: { fromLogin: true } });

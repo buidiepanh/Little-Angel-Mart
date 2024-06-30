@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
+//
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -127,7 +128,7 @@ function Content() {
         <h3>Dành cho bạn</h3>
         <Grid container spacing={2}>
           {productData &&
-            productData.products.map((product) => (
+            productData.products.slice(0, 8).map((product) => (
               <Grid key={product.id} item xs={3}>
                 <Item>
                   <Link to={`/ProductDetail/${product.id}`}>

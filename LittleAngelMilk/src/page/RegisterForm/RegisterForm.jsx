@@ -48,7 +48,7 @@ const Register = () => {
       return "Địa chỉ không được để trống.";
     }
 
-    const addressRegex = /^[a-zA-Z\s]+$/;
+    const addressRegex = /^[a-zA-Z0-9\s;,:]+$/;
     if (!addressRegex.test(address)) {
       return "Không chứa ký tự đặc biệt.";
     }
