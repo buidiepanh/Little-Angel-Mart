@@ -10,6 +10,7 @@ import CustomerInfo from "./page/CustomerInfo/CustomerInfo";
 import Payment from "./page/PaymentPage/payment";
 import AboutUsPage from "./page/AboutUsPage/AboutUsPage";
 import ProductList from "./page/ProductList/ProductList";
+import OrderDetailPage from "./page/OrderDetailPage/OrderDetailPage";
 
 import OrderConfirmation from "./page/OrderConfirmation/OrderConfirmation";
 import UserAccount from "./page/UserAccount/UserAccount";
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/product-list/:search" element={<ProductList />} />
           <Route path="/profile" element={<UserAccount />} />
           <Route path="/OrderConfirmation" element={<OrderConfirmation />} />
+          <Route path="/order-detail" element={<OrderDetailPage />} />
         </Routes>
       </Router>
     </div>

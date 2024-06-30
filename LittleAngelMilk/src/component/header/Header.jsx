@@ -6,6 +6,8 @@ import { FaAngleDown } from "react-icons/fa";
 import { BsCartCheck } from "react-icons/bs";
 import { useQuery, gql } from "@apollo/client";
 import "./Header.css";
+import logo from '/src/assets/raw_logo.png';
+
 export const ProductContext = createContext();
 const Header = () => {
   const navigate = useNavigate();
@@ -73,7 +75,7 @@ const Header = () => {
       <div className="FirstLayer">
         <div className="logo">
           <Link to="/">
-            <img src="src/assets/raw_logo.png" alt="Logo" />
+           <img src={logo} alt="Logo" />
             <p className="Title">
               Little <span className="Angel">Angel</span> Milk
             </p>
@@ -99,7 +101,7 @@ const Header = () => {
           <div className="OrderListBtn">
             <div>
               {username ? (
-                <Link to="/orderList">
+                <Link to="/order-detail">
                   <BsCartCheck className="UserCircle" />
                 </Link>
               ) : (
