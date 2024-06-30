@@ -21,18 +21,18 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const GET_PRODUCT = gql`
-  query Products {
-    products {
+  query Query($take: Int) {
+    products(take: $take) {
       id
       name
+      productPrice
+      productImage {
+        publicUrl
+      }
       category {
         name
       }
       productDescription
-      productImage {
-        publicUrl
-      }
-      productPrice
     }
   }
 `;
@@ -76,7 +76,9 @@ function Content() {
     data: productData,
     loading: productLoading,
     error: productError,
-  } = useQuery(GET_PRODUCT);
+  } = useQuery(GET_PRODUCT, {
+    variables: { take: 8 },
+  });
 
   const {
     data: postData,
@@ -128,7 +130,7 @@ function Content() {
         <h3>Dành cho bạn</h3>
         <Grid container spacing={2}>
           {productData &&
-            productData.products.slice(0, 8).map((product) => (
+            productData.products.map((product) => (
               <Grid key={product.id} item xs={3}>
                 <Item>
                   <Link to={`/ProductDetail/${product.id}`}>

@@ -46,6 +46,7 @@ const CREATE_CART_DETAIL = gql`
       price
       productId(where: $where) {
         id
+        name
       }
       quantity
     }
@@ -119,22 +120,6 @@ function ProductionDetail() {
 
   if (!selectedProduct) return <div>Product not found</div>;
 
-  const handleAddToCart = () => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    const productInCart = cartItems.find(
-      (item) => item.id === selectedProduct.id
-    );
-
-    if (productInCart) {
-      productInCart.quantity += 1;
-    } else {
-      cartItems.push({ ...selectedProduct, quantity: 1 });
-    }
-
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    toast("Đã thêm vào giỏ hàng!", {
-      icon: "🛒",
-    });
   const handleAddToCart = async () => {
     let cartId = localStorage.getItem("cartId");
 
@@ -164,7 +149,11 @@ function ProductionDetail() {
           data: {
             cartId: { connect: { id: cartId } },
             price: selectedProduct.productPrice,
-            productId: { connect: { id: selectedProduct.id } },
+            productId: { connect: 
+              { 
+                id: selectedProduct.id 
+              },
+            },
             quantity: 1,
           },
         },
@@ -247,6 +236,5 @@ function ProductionDetail() {
     </div>
   );
 }
-}
-export default ProductionDetail;
 
+export default ProductionDetail;
