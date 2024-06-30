@@ -9,9 +9,9 @@ import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
 
-const GET_CART_DETAILS = gql`
-  query Query($where: CartDetailWhereInput!) {
-    cartDetails(where: $where) {
+const GET_CART_ITEMS = gql`
+  query Query($where: CartItemWhereInput!) {
+    cartItems(where: $where) {
       cartId {
         id
       }
@@ -30,9 +30,9 @@ const GET_CART_DETAILS = gql`
   }
 `;
 
-const DELETE_CART_DETAIL = gql`
-  mutation DeleteCartDetail($where: CartDetailWhereUniqueInput!) {
-    deleteCartDetail(where: $where) {
+const DELETE_CART_ITEM = gql`
+  mutation DeleteCartItem($where: CartItemWhereUniqueInput!) {
+    deleteCartItem(where: $where) {
       cartId {
         id
       }
@@ -50,7 +50,7 @@ const CartPage = () => {
   const [items, setItems] = useState([]);
   const cartId = localStorage.getItem("cartId");
 
-  const { data, loading, error } = useQuery(GET_CART_DETAILS, {
+  const { data, loading, error } = useQuery(GET_CART_ITEMS, {
     variables: {
       where: {
         cartId: {
@@ -63,9 +63,9 @@ const CartPage = () => {
     skip: !cartId,
   });
 
-  const [deleteCartDetail] = useMutation(DELETE_CART_DETAIL, {
-    update(cache, { data: { deleteCartDetail } }) {
-      const existingCartDetails = cache.readQuery({
+  const [deleteCartItem] = useMutation(DELETE_CART_ITEM, {
+    update(cache, { data: { deleteCartItem } }) {
+      const existingCartItems = cache.readQuery({
         query: GET_CART_DETAILS,
         variables: {
           where: {
@@ -78,10 +78,10 @@ const CartPage = () => {
         }
       });
 
-      const newCartDetails = existingCartDetails.cartDetails.filter(item => item.id !== deleteCartDetail.id);
+      const newCartItems = existingCartItems.cartItems.filter(item => item.id !== deleteCartItem.id);
 
       cache.writeQuery({
-        query: GET_CART_DETAILS,
+        query: GET_CART_ITEMS,
         variables: {
           where: {
             cartId: {
@@ -91,15 +91,15 @@ const CartPage = () => {
             }
           }
         },
-        data: { cartDetails: newCartDetails }
+        data: { cartItems: newCartItems }
       });
     }
   });
 
   useEffect(() => {
-    if (data && data.cartDetails) {
-      console.log(data.cartDetails); 
-      setItems(data.cartDetails);
+    if (data && data.cartItems) {
+      console.log(data.cartItems); 
+      setItems(data.cartItems);
     }
   }, [data]);
 
@@ -112,7 +112,7 @@ const CartPage = () => {
 
   const handleRemoveItem = async (id) => {
     try {
-      await deleteCartDetail({
+      await deleteCartItem({
         variables: {
           where: { id: id }
         }
