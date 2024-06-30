@@ -48,9 +48,9 @@ const CREATE_CART = gql`
   }
 `;
 
-const CREATE_CART_DETAIL = gql`
-  mutation Mutation($where: ProductWhereInput!, $data: CartDetailCreateInput!) {
-    createCartDetail(data: $data) {
+const CREATE_CART_ITEM = gql`
+  mutation Mutation($where: ProductWhereInput!, $data: CartItemCreateInput!) {
+    createCartItem(data: $data) {
       cartId {
         id
       }
@@ -79,7 +79,7 @@ function ProductionDetail() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [createCart] = useMutation(CREATE_CART);
-  const [createCartDetail] = useMutation(CREATE_CART_DETAIL);
+  const [createCartItem] = useMutation(CREATE_CART_ITEM);
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
@@ -155,7 +155,7 @@ function ProductionDetail() {
     }
 
     try {
-      await createCartDetail({
+      await createCartItem({
         variables: {
           where: { id: { equals: selectedProduct.id } },
           data: {
