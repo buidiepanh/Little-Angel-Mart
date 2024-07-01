@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -9,6 +9,24 @@ import "./Header.css";
 import logo from '/src/assets/raw_logo.png';
 
 export const ProductContext = createContext();
+
+const GET_PRODUCT = gql`
+  query Products {
+    products {
+      id
+      name
+      category {
+        name
+      }
+      productDescription
+      productImage {
+        publicUrl
+      }
+      productPrice
+    }
+  }
+`;
+
 const Header = () => {
   const navigate = useNavigate();
   const [menuVisible, setMenuVisible] = useState(false);
@@ -41,39 +59,33 @@ const Header = () => {
     setSearchValue(event.target.value);
   };
 
-  const GET_PRODUCT = gql`
-    query Products {
-      products {
-        id
-        name
-        category {
-          name
-        }
-        productDescription
-        productImage {
-          publicUrl
-        }
-        productPrice
-      }
-    }
-  `;
+  const { data, loading, error } = useQuery(GET_PRODUCT);
 
-  const { data } = useQuery(GET_PRODUCT);
+  useEffect(() => {
+    if (data && !loading && !error) {
+      const availableProducts = data.products.filter((product) =>
+        product.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setProductList(availableProducts);
+    }
+  }, [data, searchValue, loading, error]);
 
   const handleSearch = () => {
-    const availableProducts = data.products.filter((product) =>
-      product.name.toLowerCase().includes(searchValue)
-    );
-    setProductList(availableProducts);
+    if (data && !loading && !error) {
+      const availableProducts = data.products.filter((product) =>
+        product.name.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setProductList(availableProducts);
+    }
   };
-  useEffect(() => {
-    console.log(productList);
-  }, [productList]);
 
   const handleCartClick = () => {
     navigate("/cart");
     window.location.reload();
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading products</div>;
 
   return (
     <div className="Header">

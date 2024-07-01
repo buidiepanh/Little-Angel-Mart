@@ -192,7 +192,6 @@ function ProductionDetail() {
       }
     }
 
-    // Refetch cart item data to ensure it's up-to-date
     await refetch();
 
     const existingCartItem = cartItemData?.cartItem;
