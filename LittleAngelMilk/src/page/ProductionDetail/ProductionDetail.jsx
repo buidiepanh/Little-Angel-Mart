@@ -47,7 +47,6 @@ const GET_CART_ITEM = gql`
     }
   }
 `;
-
 const CREATE_CART = gql`
   mutation CreateCart($data: CartCreateInput!) {
     createCart(data: $data) {
@@ -113,7 +112,6 @@ function ProductionDetail() {
     },
     skip: !localStorage.getItem("cartItemId")
   });
-
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
     const user = localStorage.getItem("userName");
@@ -121,6 +119,7 @@ function ProductionDetail() {
       setUsername(user);
     }
   }, []);
+  
 
   const [inputFeedback, setInput] = useState({
     comment: "",
@@ -192,6 +191,7 @@ function ProductionDetail() {
       }
     }
 
+    
     await refetch();
 
     const existingCartItem = cartItemData?.cartItem;

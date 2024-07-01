@@ -33,7 +33,15 @@ const GET_CART_ITEMS = gql`
 const DELETE_CART_ITEM = gql`
   mutation DeleteCartItem($where: CartItemWhereUniqueInput!) {
     deleteCartItem(where: $where) {
+      cartId {
+        id
+      }
       id
+      price
+      quantity
+      productId {
+        id
+      }
     }
   }
 `;
@@ -90,6 +98,7 @@ const CartPage = () => {
 
   useEffect(() => {
     if (data && data.cartItems) {
+      console.log("Fetched cart items:", data.cartItems);
       setItems(data.cartItems);
     }
   }, [data]);
@@ -105,7 +114,7 @@ const CartPage = () => {
     try {
       await deleteCartItem({
         variables: {
-          where: { id }
+          where: { id: id }
         }
       });
       const updatedItems = items.filter(item => item.id !== id);
