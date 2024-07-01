@@ -67,8 +67,8 @@ const OrderDetailPage = () => {
         </Box>
 
         <Box className="order-actions">
-          <Button variant="contained" className="cancel-button">Hủy đơn hàng</Button>
-          <Button variant="contained" component={Link} to="/" className="home-button">Quay lại trang chủ</Button>
+          <Button variant="contained" className="cancel-button1">Hủy đơn hàng</Button>
+          <Button variant="contained" component={Link} to="/" className="home-button1">Quay lại trang chủ</Button>
         </Box>
       </Box>
     </Container>
