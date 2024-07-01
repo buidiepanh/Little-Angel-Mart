@@ -70,12 +70,17 @@ const Header = () => {
     console.log(productList);
   }, [productList]);
 
+  const handleCartClick = () => {
+    navigate("/cart");
+    window.location.reload();
+  };
+
   return (
     <div className="Header">
       <div className="FirstLayer">
         <div className="logo">
           <Link to="/">
-           <img src={logo} alt="Logo" />
+            <img src={logo} alt="Logo" />
             <p className="Title">
               Little <span className="Angel">Angel</span> Milk
             </p>
@@ -116,9 +121,7 @@ const Header = () => {
           <div className="CartBtn">
             <div>
               {username ? (
-                <Link to="/cart">
-                  <FaShoppingCart className="CartCircle" />
-                </Link>
+                <FaShoppingCart className="CartCircle" onClick={handleCartClick} />
               ) : (
                 <Link to="/login">
                   <FaShoppingCart className="CartCircle" />
