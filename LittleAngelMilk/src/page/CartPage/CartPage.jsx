@@ -17,6 +17,7 @@ const GET_CART_ITEMS = gql`
       }
       id
       price
+      quantity
       productId {
         id
         name
@@ -25,7 +26,6 @@ const GET_CART_ITEMS = gql`
         }
         productPrice
       }
-      quantity
     }
   }
 `;
@@ -33,15 +33,7 @@ const GET_CART_ITEMS = gql`
 const DELETE_CART_ITEM = gql`
   mutation DeleteCartItem($where: CartItemWhereUniqueInput!) {
     deleteCartItem(where: $where) {
-      cartId {
-        id
-      }
       id
-      price
-      productId {
-        id
-      }
-      quantity
     }
   }
 `;
@@ -55,7 +47,7 @@ const CartPage = () => {
       where: {
         cartId: {
           id: {
-            equals: cartId
+            equals: cartId || ""
           }
         }
       }
@@ -66,7 +58,7 @@ const CartPage = () => {
   const [deleteCartItem] = useMutation(DELETE_CART_ITEM, {
     update(cache, { data: { deleteCartItem } }) {
       const existingCartItems = cache.readQuery({
-        query: GET_CART_DETAILS,
+        query: GET_CART_ITEMS,
         variables: {
           where: {
             cartId: {
@@ -98,7 +90,6 @@ const CartPage = () => {
 
   useEffect(() => {
     if (data && data.cartItems) {
-      console.log(data.cartItems); 
       setItems(data.cartItems);
     }
   }, [data]);
@@ -114,7 +105,7 @@ const CartPage = () => {
     try {
       await deleteCartItem({
         variables: {
-          where: { id: id }
+          where: { id }
         }
       });
       const updatedItems = items.filter(item => item.id !== id);
@@ -125,6 +116,8 @@ const CartPage = () => {
   };
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  if (!cartId) return <div>Error: cartId is missing. Please add items to your cart.</div>;
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading cart items</div>;
@@ -177,7 +170,11 @@ const CartPage = () => {
             <p>Tổng cộng ({items.length} sản phẩm): <strong>{total.toLocaleString("vi-VN")}đ</strong></p>
             <div className='btns'>
               <Link to='/'><button className="back-button">Quay lại</button></Link>
-              <Link to='/CustomerCartInfo'><button className="continue-button">Tiếp tục</button></Link>
+              {items.length > 0 ? (
+                <Link to='/CustomerCartInfo'><button className="continue-button">Tiếp tục</button></Link>
+              ) : (
+                <button className="continue-button" disabled>Tiếp tục</button>
+              )}
             </div>
           </div>
         </div>

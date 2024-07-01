@@ -36,11 +36,24 @@ const GET_PRODUCT = gql`
   }
 `;
 
+const GET_CART_ITEM = gql`
+  query Query($where: CartItemWhereUniqueInput!) {
+    cartItem(where: $where) {
+      id
+      productId {
+        id
+      }
+      quantity
+    }
+  }
+`;
+
 const CREATE_CART = gql`
-  mutation Mutation($data: CartCreateInput!) {
+  mutation CreateCart($data: CartCreateInput!) {
     createCart(data: $data) {
       createdAt
       id
+      itemsCount
       user {
         id
       }
@@ -49,17 +62,26 @@ const CREATE_CART = gql`
 `;
 
 const CREATE_CART_ITEM = gql`
-  mutation Mutation($where: ProductWhereInput!, $data: CartItemCreateInput!) {
+  mutation CreateCartItem($data: CartItemCreateInput!) {
     createCartItem(data: $data) {
       cartId {
         id
       }
       id
-      price
-      productId(where: $where) {
+      productId {
         id
         name
       }
+      quantity
+      price
+    }
+  }
+`;
+
+const UPDATE_CART_ITEM_QUANTITY = gql`
+  mutation UpdateCartItem($where: CartItemWhereUniqueInput!, $data: CartItemUpdateInput!) {
+    updateCartItem(where: $where, data: $data) {
+      id
       quantity
     }
   }
@@ -80,6 +102,17 @@ function ProductionDetail() {
   const [username, setUsername] = useState("");
   const [createCart] = useMutation(CREATE_CART);
   const [createCartItem] = useMutation(CREATE_CART_ITEM);
+  const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
+  const userId = localStorage.getItem("userId");
+
+  const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
+    variables: {
+      where: {
+        id: localStorage.getItem("cartItemId")
+      }
+    },
+    skip: !localStorage.getItem("cartItemId")
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
@@ -92,8 +125,6 @@ function ProductionDetail() {
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
-
-  const userId = localStorage.getItem("userId");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -161,26 +192,50 @@ function ProductionDetail() {
       }
     }
 
-    try {
-      await createCartItem({
-        variables: {
-          where: { id: { equals: selectedProduct.id } },
-          data: {
-            cartId: { connect: { id: cartId } },
-            price: selectedProduct.productPrice,
-            productId: { connect: { id: selectedProduct.id } },
-            quantity: 1,
-          },
-        },
-      });
+    await refetch();
 
-      toast.success("Đã thêm vào giỏ hàng!", {
-        icon: "🛒",
-      });
-    } catch (err) {
-      console.error("Error adding to cart:", err);
-      toast.error(`Error adding to cart: ${err.message}`);
+    const existingCartItem = cartItemData?.cartItem;
+
+    if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
+      try {
+        await updateCartItemQuantity({
+          variables: {
+            where: { id: existingCartItem.id },
+            data: { quantity: existingCartItem.quantity + 1 },
+          },
+        });
+
+        toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
+          icon: '🛒',
+        });
+      } catch (err) {
+        console.error("Error updating cart item quantity:", err);
+        toast.error(`Error updating cart item quantity: ${err.message}`);
+      }
+    } else {
+      try {
+        const { data } = await createCartItem({
+          variables: {
+            data: {
+              cartId: { connect: { id: cartId } },
+              price: selectedProduct.productPrice,
+              productId: { connect: { id: selectedProduct.id } },
+              quantity: 1,
+            },
+          },
+        });
+
+        localStorage.setItem("cartItemId", data.createCartItem.id);
+
+        toast('Đã thêm vào giỏ hàng!', {
+          icon: '🛒',
+        });
+      } catch (err) {
+        console.error("Error adding to cart:", err);
+        toast.error(`Error adding to cart: ${err.message}`);
+      }
     }
+    await refetch();
   };
 
   return (
