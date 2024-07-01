@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
-import "./ProductionDetail.css";
+import {
+  Container,
+  Grid,
+  Typography,
+  Button,
+  TextField,
+  Box,
+  Card,
+  CardMedia,
+  CardContent,
+  CircularProgress,
+} from "@mui/material";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
+import "./ProductionDetail.css";
 
 const GET_PRODUCT = gql`
   query Products {
@@ -95,6 +107,11 @@ function ProductionDetail() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (inputFeedback.comment.trim() === "") {
+      toast.error("Hãy nhập đánh giá của ba mẹ vào đây nhé !!!");
+      return;
+    }
+
     try {
       await createFeedback({
         variables: {
@@ -105,20 +122,22 @@ function ProductionDetail() {
           },
         },
       });
-      alert("Feedback submitted successfully!");
+      toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
     } catch (err) {
       console.error("Error submitting feedback:", err);
-      alert(`Error submitting feedback: ${err.message}`);
+      toast.error(`Error submitting feedback: ${err.message}`);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading product details</div>;
+  if (loading) return <CircularProgress />;
+  if (error)
+    return <Typography color="error">Error loading product details</Typography>;
 
   const selectedProduct = data?.products?.find((product) => product.id === id);
 
-  if (!selectedProduct) return <div>Product not found</div>;
+  if (!selectedProduct)
+    return <Typography color="error">Product not found</Typography>;
 
   const handleAddToCart = async () => {
     let cartId = localStorage.getItem("cartId");
@@ -149,18 +168,14 @@ function ProductionDetail() {
           data: {
             cartId: { connect: { id: cartId } },
             price: selectedProduct.productPrice,
-            productId: { connect: 
-              { 
-                id: selectedProduct.id 
-              },
-            },
+            productId: { connect: { id: selectedProduct.id } },
             quantity: 1,
           },
         },
       });
 
-      toast('Đã thêm vào giỏ hàng!', {
-        icon: '🛒',
+      toast.success("Đã thêm vào giỏ hàng!", {
+        icon: "🛒",
       });
     } catch (err) {
       console.error("Error adding to cart:", err);
@@ -172,66 +187,110 @@ function ProductionDetail() {
     <div>
       <Toaster />
       <Header />
-      <div className="product-detail-container">
-        <div className="product-upper">
-          <div className="product-image">
-            {selectedProduct.productImage?.publicUrl && (
-              <img
-                src={selectedProduct.productImage.publicUrl}
-                alt={selectedProduct.name}
-              />
-            )}
-          </div>
-          <div className="product-info">
-            <h1>{selectedProduct.name}</h1>
-            <div className="product-price">
-              {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
-            </div>
-            <ProductCounter />
-            {username ? (
-              <div className="product-actions">
-                <button className="button-large btn-buy">Mua ngay</button>
-                <button
-                  className="button-large btn-cart"
-                  onClick={handleAddToCart}
-                >
-                  Thêm vào giỏ hàng
-                </button>
-              </div>
-            ) : (
-              <div className="product-actions">
-                <Link to="/Login">
-                  <button className="button-large btn-buy">Mua ngay</button>
-                </Link>
-                <Link to="/Login">
-                  <button className="button-large btn-cart">
-                    Thêm vào giỏ hàng
-                  </button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="product-lower">
-          <div className="product-description">
-            <h2>Mô tả sản phẩm</h2>
-            {selectedProduct.productDescription}
-          </div>
-          <div className="product-recommendations">
-            <h2>Các sản phẩm tương tự</h2>
-          </div>
-          <div className="product-comments">
-            <h2>Bình luận</h2>
-            <textarea
+      <Container maxWidth="lg" className="product-detail-container">
+        <Card className="product-upper">
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6} className="product-image">
+              {selectedProduct.productImage?.publicUrl && (
+                <CardMedia
+                  component="img"
+                  image={selectedProduct.productImage.publicUrl}
+                  alt={selectedProduct.name}
+                  className="product-image"
+                />
+              )}
+            </Grid>
+            <Grid item xs={12} md={6} className="product-info">
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  {selectedProduct.name}
+                </Typography>
+                <Typography variant="h5" gutterBottom>
+                  {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
+                </Typography>
+                <ProductCounter />
+                {username ? (
+                  <Box
+                    className="product-actions"
+                    display="flex"
+                    gap={2}
+                    marginTop={2}
+                  >
+                    <Button
+                      variant="contained"
+                      color="error"
+                      className="btn-buy"
+                    >
+                      Mua ngay
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className="btn-cart"
+                      onClick={handleAddToCart}
+                    >
+                      Thêm vào giỏ hàng
+                    </Button>
+                  </Box>
+                ) : (
+                  <Box className="product-actions">
+                    <Link to="/Login">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className="btn-buy"
+                      >
+                        Mua ngay
+                      </Button>
+                    </Link>
+                    <Link to="/Login">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className="btn-cart"
+                      >
+                        Thêm vào giỏ hàng
+                      </Button>
+                    </Link>
+                  </Box>
+                )}
+              </CardContent>
+            </Grid>
+          </Grid>
+        </Card>
+        <Box className="product-lower">
+          <Box className="product-description">
+            <Typography variant="h6">Mô tả sản phẩm</Typography>
+            <Typography variant="body1">
+              {selectedProduct.productDescription}
+            </Typography>
+          </Box>
+          <Box className="product-recommendations">
+            <Typography variant="h6">Các sản phẩm tương tự</Typography>
+          </Box>
+          <Box className="product-comments">
+            <Typography variant="h6">Bình luận</Typography>
+            <TextField
               name="comment"
               value={inputFeedback.comment}
               onChange={handleChange}
               placeholder="Hãy viết nội dung..."
-            ></textarea>
-            <button onClick={handleSubmit}>Submit Comment</button>
-          </div>
-        </div>
-      </div>
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
+            />
+            <Button
+              onClick={handleSubmit}
+              variant="contained"
+              color="primary"
+              style={{ marginTop: "10px" }}
+            >
+              Submit Comment
+            </Button>
+          </Box>
+        </Box>
+      </Container>
       <Footer />
     </div>
   );
