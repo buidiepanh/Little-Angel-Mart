@@ -11,7 +11,7 @@ import {
   Card,
   CardMedia,
   CardContent,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import ProductCounter from "../../component/ProductionDetail/ProductCounter";
 import Header from "../../component/header/Header";
@@ -138,6 +138,11 @@ function ProductionDetail() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (inputFeedback.comment.trim() === "") {
+      toast.error("Hãy nhập đánh giá của ba mẹ vào đây nhé !!!");
+      return;
+    }
+
     try {
       await createFeedback({
         variables: {
@@ -157,11 +162,13 @@ function ProductionDetail() {
   };
 
   if (loading) return <CircularProgress />;
-  if (error) return <Typography color="error">Error loading product details</Typography>;
+  if (error)
+    return <Typography color="error">Error loading product details</Typography>;
 
   const selectedProduct = data?.products?.find((product) => product.id === id);
 
-  if (!selectedProduct) return <Typography color="error">Product not found</Typography>;
+  if (!selectedProduct)
+    return <Typography color="error">Product not found</Typography>;
 
   const handleAddToCart = async () => {
     let cartId = localStorage.getItem("cartId");
@@ -259,8 +266,17 @@ function ProductionDetail() {
                 </Typography>
                 <ProductCounter />
                 {username ? (
-                  <Box className="product-actions" display="flex" gap={2} marginTop={2}>
-                    <Button variant="contained" color="error" className="btn-buy">
+                  <Box
+                    className="product-actions"
+                    display="flex"
+                    gap={2}
+                    marginTop={2}
+                  >
+                    <Button
+                      variant="contained"
+                      color="error"
+                      className="btn-buy"
+                    >
                       Mua ngay
                     </Button>
                     <Button
@@ -275,12 +291,20 @@ function ProductionDetail() {
                 ) : (
                   <Box className="product-actions">
                     <Link to="/Login">
-                      <Button variant="contained" color="secondary" className="btn-buy">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className="btn-buy"
+                      >
                         Mua ngay
                       </Button>
                     </Link>
                     <Link to="/Login">
-                      <Button variant="contained" color="primary" className="btn-cart">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className="btn-cart"
+                      >
                         Thêm vào giỏ hàng
                       </Button>
                     </Link>
@@ -293,7 +317,9 @@ function ProductionDetail() {
         <Box className="product-lower">
           <Box className="product-description">
             <Typography variant="h6">Mô tả sản phẩm</Typography>
-            <Typography variant="body1">{selectedProduct.productDescription}</Typography>
+            <Typography variant="body1">
+              {selectedProduct.productDescription}
+            </Typography>
           </Box>
           <Box className="product-recommendations">
             <Typography variant="h6">Các sản phẩm tương tự</Typography>

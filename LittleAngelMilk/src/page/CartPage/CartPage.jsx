@@ -12,6 +12,9 @@ import { FaCheck } from "react-icons/fa";
 const GET_CART_ITEMS = gql`
   query Query($where: CartItemWhereInput!) {
     cartItems(where: $where) {
+const GET_CART_ITEMS = gql`
+  query Query($where: CartItemWhereInput!) {
+    cartItems(where: $where) {
       cartId {
         id
       }
@@ -33,6 +36,9 @@ const GET_CART_ITEMS = gql`
 const DELETE_CART_ITEM = gql`
   mutation DeleteCartItem($where: CartItemWhereUniqueInput!) {
     deleteCartItem(where: $where) {
+const DELETE_CART_ITEM = gql`
+  mutation DeleteCartItem($where: CartItemWhereUniqueInput!) {
+    deleteCartItem(where: $where) {
       cartId {
         id
       }
@@ -50,6 +56,7 @@ const CartPage = () => {
   const [items, setItems] = useState([]);
   const cartId = localStorage.getItem("cartId");
 
+  const { data, loading, error } = useQuery(GET_CART_ITEMS, {
   const { data, loading, error } = useQuery(GET_CART_ITEMS, {
     variables: {
       where: {
@@ -79,8 +86,10 @@ const CartPage = () => {
       });
 
       const newCartItems = existingCartItems.cartItems.filter(item => item.id !== deleteCartItem.id);
+      const newCartItems = existingCartItems.cartItems.filter(item => item.id !== deleteCartItem.id);
 
       cache.writeQuery({
+        query: GET_CART_ITEMS,
         query: GET_CART_ITEMS,
         variables: {
           where: {
@@ -91,6 +100,7 @@ const CartPage = () => {
             }
           }
         },
+        data: { cartItems: newCartItems }
         data: { cartItems: newCartItems }
       });
     }
@@ -112,6 +122,7 @@ const CartPage = () => {
 
   const handleRemoveItem = async (id) => {
     try {
+      await deleteCartItem({
       await deleteCartItem({
         variables: {
           where: { id: id }
