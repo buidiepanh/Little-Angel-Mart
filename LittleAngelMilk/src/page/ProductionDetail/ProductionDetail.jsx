@@ -36,6 +36,15 @@ const GET_PRODUCT = gql`
   }
 `;
 
+const GET_PRODUCT_FEEDBACK = gql`
+  query Query($productId: ID!) {
+    feedbacks(where: { product: { id: { equals: $productId } } }) {
+      id
+      comment
+    }
+  }
+`;
+
 const GET_CART_ITEM = gql`
   query Query($where: CartItemWhereUniqueInput!) {
     cartItem(where: $where) {
@@ -47,6 +56,7 @@ const GET_CART_ITEM = gql`
     }
   }
 `;
+
 const CREATE_CART = gql`
   mutation CreateCart($data: CartCreateInput!) {
     createCart(data: $data) {
@@ -97,6 +107,16 @@ const FEEDBACK_MUTATION = gql`
 function ProductionDetail() {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_PRODUCT);
+  const selectedProduct = data?.products?.find((product) => product.id === id);
+  const { data: feedbackOfProduct } = useQuery(GET_PRODUCT_FEEDBACK, {
+    variables: { productId: selectedProduct?.id },
+    skip: !selectedProduct
+  });
+
+
+
+  console.log(feedbackOfProduct);
+
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [createCart] = useMutation(CREATE_CART);
@@ -112,6 +132,7 @@ function ProductionDetail() {
     },
     skip: !localStorage.getItem("cartItemId")
   });
+
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
     const user = localStorage.getItem("userName");
@@ -120,7 +141,6 @@ function ProductionDetail() {
     }
   }, []);
   
-
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
@@ -141,7 +161,7 @@ function ProductionDetail() {
       toast.error("Hãy nhập đánh giá của ba mẹ vào đây nhé !!!");
       return;
     }
-
+  
     try {
       await createFeedback({
         variables: {
@@ -154,6 +174,7 @@ function ProductionDetail() {
       });
       toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
+
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -164,7 +185,7 @@ function ProductionDetail() {
   if (error)
     return <Typography color="error">Error loading product details</Typography>;
 
-  const selectedProduct = data?.products?.find((product) => product.id === id);
+
 
   if (!selectedProduct)
     return <Typography color="error">Product not found</Typography>;
@@ -200,6 +221,7 @@ function ProductionDetail() {
     }
 /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
 
+    await refetch();
     // const existingCartItem = cartItemData?.cartItem;
 
     // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
@@ -343,26 +365,44 @@ function ProductionDetail() {
             <Typography variant="h6">Các sản phẩm tương tự</Typography>
           </Box>
           <Box className="product-comments">
-            <Typography variant="h6">Bình luận</Typography>
-            <TextField
-              name="comment"
-              value={inputFeedback.comment}
-              onChange={handleChange}
-              placeholder="Hãy viết nội dung..."
-              multiline
-              rows={4}
-              variant="outlined"
-              fullWidth
-            />
-            <Button
-              onClick={handleSubmit}
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "10px" }}
-            >
-              Submit Comment
-            </Button>
-          </Box>
+    <Typography variant="h6">Bình luận</Typography>
+    <TextField
+        name="comment"
+        value={inputFeedback.comment}
+        onChange={handleChange}
+        placeholder="Hãy viết nội dung..."
+        multiline
+        rows={4}
+        variant="outlined"
+        fullWidth
+    />
+    <Button
+        onClick={handleSubmit}
+        variant="contained"
+        color="primary"
+        style={{ marginTop: "10px" }}
+    >
+        Submit Comment
+    </Button>
+    {/* Hiển thị feedbacks */}
+    {feedbackOfProduct?.feedbacks?.length > 0 ? (
+        feedbackOfProduct.feedbacks.map((feedback, index) => (
+            <Box key={index} className="feedback-item">
+    
+                <div className="feedback-content">
+                    <Typography variant="body1">{feedback.comment}</Typography>
+                    <div className="feedback-info">
+                        <span>User</span> {/* Set user name hard-coded as "User" */}
+                        
+                    </div>
+                </div>
+ 
+            </Box>
+        ))
+    ) : (
+        <Typography variant="body2">Chưa có bình luận nào.</Typography>
+    )}
+</Box>
         </Box>
       </Container>
       <Footer />

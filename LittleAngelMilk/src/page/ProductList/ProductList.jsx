@@ -4,6 +4,7 @@ import { useQuery, gql } from "@apollo/client";
 import img1 from "/src/assets/anh1.png";
 import { Link, useParams } from "react-router-dom";
 import Header from "../../component/header/Header";
+import Footer from "../../component/footer/footer"; 
 
 function ProductsList() {
   const GET_PRODUCT = gql`
@@ -117,6 +118,7 @@ function ProductsList() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
