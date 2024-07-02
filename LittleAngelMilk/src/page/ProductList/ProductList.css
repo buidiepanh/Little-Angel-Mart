@@ -87,6 +87,11 @@
   }
 
   .product-list-page {
-    background-color: #80e2f8; /* Màu nền chỉ dành cho ProductList */
-    padding: 20px; /* Padding tùy chỉnh */
+    background-color: #80e2f8; 
+    padding: 20px; 
+}
+
+.product-card a {
+  text-decoration: none; 
+  color: inherit; 
 }
