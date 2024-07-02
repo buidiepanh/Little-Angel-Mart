@@ -168,7 +168,7 @@ function Content() {
       <div className="content__article">
         <div className="title">
           <h3>Các bài viết mới</h3>
-          <a href="#">Xem thêm</a>
+          <Link to="/posts">Xem thêm</Link>
         </div>
 
         <div className="content__articles">
