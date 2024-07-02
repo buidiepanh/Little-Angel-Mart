@@ -1,0 +1,146 @@
+/* PostPage.css */
+
+
+
+.postPage {
+  font-family: "Quicksand", sans-serif;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: #E0F7FA;
+  margin-top: 200px;
+}
+
+.postPage .content-wrapper {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.postPage__articles {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
+  margin-block: 2rem;
+  gap: 2rem;
+}
+
+.postPage__item {
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  background: #ECE9E6;
+  background: linear-gradient(to right, #FFFFFF, #ECE9E6);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.3s;
+  height: 550px;
+}
+
+.postPage__item:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.postPage .card__header img {
+  max-width: 100%;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.postPage .card__body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.postPage .tag {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+.postPage .tag + .tag {
+  margin-left: 8px;
+}
+
+.postPage .tag-blue {
+  background: #56CCF2;
+  background: linear-gradient(to bottom, #2F80ED, #56CCF2);
+  color: #fafafa;
+}
+
+.postPage .tag-brown {
+  background: #D1913C;
+  background: linear-gradient(to bottom, #FFD194, #D1913C);
+  color: #fafafa;
+}
+
+.postPage .tag-red {
+  background: #cb2d3e;
+  background: linear-gradient(to bottom, #ef473a, #cb2d3e);
+  color: #fafafa;
+}
+
+.postPage .card__body h4 {
+  font-size: 24px;
+  text-transform: capitalize;
+}
+
+.postPage .card__body p {
+  font-size: 16px;
+  color: #666;
+}
+
+.postPage .card__footer {
+  display: flex;
+  padding: 16px;
+  margin-top: auto;
+}
+
+.postPage .user {
+  display: flex;
+  gap: 8px;
+}
+
+.postPage .user__image {
+  border-radius: 50%;
+}
+
+.postPage .user__info > small {
+  color: #666;
+}
+
+footer {
+  width: 100%;
+  background-color: #007bff;
+  padding: 20px 0;
+  text-align: center;
+  color: white;
+}
+
+footer p {
+  margin: 0;
+}
+
+footer .footer-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+footer .footer-container div {
+  margin: 10px 0;
+}
