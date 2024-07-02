@@ -194,48 +194,49 @@ function ProductionDetail() {
     
   //   await refetch();
 
-  //   const existingCartItem = cartItemData?.cartItem;
+    // const existingCartItem = cartItemData?.cartItem;
 
-  //   if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
-  //     try {
-  //       await updateCartItemQuantity({
-  //         variables: {
-  //           where: { id: existingCartItem.id },
-  //           data: { quantity: existingCartItem.quantity + 1 },
-  //         },
-  //       });
+    // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
+    //   try {
+    //     await updateCartItemQuantity({
+    //       variables: {
+    //         where: { id: existingCartItem.id },
+    //         data: { quantity: existingCartItem.quantity + 1 },
+    //       },
+    //     });
 
-  //       toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
-  //         icon: '🛒',
-  //       });
-  //     } catch (err) {
-  //       console.error("Error updating cart item quantity:", err);
-  //       toast.error(`Error updating cart item quantity: ${err.message}`);
-  //     }
-  //   } else {
-  //     try {
-  //       const { data } = await createCartItem({
-  //         variables: {
-  //           data: {
-  //             cartId: { connect: { id: cartId } },
-  //             price: selectedProduct.productPrice,
-  //             productId: { connect: { id: selectedProduct.id } },
-  //             quantity: 1,
-  //           },
-  //         },
-  //       });
+    //     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
+    //       icon: '🛒',
+    //     });
+    //   } catch (err) {
+    //     console.error("Error updating cart item quantity:", err);
+    //     toast.error(`Error updating cart item quantity: ${err.message}`);
+    //   }
+    // } 
+  // else {
+      try {
+        const { data } = await createCartItem({
+          variables: {
+            data: {
+              cartId: { connect: { id: cartId } },
+              price: selectedProduct.productPrice,
+              productId: { connect: { id: selectedProduct.id } },
+              quantity: 1,
+            },
+          },
+        });
 
-  //       localStorage.setItem("cartItemId", data.createCartItem.id);
+        localStorage.setItem("cartItemId", data.createCartItem.id);
 
-  //       toast('Đã thêm vào giỏ hàng!', {
-  //         icon: '🛒',
-  //       });
-  //     } catch (err) {
-  //       console.error("Error adding to cart:", err);
-  //       toast.error(`Error adding to cart: ${err.message}`);
-  //     }
-  //   }
-  //   await refetch();
+        toast('Đã thêm vào giỏ hàng!', {
+          icon: '🛒',
+        });
+      } catch (err) {
+        console.error("Error adding to cart:", err);
+        toast.error(`Error adding to cart: ${err.message}`);
+      }
+    // }
+    // await refetch();
   };
 
   return (
