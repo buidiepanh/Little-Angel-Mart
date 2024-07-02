@@ -6,7 +6,7 @@ import { FaAngleDown } from "react-icons/fa";
 import { BsCartCheck } from "react-icons/bs";
 import { useQuery, gql } from "@apollo/client";
 import "./Header.css";
-import logo from '/src/assets/raw_logo.png';
+import logo from "/src/assets/raw_logo.png";
 
 export const ProductContext = createContext();
 
@@ -133,7 +133,10 @@ const Header = () => {
           <div className="CartBtn">
             <div>
               {username ? (
-                <FaShoppingCart className="CartCircle" onClick={handleCartClick} />
+                <FaShoppingCart
+                  className="CartCircle"
+                  onClick={handleCartClick}
+                />
               ) : (
                 <Link to="/login">
                   <FaShoppingCart className="CartCircle" />

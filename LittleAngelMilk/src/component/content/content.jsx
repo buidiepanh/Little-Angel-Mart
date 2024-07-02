@@ -38,8 +38,8 @@ const GET_PRODUCT = gql`
 `;
 
 const GET_POST = gql`
-  query Query {
-    posts {
+  query Query($take: Int) {
+    posts(take: $take) {
       id
       title
       image {
@@ -84,7 +84,9 @@ function Content() {
     data: postData,
     loading: postLoading,
     error: postError,
-  } = useQuery(GET_POST);
+  } = useQuery(GET_POST, {
+    variables: { take: 3 },
+  });
 
   const { pathname, hash } = location;
 
@@ -101,7 +103,7 @@ function Content() {
   if (productError || postError) return <p>Error</p>;
 
   // console.log(productData);
-  // console.log(postData);
+  console.log(postData);
 
   return (
     <div className="content">
