@@ -167,3 +167,33 @@ textarea {
     cursor: pointer; 
 }
 
+.feedback-item {
+    background: #fff;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+.feedback-item .feedback-content {
+    flex: 1;
+}
+
+.feedback-item .feedback-info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.feedback-item .feedback-info span {
+    margin-right: 10px;
+}
+
+
