@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-
+import SimilarProducts from "../SimilarProducts/SimilarProducts";
 import {
   Container,
   Grid,
@@ -385,7 +385,8 @@ await refetch();
             </Typography>
           </Box>
           <Box className="product-recommendations">
-            <Typography variant="h6">Các sản phẩm tương tự</Typography>
+            <Typography variant="h6">Các sản phẩm khác</Typography>
+            <SimilarProducts />
           </Box>
           <Box className="product-comments">
             <Typography variant="h6">Bình luận</Typography>
@@ -405,7 +406,7 @@ await refetch();
                 color="primary"
                 style={{ marginTop: "10px" }}
             >
-                Submit Comment
+                Đăng bình luận
             </Button>
             {/* Hiển thị feedbacks */}
             {feedbacks.slice(0, visibleFeedbackCount).map((feedback, index) => (
