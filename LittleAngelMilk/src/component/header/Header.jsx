@@ -187,7 +187,7 @@ const Header = () => {
           </div>
         </div>
         <Link to="/#articles">Bài viết</Link>
-        <Link to="/voucher">Voucher</Link>
+        <Link to="/">Shop chúng tôi</Link>
       </div>
     </div>
   );

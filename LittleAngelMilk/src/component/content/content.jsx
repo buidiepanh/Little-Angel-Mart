@@ -102,7 +102,7 @@ function Content() {
   if (productLoading || postLoading) return <p>Loading</p>;
   if (productError || postError) return <p>Error</p>;
 
-  // console.log(productData);
+  console.log(productData);
   console.log(postData);
 
   return (
