@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import SimilarProducts from "../SimilarProducts/SimilarProducts";
 import {
   Container,
   Grid,
@@ -113,10 +115,13 @@ function ProductionDetail() {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const selectedProduct = data?.products?.find((product) => product.id === id);
-  const { data: feedbackOfProduct } = useQuery(GET_PRODUCT_FEEDBACK, {
-    variables: { productId: selectedProduct?.id },
-    skip: !selectedProduct,
-  });
+  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
+    GET_PRODUCT_FEEDBACK,
+    {
+      variables: { productId: selectedProduct?.id },
+      skip: !selectedProduct,
+    }
+  );
 
   // console.log(feedbackOfProduct);
 
@@ -147,6 +152,30 @@ function ProductionDetail() {
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
+
+  const [feedbacks, setFeedbacks] = useState(() => {
+    const storedFeedbacks = localStorage.getItem(
+      `feedbacks_${selectedProduct?.id}`
+    );
+    return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
+  });
+
+  useEffect(() => {
+    if (feedbackOfProduct?.feedbacks) {
+      const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
+        comment: fb.comment,
+        date: fb.date || new Date().toLocaleString(), // Use the date from feedback or current date for existing feedbacks
+      }));
+      setFeedbacks(initialFeedbacks);
+    }
+  }, [feedbackOfProduct]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      `feedbacks_${selectedProduct?.id}`,
+      JSON.stringify(feedbacks)
+    );
+  }, [feedbacks, selectedProduct]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -193,7 +222,6 @@ function ProductionDetail() {
   const handleAddToCart = async () => {
     // Get cart ID.
     let cartId = localStorage.getItem("cartId");
-    // If it returns null(cart has not been created), create a new cart with date created and user(userid) that creates the cart
     if (!cartId) {
       try {
         const { data } = await createCart({
@@ -208,8 +236,6 @@ function ProductionDetail() {
             },
           },
         });
-        //automatically assign new ID to create that has been created, and set the id into localStorage in case user wants to
-        //add more items in the same cart
         cartId = data.createCart.id;
         localStorage.setItem("cartId", cartId);
       } catch (err) {
@@ -359,7 +385,8 @@ function ProductionDetail() {
             </Typography>
           </Box>
           <Box className="product-recommendations">
-            <Typography variant="h6">Các sản phẩm tương tự</Typography>
+            <Typography variant="h6">Các sản phẩm khác</Typography>
+            <SimilarProducts />
           </Box>
           <Box className="product-comments">
             <Typography variant="h6">Bình luận</Typography>
