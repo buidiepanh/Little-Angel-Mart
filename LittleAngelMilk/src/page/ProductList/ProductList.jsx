@@ -4,7 +4,7 @@ import { useQuery, gql } from "@apollo/client";
 import img1 from "/src/assets/anh1.png";
 import { Link, useParams } from "react-router-dom";
 import Header from "../../component/header/Header";
-import Footer from "../../component/footer/footer"; 
+import Footer from "../../component/footer/footer";
 
 function ProductsList() {
   const GET_PRODUCT = gql`
@@ -35,7 +35,8 @@ function ProductsList() {
   const { data } = useQuery(GET_PRODUCT);
   const { searchUrl } = useParams();
   const searchValue = (searchUrl || "").toLowerCase();
-  const products = data.products;
+  const products = data?.products || []; //Prevent lost data when refresh
+  console.log(products);
   const [productCategory, setProductCategory] = useState("");
   const [productPrice, setProductPrice] = useState("");
 
@@ -67,7 +68,7 @@ function ProductsList() {
     error: categoryError,
   } = useQuery(GET_CATEGORY);
 
-  console.log(categoryData);
+  // console.log(categoryData);
 
   if (categoryLoading) return <p>Loading</p>;
   if (categoryError) return <p>Error</p>;
