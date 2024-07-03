@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SimilarProducts from "../SimilarProducts/SimilarProducts";
 import {
   Container,
@@ -21,7 +21,6 @@ import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
 import "./ProductionDetail.css";
 
-// Query to get product
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -35,15 +34,6 @@ const GET_PRODUCT = gql`
         publicUrl
       }
       productPrice
-    }
-  }
-`;
-
-// Mutation to create feedback
-const FEEDBACK_MUTATION = gql`
-  mutation Mutation($data: FeedbackCreateInput!) {
-    createFeedback(data: $data) {
-      comment
     }
   }
 `;
@@ -100,13 +90,18 @@ const CREATE_CART_ITEM = gql`
 `;
 
 const UPDATE_CART_ITEM_QUANTITY = gql`
-  mutation UpdateCartItem(
-    $where: CartItemWhereUniqueInput!
-    $data: CartItemUpdateInput!
-  ) {
+  mutation UpdateCartItem($where: CartItemWhereUniqueInput!, $data: CartItemUpdateInput!) {
     updateCartItem(where: $where, data: $data) {
       id
       quantity
+    }
+  }
+`;
+
+const FEEDBACK_MUTATION = gql`
+  mutation Mutation($data: FeedbackCreateInput!) {
+    createFeedback(data: $data) {
+      comment
     }
   }
 `;
@@ -115,15 +110,10 @@ function ProductionDetail() {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const selectedProduct = data?.products?.find((product) => product.id === id);
-  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
-    GET_PRODUCT_FEEDBACK,
-    {
-      variables: { productId: selectedProduct?.id },
-      skip: !selectedProduct,
-    }
-  );
-
-  // console.log(feedbackOfProduct);
+  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(GET_PRODUCT_FEEDBACK, {
+    variables: { productId: selectedProduct?.id },
+    skip: !selectedProduct
+  });
 
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -135,10 +125,10 @@ function ProductionDetail() {
   const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
     variables: {
       where: {
-        id: localStorage.getItem("cartItemId"),
-      },
+        id: localStorage.getItem("cartItemId")
+      }
     },
-    skip: !localStorage.getItem("cartItemId"),
+    skip: !localStorage.getItem("cartItemId")
   });
 
   useEffect(() => {
@@ -154,27 +144,22 @@ function ProductionDetail() {
   });
 
   const [feedbacks, setFeedbacks] = useState(() => {
-    const storedFeedbacks = localStorage.getItem(
-      `feedbacks_${selectedProduct?.id}`
-    );
+    const storedFeedbacks = localStorage.getItem(`feedbacks_${selectedProduct?.id}`);
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
-      const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
+      const initialFeedbacks = feedbackOfProduct.feedbacks.map(fb => ({
         comment: fb.comment,
-        date: fb.date || new Date().toLocaleString(), // Use the date from feedback or current date for existing feedbacks
+        date: fb.date || new Date().toLocaleString() // Use the date from feedback or current date for existing feedbacks
       }));
       setFeedbacks(initialFeedbacks);
     }
   }, [feedbackOfProduct]);
 
   useEffect(() => {
-    localStorage.setItem(
-      `feedbacks_${selectedProduct?.id}`,
-      JSON.stringify(feedbacks)
-    );
+    localStorage.setItem(`feedbacks_${selectedProduct?.id}`, JSON.stringify(feedbacks));
   }, [feedbacks, selectedProduct]);
 
   const handleChange = (e) => {
@@ -194,6 +179,8 @@ function ProductionDetail() {
       return;
     }
 
+    const currentDate = new Date().toLocaleString();  // Get the current date and time
+
     try {
       await createFeedback({
         variables: {
@@ -206,6 +193,7 @@ function ProductionDetail() {
       });
       toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
+      setFeedbacks([...feedbacks, { comment: inputFeedback.comment, date: currentDate }]); // Store the feedback with date
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -220,20 +208,18 @@ function ProductionDetail() {
     return <Typography color="error">Product not found</Typography>;
 
   const handleAddToCart = async () => {
-    // Get cart ID.
     let cartId = localStorage.getItem("cartId");
-    console.log("Retrieved cartId from localStorage:", cartId);
-    // If it returns null(cart has not been created), create a new cart with date created and user(userid) that creates the cart
     if (!cartId) {
       try {
         const { data } = await createCart({
           variables: {
             data: {
-              createdAt: new Date().toISOString(), // set the creation date for the cart
-              user: {
-                connect: {
-                  id: userId, // connect the cart to the user
-                },
+              createdAt: new Date().toISOString(),
+              user: { 
+                connect: 
+                { 
+                  id: userId
+                } 
               },
             },
           },
@@ -246,62 +232,74 @@ function ProductionDetail() {
         return;
       }
     }
-    /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
+/*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
 
-    await refetch();
-    // const existingCartItem = cartItemData?.cartItem;
+await refetch();
+// const existingCartItem = cartItemData?.cartItem;
 
-    // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
-    //   try {
-    //     await updateCartItemQuantity({
-    //       variables: {
-    //         where: { id: existingCartItem.id },
-    //         data: { quantity: existingCartItem.quantity + 1 },
-    //       },
-    //     });
+// if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
+//   try {
+//     await updateCartItemQuantity({
+//       variables: {
+//         where: { id: existingCartItem.id },
+//         data: { quantity: existingCartItem.quantity + 1 },
+//       },
+//     });
 
-    //     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
-    //       icon: '🛒',
-    //     });
-    //   } catch (err) {
-    //     console.error("Error updating cart item quantity:", err);
-    //     toast.error(`Error updating cart item quantity: ${err.message}`);
-    //   }
-    // }
-    // else {
+//     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
+//       icon: '🛒',
+//     });
+//   } catch (err) {
+//     console.error("Error updating cart item quantity:", err);
+//     toast.error(`Error updating cart item quantity: ${err.message}`);
+//   }
+// } 
+// else {
 
-    //add item to cart
+
+//add item to cart
+
     try {
       const { data } = await createCartItem({
         variables: {
           data: {
-            cartId: {
-              connect: {
-                id: cartId, // connect the item to the cart
-              },
+            cartId: { 
+              connect: 
+              { 
+                id: cartId
+              } 
             },
-            price: selectedProduct.productPrice, // set the product price
-            productId: {
-              connect: {
-                id: selectedProduct.id, // connect the item to the product
-              },
+            price: selectedProduct.productPrice,
+            productId: { 
+              connect: 
+              { 
+                id: selectedProduct.id
+              } 
             },
-            quantity: 1, // set the initial quantity to 1
+            quantity: 1,
           },
         },
       });
 
       localStorage.setItem("cartItemId", data.createCartItem.id);
 
-      toast("Đã thêm vào giỏ hàng!", {
-        // show success toast
-        icon: "🛒",
+      toast('Đã thêm vào giỏ hàng!', {
+        icon: '🛒',
       });
     } catch (err) {
       console.error("Error adding to cart:", err);
-      toast.error(`Error adding to cart: ${err.message}`); // Show error toast
+      toast.error(`Error adding to cart: ${err.message}`);
     }
-    // }
+  };
+
+  const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
+
+  const handleLoadMoreFeedback = () => {
+    setVisibleFeedbackCount((prevCount) => prevCount + 2);
+  };
+
+  const handleLoadLessFeedback = () => {
+    setVisibleFeedbackCount((prevCount) => Math.max(prevCount - 2, 2));
   };
 
   return (
@@ -387,45 +385,64 @@ function ProductionDetail() {
             </Typography>
           </Box>
           <Box className="product-recommendations">
-            <Typography variant="h6">Các sản phẩm khác</Typography>
-            <SimilarProducts />
+          <Typography variant="h6">Các sản phẩm khác</Typography>
+          <SimilarProducts />
           </Box>
           <Box className="product-comments">
             <Typography variant="h6">Bình luận</Typography>
             <TextField
-              name="comment"
-              value={inputFeedback.comment}
-              onChange={handleChange}
-              placeholder="Hãy viết nội dung..."
-              multiline
-              rows={4}
-              variant="outlined"
-              fullWidth
+                name="comment"
+                value={inputFeedback.comment}
+                onChange={handleChange}
+                placeholder="Hãy viết nội dung..."
+                multiline
+                rows={4}
+                variant="outlined"
+                fullWidth
             />
             <Button
-              onClick={handleSubmit}
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "10px" }}
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                style={{ marginTop: "10px" }}
             >
-              Submit Comment
+                Submit Comment
             </Button>
             {/* Hiển thị feedbacks */}
-            {feedbackOfProduct?.feedbacks?.length > 0 ? (
-              feedbackOfProduct.feedbacks.map((feedback, index) => (
+            {feedbacks.slice(0, visibleFeedbackCount).map((feedback, index) => (
                 <Box key={index} className="feedback-item">
-                  <div className="feedback-content">
-                    <Typography variant="body1">{feedback.comment}</Typography>
-                    <div className="feedback-info">
-                      <span>User</span>{" "}
-                      {/* Set user name hard-coded as "User" */}
+                    <div className="icon-container">
+                        <AccountCircleOutlinedIcon style={{ fontSize: 50 }} />
                     </div>
-                  </div>
+                    <div className="feedback-content">
+                        <div className="feedback-header">
+                            <span>User</span>
+                            <span>{feedback.date}</span>
+                        </div>
+                        <Typography variant="body1">{feedback.comment}</Typography>
+                    </div>
                 </Box>
-              ))
-            ) : (
-              <Typography variant="body2">Chưa có bình luận nào.</Typography>
-            )}
+            ))}
+            <Box className="button-container">
+                {feedbacks.length > visibleFeedbackCount && (
+                    <Button 
+                      variant="contained"
+                      onClick={handleLoadMoreFeedback} 
+                      className="load-more-button"
+                    >
+                      Xem thêm
+                    </Button>
+                )}
+                {visibleFeedbackCount > 2 && (
+                    <Button 
+                      variant="contained"
+                      onClick={handleLoadLessFeedback} 
+                      className="load-less-button"
+                    >
+                      Giảm bớt
+                    </Button>
+                )}
+            </Box>
           </Box>
         </Box>
       </Container>
@@ -435,7 +452,3 @@ function ProductionDetail() {
 }
 
 export default ProductionDetail;
-
-
-
-// pull code mới nhất
