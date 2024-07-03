@@ -1,0 +1,41 @@
+.similar-products-carousel {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.similar-products-container {
+  display: flex;
+  overflow: hidden;
+  flex-grow: 1;
+  height: 400px;
+  ;
+}
+
+.similar-product-card {
+  flex: 0 0 25%; 
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.similar-product-card img {
+  width: 100%;
+  height: auto;
+}
+
+.similar-product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.similar-product-image {
+  height: 100px;
+  object-fit: cover;
+}
+
+.similar-products-carousel .MuiIconButton-root {
+  flex-shrink: 0;
+}
+
