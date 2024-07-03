@@ -172,6 +172,7 @@ function ProductionDetail() {
   const handleAddToCart = async () => {
     // Get cart ID. 
     let cartId = localStorage.getItem("cartId");
+    console.log("Retrieved cartId from localStorage:", cartId);
     // If it returns null(cart has not been created), create a new cart with date created and user(userid) that creates the cart
     if (!cartId) {
       try {
