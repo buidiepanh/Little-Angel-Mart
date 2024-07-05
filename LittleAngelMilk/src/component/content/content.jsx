@@ -20,6 +20,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+// Query to get product
 const GET_PRODUCT = gql`
   query Query($take: Int) {
     products(take: $take) {
@@ -37,6 +38,7 @@ const GET_PRODUCT = gql`
   }
 `;
 
+// Query to get post
 const GET_POST = gql`
   query Query($take: Int) {
     posts(take: $take) {
@@ -72,6 +74,7 @@ function Content() {
     }
   }, [location.state]);
 
+  //Start: Save data into variables
   const {
     data: productData,
     loading: productLoading,
@@ -87,6 +90,7 @@ function Content() {
   } = useQuery(GET_POST, {
     variables: { take: 3 },
   });
+  //End: Save data into variables
 
   const { pathname, hash } = location;
 
@@ -99,6 +103,7 @@ function Content() {
     }
   }, [pathname, hash]);
 
+  //Handle situation
   if (productLoading || postLoading) return <p>Loading</p>;
   if (productError || postError) return <p>Error</p>;
 
@@ -130,6 +135,8 @@ function Content() {
       </div>
       <div className="content__foryou">
         <h3>Dành cho bạn</h3>
+
+        {/* Start: Render data of product into view */}
         <Grid container spacing={2}>
           {productData &&
             productData.products.map((product) => (
@@ -156,6 +163,8 @@ function Content() {
               </Grid>
             ))}
         </Grid>
+        {/* End: Render data of product into view */}
+
         <div id="articles-section" className="content__articles"></div>
         <div className="xemthem">
           <Link to="/product-list">
@@ -174,6 +183,7 @@ function Content() {
         </div>
 
         <div className="content__articles">
+          {/* Start: Render data of post into view */}
           <Grid container spacing={2}>
             {postData &&
               postData.posts.map((post) => {
@@ -218,6 +228,7 @@ function Content() {
                 );
               })}
           </Grid>
+          {/* End: Render data of post into view */}
         </div>
       </div>
       <Toaster position="bottom-right" reverseOrder={false} />
