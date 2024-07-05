@@ -1,17 +1,16 @@
 
-.sort-container{
-  position: fixed;
-  left: 0;
-  top: 170px;
+.sort-container {
+  position: absolute;
+  left: 60px; 
+  top: 200px; 
   height: 260px;
   width: 160px;
   background-color: #5082bf;
-  z-index: 2;
+  margin-top: 20px;
   padding: 20px;
   border-radius: 10px;
-  margin-left: 60px;
-  margin-top: 50px;
 }
+
 .product-list-container {
     max-width: 1000px; 
     margin: 0 auto; 
