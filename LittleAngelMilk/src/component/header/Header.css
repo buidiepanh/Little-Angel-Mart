@@ -194,7 +194,7 @@
   display: block;
   padding: 10px;
   text-decoration: none;
-  color: black;
+  color: black !important;
   background: none;
   border: none;
   width: 100%;
