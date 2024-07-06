@@ -1,3 +1,4 @@
+// Import các thư viện cần thiết
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
@@ -21,6 +22,7 @@ import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
 import "./ProductionDetail.css";
 
+// GraphQL queries và mutations
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -110,17 +112,22 @@ const FEEDBACK_MUTATION = gql`
 `;
 
 function ProductionDetail() {
+  // Lấy ID sản phẩm từ URL
   const { id } = useParams();
+  
+  // Lấy dữ liệu sản phẩm từ API
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const selectedProduct = data?.products?.find((product) => product.id === id);
-  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
-    GET_PRODUCT_FEEDBACK,
-    {
-      variables: { productId: selectedProduct?.id },
-      skip: !selectedProduct,
-    }
-  );
 
+
+  // Lấy feedback của sản phẩm từ API
+  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(GET_PRODUCT_FEEDBACK, {
+    variables: { productId: selectedProduct?.id },
+    skip: !selectedProduct
+  });
+
+
+  // Các state và hook cần thiết
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [createCart] = useMutation(CREATE_CART);
@@ -128,6 +135,7 @@ function ProductionDetail() {
   const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
   const userId = localStorage.getItem("userId");
 
+  // Lấy dữ liệu giỏ hàng từ API
   const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
     variables: {
       where: {
@@ -137,6 +145,7 @@ function ProductionDetail() {
     skip: !localStorage.getItem("cartItemId"),
   });
 
+  // Lấy token và tên người dùng từ localStorage
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
     const user = localStorage.getItem("userName");
@@ -156,6 +165,7 @@ function ProductionDetail() {
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
+  // Lưu feedback vào state và localStorage
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
       const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
@@ -173,6 +183,7 @@ function ProductionDetail() {
     );
   }, [feedbacks, selectedProduct]);
 
+  // Xử lý thay đổi input của feedback
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInput((prevInput) => ({
@@ -183,6 +194,7 @@ function ProductionDetail() {
 
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
+  // Xử lý submit feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inputFeedback.comment.trim() === "") {
@@ -221,6 +233,7 @@ function ProductionDetail() {
   if (!selectedProduct)
     return <Typography color="error">Product not found</Typography>;
 
+  // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = async () => {
     let cartId = localStorage.getItem("cartId");
     if (!cartId) {
@@ -245,6 +258,7 @@ function ProductionDetail() {
         return;
       }
     }
+
     /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
 
     await refetch();
@@ -304,10 +318,12 @@ function ProductionDetail() {
 
   const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
 
+  // Xử lý load thêm feedback
   const handleLoadMoreFeedback = () => {
     setVisibleFeedbackCount((prevCount) => prevCount + 2);
   };
 
+  // Xử lý giảm bớt feedback
   const handleLoadLessFeedback = () => {
     setVisibleFeedbackCount((prevCount) => Math.max(prevCount - 2, 2));
   };
@@ -338,7 +354,7 @@ function ProductionDetail() {
                   {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
                 </Typography>
                 <ProductCounter />
-                {username ? (
+                {username ? (  // Kiểm tra xem người dùng đã đăng nhập chưa
                   <Box
                     className="product-actions"
                     display="flex"
@@ -356,13 +372,13 @@ function ProductionDetail() {
                       variant="contained"
                       color="primary"
                       className="btn-cart"
-                      onClick={handleAddToCart}
+                      onClick={handleAddToCart}   // Thêm sản phẩm vào giỏ hàng
                     >
                       Thêm vào giỏ hàng
                     </Button>
                   </Box>
-                ) : (
-                  <Box className="product-actions">
+                ) : ( //Nếu người dùng chưa đăng nhập, hiển thị các nút dẫn đến trang đăng nhập
+                  <Box className ="product-actions">
                     <Link to="/Login">
                       <Button
                         variant="contained"
@@ -411,7 +427,9 @@ function ProductionDetail() {
               fullWidth
             />
             <Button
-              onClick={handleSubmit}
+
+              onClick={handleSubmit} // Xử lý submit feedback
+
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
@@ -437,7 +455,9 @@ function ProductionDetail() {
               {feedbacks.length > visibleFeedbackCount && (
                 <Button
                   variant="contained"
-                  onClick={handleLoadMoreFeedback}
+
+                  onClick={handleLoadMoreFeedback} // Xử lý load thêm feedback
+
                   className="load-more-button"
                 >
                   Xem thêm
@@ -446,7 +466,9 @@ function ProductionDetail() {
               {visibleFeedbackCount > 2 && (
                 <Button
                   variant="contained"
-                  onClick={handleLoadLessFeedback}
+
+                  onClick={handleLoadLessFeedback} // Xử lý giảm bớt feedback
+
                   className="load-less-button"
                 >
                   Giảm bớt
@@ -456,7 +478,7 @@ function ProductionDetail() {
           </Box>
         </Box>
       </Container>
-      <Footer />
+      <Footer /> 
     </div>
   );
 }
