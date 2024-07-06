@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SimilarProducts from "../SimilarProducts/SimilarProducts";
 import {
   Container,
@@ -92,7 +92,10 @@ const CREATE_CART_ITEM = gql`
 `;
 
 const UPDATE_CART_ITEM_QUANTITY = gql`
-  mutation UpdateCartItem($where: CartItemWhereUniqueInput!, $data: CartItemUpdateInput!) {
+  mutation UpdateCartItem(
+    $where: CartItemWhereUniqueInput!
+    $data: CartItemUpdateInput!
+  ) {
     updateCartItem(where: $where, data: $data) {
       id
       quantity
@@ -116,11 +119,13 @@ function ProductionDetail() {
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const selectedProduct = data?.products?.find((product) => product.id === id);
 
+
   // Lấy feedback của sản phẩm từ API
   const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(GET_PRODUCT_FEEDBACK, {
     variables: { productId: selectedProduct?.id },
     skip: !selectedProduct
   });
+
 
   // Các state và hook cần thiết
   const navigate = useNavigate();
@@ -134,10 +139,10 @@ function ProductionDetail() {
   const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
     variables: {
       where: {
-        id: localStorage.getItem("cartItemId")
-      }
+        id: localStorage.getItem("cartItemId"),
+      },
     },
-    skip: !localStorage.getItem("cartItemId")
+    skip: !localStorage.getItem("cartItemId"),
   });
 
   // Lấy token và tên người dùng từ localStorage
@@ -154,23 +159,28 @@ function ProductionDetail() {
   });
 
   const [feedbacks, setFeedbacks] = useState(() => {
-    const storedFeedbacks = localStorage.getItem(`feedbacks_${selectedProduct?.id}`);
+    const storedFeedbacks = localStorage.getItem(
+      `feedbacks_${selectedProduct?.id}`
+    );
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
   // Lưu feedback vào state và localStorage
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
-      const initialFeedbacks = feedbackOfProduct.feedbacks.map(fb => ({
+      const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
         comment: fb.comment,
-        date: fb.date || new Date().toLocaleString() // Use the date from feedback or current date for existing feedbacks
+        date: fb.date || new Date().toLocaleString(), // Use the date from feedback or current date for existing feedbacks
       }));
       setFeedbacks(initialFeedbacks);
     }
   }, [feedbackOfProduct]);
 
   useEffect(() => {
-    localStorage.setItem(`feedbacks_${selectedProduct?.id}`, JSON.stringify(feedbacks));
+    localStorage.setItem(
+      `feedbacks_${selectedProduct?.id}`,
+      JSON.stringify(feedbacks)
+    );
   }, [feedbacks, selectedProduct]);
 
   // Xử lý thay đổi input của feedback
@@ -192,7 +202,7 @@ function ProductionDetail() {
       return;
     }
 
-    const currentDate = new Date().toLocaleString();  // Get the current date and time
+    const currentDate = new Date().toLocaleString(); // Get the current date and time
 
     try {
       await createFeedback({
@@ -206,7 +216,10 @@ function ProductionDetail() {
       });
       toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
-      setFeedbacks([...feedbacks, { comment: inputFeedback.comment, date: currentDate }]); // Store the feedback with date
+      setFeedbacks([
+        ...feedbacks,
+        { comment: inputFeedback.comment, date: currentDate },
+      ]); // Store the feedback with date
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -229,11 +242,10 @@ function ProductionDetail() {
           variables: {
             data: {
               createdAt: new Date().toISOString(),
-              user: { 
-                connect: 
-                { 
-                  id: userId
-                } 
+              user: {
+                connect: {
+                  id: userId,
+                },
               },
             },
           },
@@ -248,9 +260,10 @@ function ProductionDetail() {
     }
 
     /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
-    await refetch();
 
+    await refetch();
     // const existingCartItem = cartItemData?.cartItem;
+
     // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
     //   try {
     //     await updateCartItemQuantity({
@@ -267,24 +280,25 @@ function ProductionDetail() {
     //     console.error("Error updating cart item quantity:", err);
     //     toast.error(`Error updating cart item quantity: ${err.message}`);
     //   }
-    // } else {
-    //   add item to cart
+    // }
+    // else {
+
+    //add item to cart
+
     try {
       const { data } = await createCartItem({
         variables: {
           data: {
-            cartId: { 
-              connect: 
-              { 
-                id: cartId
-              } 
+            cartId: {
+              connect: {
+                id: cartId,
+              },
             },
             price: selectedProduct.productPrice,
-            productId: { 
-              connect: 
-              { 
-                id: selectedProduct.id
-              } 
+            productId: {
+              connect: {
+                id: selectedProduct.id,
+              },
             },
             quantity: 1,
           },
@@ -293,8 +307,8 @@ function ProductionDetail() {
 
       localStorage.setItem("cartItemId", data.createCartItem.id);
 
-      toast('Đã thêm vào giỏ hàng!', {
-        icon: '🛒',
+      toast("Đã thêm vào giỏ hàng!", {
+        icon: "🛒",
       });
     } catch (err) {
       console.error("Error adding to cart:", err);
@@ -413,7 +427,9 @@ function ProductionDetail() {
               fullWidth
             />
             <Button
+
               onClick={handleSubmit} // Xử lý submit feedback
+
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
@@ -439,7 +455,9 @@ function ProductionDetail() {
               {feedbacks.length > visibleFeedbackCount && (
                 <Button
                   variant="contained"
+
                   onClick={handleLoadMoreFeedback} // Xử lý load thêm feedback
+
                   className="load-more-button"
                 >
                   Xem thêm
@@ -448,7 +466,9 @@ function ProductionDetail() {
               {visibleFeedbackCount > 2 && (
                 <Button
                   variant="contained"
+
                   onClick={handleLoadLessFeedback} // Xử lý giảm bớt feedback
+
                   className="load-less-button"
                 >
                   Giảm bớt
