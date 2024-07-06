@@ -10,50 +10,18 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { formatMoney } from "../../utils/formatMoney";
+import { GET_PRODUCTS } from "../../page/Queries/product";
+import { GET_POSTS } from "../../page/Queries/post";
 
-//
+//Defined new component use styled
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
+  ...theme.typography.body2, //apply all font from theme
   padding: theme.spacing(1),
   textAlign: "center",
-  color: theme.palette.text.secondary,
+  color: theme.palette.text.secondary, //apply secondary color from theme
 }));
-
-// Query to get product
-const GET_PRODUCT = gql`
-  query Query($take: Int) {
-    products(take: $take) {
-      id
-      name
-      productPrice
-      productImage {
-        publicUrl
-      }
-      category {
-        name
-      }
-      productDescription
-    }
-  }
-`;
-
-// Query to get post
-const GET_POST = gql`
-  query Query($take: Int) {
-    posts(take: $take) {
-      id
-      title
-      image {
-        publicUrl
-      }
-      link {
-        document
-      }
-      content
-    }
-  }
-`;
 
 function Content() {
   const location = useLocation();
@@ -78,7 +46,7 @@ function Content() {
     data: productData,
     loading: productLoading,
     error: productError,
-  } = useQuery(GET_PRODUCT, {
+  } = useQuery(GET_PRODUCTS, {
     variables: { take: 8 },
   });
 
@@ -86,7 +54,7 @@ function Content() {
     data: postData,
     loading: postLoading,
     error: postError,
-  } = useQuery(GET_POST, {
+  } = useQuery(GET_POSTS, {
     variables: { take: 3 },
   });
   //End: Save data into variables
@@ -137,6 +105,7 @@ function Content() {
 
         {/* Start: Render data of product into view */}
         <Grid container spacing={2}>
+          {/* productData: have data and have key in product */}
           {productData &&
             productData.products.map((product) => (
               <Grid key={product.id} item xs={3}>
@@ -151,9 +120,7 @@ function Content() {
                       )}
                       <div className="product__info">
                         <h4>{product.name}</h4>
-                        <div className="price">
-                          {product.productPrice.toLocaleString("vi-VN")}đ
-                        </div>
+                        <div>{formatMoney(product.productPrice)}</div>
                         <button>Xem thêm</button>
                       </div>
                     </div>

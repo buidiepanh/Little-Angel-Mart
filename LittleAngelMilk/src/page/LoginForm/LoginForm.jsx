@@ -7,26 +7,7 @@ import "./LoginForm.css";
 import { useMutation, gql } from "@apollo/client";
 import { IoReturnDownBackOutline } from "react-icons/io5";
 import toast, { Toaster } from "react-hot-toast";
-
-const LOGIN_MUTATION = gql`
-  mutation Mutation($email: String!, $password: String!) {
-    authenticateUserWithPassword(userEmail: $email, userPassword: $password) {
-      ... on UserAuthenticationWithPasswordSuccess {
-        sessionToken
-        item {
-          id
-          userPhone
-          userEmail
-          userAddress
-          name
-        }
-      }
-      ... on UserAuthenticationWithPasswordFailure {
-        message
-      }
-    }
-  }
-`;
+import { LOGIN_MUTATION } from "../Mutations/user";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -37,16 +18,16 @@ const LoginForm = () => {
     email: "",
   });
 
-  const handleLoginGoogle = () => {
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        console.log(credential);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const handleLoginGoogle = () => {
+  //   signInWithPopup(auth, googleProvider)
+  //     .then((result) => {
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       console.log(credential);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   const [errorMess, setErrorMess] = useState("");
 

@@ -1,30 +1,16 @@
 import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useParams } from "react-router-dom";
+import { GET_PRODUCT } from "../../page/Queries/product";
 function ProductCounter() {
   const [count, setCount] = useState(1);
 
-  const GET_PRODUCT = gql`
-    query Products {
-      products {
-        id
-        name
-        category {
-          name
-        }
-        productDescription
-        productImage {
-          publicUrl
-        }
-        productPrice
-      }
-    }
-  `;
-
   const { id } = useParams();
-  const { data } = useQuery(GET_PRODUCT);
-  const selectedProduct = data.products.find((product) => product.id === id);
-  const unitPrice = selectedProduct.productPrice;
+  const { data } = useQuery(GET_PRODUCT, {
+    variables: { where: { id } },
+  });
+
+  const unitPrice = data?.product.productPrice;
 
   const increment = () => {
     setCount((prevCount) => prevCount + 1);

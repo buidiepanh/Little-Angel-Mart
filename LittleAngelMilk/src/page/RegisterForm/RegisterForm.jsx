@@ -5,20 +5,7 @@ import "./RegisterForm.css";
 import milkImage from "../../assets/Logo.jpg";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-
-const REGISTER_MUTATION = gql`
-  mutation Mutation($data: UserCreateInput!) {
-    createUser(data: $data) {
-      name
-      userAddress
-      userEmail
-      userPhone
-      userPassword {
-        isSet
-      }
-    }
-  }
-`;
+import { REGISTER_MUTATION } from "../Queries/user";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -36,7 +23,8 @@ const Register = () => {
       return "Tên không được để trống.";
     }
 
-    const nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơưẠ-ỹ\s]+$/;
+    const nameRegex =
+      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơưẠ-ỹ\s]+$/;
     if (!nameRegex.test(name)) {
       return "Không chứa ký tự đặc biệt.";
     }

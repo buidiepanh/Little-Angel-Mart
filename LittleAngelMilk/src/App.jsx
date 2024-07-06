@@ -18,30 +18,28 @@ import CustomerPolicy from "./page/CustomerPolicy/CustomerPolicy";
 import WarrantyPolicy from "./page/WarrantyPolicy/WarrantyPolicy";
 const App = () => {
   return (
-    <div>
-      <Router>
-        <Routes>
-          <Route path="/ForgotPassEmail" element={<ForgotPage />} />
-          <Route path="/ForgotPass" element={<ForgotPagePassword />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/" element={<Content />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/CustomerCartInfo" element={<CustomerInfo />} />
-          <Route path="/ProductDetail/:id" element={<ProductionDetail />} />
-          <Route path="/PaymentPage" element={<Payment />} />
-          <Route path="/about" element={<AboutUsPage />} />
-          <Route path="/product-list" element={<ProductList />} />
-          <Route path="/product-list/:search" element={<ProductList />} />
-          <Route path="/profile" element={<UserAccount />} />
-          <Route path="/OrderConfirmation" element={<OrderConfirmation />} />
-          <Route path="/order-detail" element={<OrderDetailPage />} />
-          <Route path="/posts" element={<PostPage />} />
-          <Route path="/customer-policy" element={<CustomerPolicy />} />
-          <Route path="/warranty-policy" element={<WarrantyPolicy />} />
-        </Routes>
-      </Router>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/ForgotPassEmail" element={<ForgotPage />} />
+        <Route path="/ForgotPass" element={<ForgotPagePassword />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/" element={<Content />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/CustomerCartInfo" element={<CustomerInfo />} />
+        <Route path="/ProductDetail/:id" element={<ProductionDetail />} />
+        <Route path="/PaymentPage" element={<Payment />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/product-list" element={<ProductList />} />
+        <Route path="/product-list/:search" element={<ProductList />} />
+        <Route path="/profile" element={<UserAccount />} />
+        <Route path="/OrderConfirmation" element={<OrderConfirmation />} />
+        <Route path="/order-detail" element={<OrderDetailPage />} />
+        <Route path="/posts" element={<PostPage />} />
+        <Route path="/customer-policy" element={<CustomerPolicy />} />
+        <Route path="/warranty-policy" element={<WarrantyPolicy />} />
+      </Routes>
+    </Router>
   );
 };
 

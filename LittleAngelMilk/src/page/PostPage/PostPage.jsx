@@ -1,30 +1,14 @@
-import React from 'react';
-import { useQuery, gql } from '@apollo/client';
-import Grid from '@mui/material/Grid';
-import Header from "../../component/header/Header"; 
-import Footer from "../../component/footer/footer"; 
-import './PostPage.css'; 
-
-// GraphQL query to fetch posts
-const GET_POST = gql`
-  query Query {
-    posts {
-      id
-      title
-      image {
-        publicUrl
-      }
-      link {
-        document
-      }
-      content
-    }
-  }
-`;
+import React from "react";
+import { useQuery, gql } from "@apollo/client";
+import Grid from "@mui/material/Grid";
+import Header from "../../component/header/Header";
+import Footer from "../../component/footer/footer";
+import "./PostPage.css";
+import { GET_POSTS } from "../Queries/post";
 
 const PostPage = () => {
   // Use useQuery hook to fetch data from the GraphQL API
-  const { loading, error, data: postData } = useQuery(GET_POST);
+  const { loading, error, data: postData } = useQuery(GET_POSTS);
 
   // Display loading message while data is being fetched
   if (loading) return <p>Loading...</p>;
@@ -36,12 +20,12 @@ const PostPage = () => {
     <>
       {/* Render the Header component */}
       <Header />
-      
+
       <div className="postPage">
         <div className="content-wrapper">
           {/* Page title */}
           <h2>Tất cả bài viết</h2>
-          
+
           <div className="postPage__articles">
             <Grid container spacing={2}>
               {/* Map through the fetched posts and render each post */}
@@ -51,7 +35,7 @@ const PostPage = () => {
                   const link = post.link?.document?.[0]?.children?.find(
                     (child) => child.href
                   )?.href;
-                  
+
                   return (
                     <Grid key={post.id} item xs={4}>
                       <a
@@ -70,11 +54,11 @@ const PostPage = () => {
                             />
                           )}
                         </div>
-                        
+
                         <div className="card__body">
                           {/* Render the post title */}
                           <h4>{post.title}</h4>
-                          
+
                           {/* Render the post content */}
                           <p>{post.content}</p>
                         </div>
