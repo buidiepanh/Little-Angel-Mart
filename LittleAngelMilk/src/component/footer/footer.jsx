@@ -1,9 +1,28 @@
-import Link from "antd/es/typography/Link";
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import "./footer.scss";
 import { MailOutlined, PhoneOutlined, TeamOutlined } from "@ant-design/icons";
 import logo from '/src/assets/raw_logo.png';
 
 function Footer() {
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = localStorage.getItem("userName");
+    if (user) {
+      setUsername(user);
+    }
+  }, []);
+
+  const handlePrivacyPolicyClick = () => {
+    if (username) {
+      navigate("/profile");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="footer">
       <div className="footer__top">
@@ -49,9 +68,9 @@ function Footer() {
         <div className="footer__bot__about">
           <h4>Về chúng tôi</h4>
           <hr />
-          <Link className="op">Giới thiệu</Link>
+          <Link className="op" to="/about">Giới thiệu</Link>
           <br /> <br />
-          <Link className="op">Cẩm nang cho mẹ</Link>
+          <Link className="op" to="/posts">Cẩm nang cho mẹ</Link>
           <br /> <br />
           <Link className="op">Liên hệ</Link>
         </div>
@@ -60,16 +79,16 @@ function Footer() {
           <hr />
           <Link className="op">Hotline miễn phí: 0123456789</Link>
           <br /> <br />
-          <Link className="op">Chính sách bảo hành</Link>
+          <Link className="op" to="/warranty-policy">Chính sách bảo hành</Link>
           <br /> <br />
-          <Link className="op">Chính sách khách hàng</Link>
+          <Link className="op" to="/customer-policy">Chính sách khách hàng</Link>
           <br /> <br />
-          <Link className="op">Bảo mật thông tin cá nhân</Link>
+          <span className="op" onClick={handlePrivacyPolicyClick} >Bảo mật thông tin cá nhân</span>
         </div>
         <div className="footer__bot__convinient">
           <h4>Hệ thống tiện ích</h4>
           <hr />
-          <Link className="op">Kiểm tra đơn hàng</Link>
+          <Link className="op" to="/order-detail">Kiểm tra đơn hàng</Link>
           <br /> <br />
           <Link className="op">Phương thức thanh toán</Link>
         </div>

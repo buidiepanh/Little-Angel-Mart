@@ -13,19 +13,36 @@
     align-items: center; 
     color: #000;
     padding-top: 80px;
+    margin-top: 100px;
 }
   
-.aboutUs h1 {
-    color: #2A5D78;
-}
-
-.aboutDetails h2 {
-    color: #333;
-}
-
-.aboutDetails p {
-    margin: 10px 0;
-}
+.about-us-container h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #5082bf;
+  }
+  
+  .mission, .vision, .core-values, .products, .customer-care, .contact-info {
+    margin-bottom: 30px;
+  }
+  
+  h2 {
+    color: #5082bf;
+    margin-bottom: 10px;
+  }
+  
+  p, ul {
+    line-height: 1.6;
+  }
+  
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
 
 .back-button2 {
     display: inline-block;

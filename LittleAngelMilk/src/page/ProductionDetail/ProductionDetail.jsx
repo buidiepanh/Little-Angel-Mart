@@ -1,3 +1,4 @@
+// Import các thư viện cần thiết
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
@@ -21,6 +22,7 @@ import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
 import "./ProductionDetail.css";
 
+// GraphQL queries và mutations
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -107,14 +109,20 @@ const FEEDBACK_MUTATION = gql`
 `;
 
 function ProductionDetail() {
+  // Lấy ID sản phẩm từ URL
   const { id } = useParams();
+  
+  // Lấy dữ liệu sản phẩm từ API
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const selectedProduct = data?.products?.find((product) => product.id === id);
+
+  // Lấy feedback của sản phẩm từ API
   const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(GET_PRODUCT_FEEDBACK, {
     variables: { productId: selectedProduct?.id },
     skip: !selectedProduct
   });
 
+  // Các state và hook cần thiết
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [createCart] = useMutation(CREATE_CART);
@@ -122,6 +130,7 @@ function ProductionDetail() {
   const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
   const userId = localStorage.getItem("userId");
 
+  // Lấy dữ liệu giỏ hàng từ API
   const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
     variables: {
       where: {
@@ -131,6 +140,7 @@ function ProductionDetail() {
     skip: !localStorage.getItem("cartItemId")
   });
 
+  // Lấy token và tên người dùng từ localStorage
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
     const user = localStorage.getItem("userName");
@@ -148,6 +158,7 @@ function ProductionDetail() {
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
+  // Lưu feedback vào state và localStorage
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
       const initialFeedbacks = feedbackOfProduct.feedbacks.map(fb => ({
@@ -162,6 +173,7 @@ function ProductionDetail() {
     localStorage.setItem(`feedbacks_${selectedProduct?.id}`, JSON.stringify(feedbacks));
   }, [feedbacks, selectedProduct]);
 
+  // Xử lý thay đổi input của feedback
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInput((prevInput) => ({
@@ -172,6 +184,7 @@ function ProductionDetail() {
 
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
+  // Xử lý submit feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inputFeedback.comment.trim() === "") {
@@ -207,6 +220,7 @@ function ProductionDetail() {
   if (!selectedProduct)
     return <Typography color="error">Product not found</Typography>;
 
+  // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = async () => {
     let cartId = localStorage.getItem("cartId");
     if (!cartId) {
@@ -232,33 +246,29 @@ function ProductionDetail() {
         return;
       }
     }
-/*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
 
-await refetch();
-// const existingCartItem = cartItemData?.cartItem;
+    /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
+    await refetch();
 
-// if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
-//   try {
-//     await updateCartItemQuantity({
-//       variables: {
-//         where: { id: existingCartItem.id },
-//         data: { quantity: existingCartItem.quantity + 1 },
-//       },
-//     });
+    // const existingCartItem = cartItemData?.cartItem;
+    // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
+    //   try {
+    //     await updateCartItemQuantity({
+    //       variables: {
+    //         where: { id: existingCartItem.id },
+    //         data: { quantity: existingCartItem.quantity + 1 },
+    //       },
+    //     });
 
-//     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
-//       icon: '🛒',
-//     });
-//   } catch (err) {
-//     console.error("Error updating cart item quantity:", err);
-//     toast.error(`Error updating cart item quantity: ${err.message}`);
-//   }
-// } 
-// else {
-
-
-//add item to cart
-
+    //     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
+    //       icon: '🛒',
+    //     });
+    //   } catch (err) {
+    //     console.error("Error updating cart item quantity:", err);
+    //     toast.error(`Error updating cart item quantity: ${err.message}`);
+    //   }
+    // } else {
+    //   add item to cart
     try {
       const { data } = await createCartItem({
         variables: {
@@ -294,10 +304,12 @@ await refetch();
 
   const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
 
+  // Xử lý load thêm feedback
   const handleLoadMoreFeedback = () => {
     setVisibleFeedbackCount((prevCount) => prevCount + 2);
   };
 
+  // Xử lý giảm bớt feedback
   const handleLoadLessFeedback = () => {
     setVisibleFeedbackCount((prevCount) => Math.max(prevCount - 2, 2));
   };
@@ -328,7 +340,7 @@ await refetch();
                   {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
                 </Typography>
                 <ProductCounter />
-                {username ? (
+                {username ? (  // Kiểm tra xem người dùng đã đăng nhập chưa
                   <Box
                     className="product-actions"
                     display="flex"
@@ -346,13 +358,13 @@ await refetch();
                       variant="contained"
                       color="primary"
                       className="btn-cart"
-                      onClick={handleAddToCart}
+                      onClick={handleAddToCart}   // Thêm sản phẩm vào giỏ hàng
                     >
                       Thêm vào giỏ hàng
                     </Button>
                   </Box>
-                ) : (
-                  <Box className="product-actions">
+                ) : ( //Nếu người dùng chưa đăng nhập, hiển thị các nút dẫn đến trang đăng nhập
+                  <Box className ="product-actions">
                     <Link to="/Login">
                       <Button
                         variant="contained"
@@ -385,68 +397,68 @@ await refetch();
             </Typography>
           </Box>
           <Box className="product-recommendations">
-          <Typography variant="h6">Các sản phẩm khác</Typography>
-          <SimilarProducts />
+            <Typography variant="h6">Các sản phẩm khác</Typography>
+            <SimilarProducts />
           </Box>
           <Box className="product-comments">
             <Typography variant="h6">Bình luận</Typography>
             <TextField
-                name="comment"
-                value={inputFeedback.comment}
-                onChange={handleChange}
-                placeholder="Hãy viết nội dung..."
-                multiline
-                rows={4}
-                variant="outlined"
-                fullWidth
+              name="comment"
+              value={inputFeedback.comment}
+              onChange={handleChange}
+              placeholder="Hãy viết nội dung..."
+              multiline
+              rows={4}
+              variant="outlined"
+              fullWidth
             />
             <Button
-                onClick={handleSubmit}
-                variant="contained"
-                color="primary"
-                style={{ marginTop: "10px" }}
+              onClick={handleSubmit} // Xử lý submit feedback
+              variant="contained"
+              color="primary"
+              style={{ marginTop: "10px" }}
             >
-                Submit Comment
+              Submit Comment
             </Button>
             {/* Hiển thị feedbacks */}
             {feedbacks.slice(0, visibleFeedbackCount).map((feedback, index) => (
-                <Box key={index} className="feedback-item">
-                    <div className="icon-container">
-                        <AccountCircleOutlinedIcon style={{ fontSize: 50 }} />
-                    </div>
-                    <div className="feedback-content">
-                        <div className="feedback-header">
-                            <span>User</span>
-                            <span>{feedback.date}</span>
-                        </div>
-                        <Typography variant="body1">{feedback.comment}</Typography>
-                    </div>
-                </Box>
+              <Box key={index} className="feedback-item">
+                <div className="icon-container">
+                  <AccountCircleOutlinedIcon style={{ fontSize: 50 }} />
+                </div>
+                <div className="feedback-content">
+                  <div className="feedback-header">
+                    <span>User</span>
+                    <span>{feedback.date}</span>
+                  </div>
+                  <Typography variant="body1">{feedback.comment}</Typography>
+                </div>
+              </Box>
             ))}
             <Box className="button-container">
-                {feedbacks.length > visibleFeedbackCount && (
-                    <Button 
-                      variant="contained"
-                      onClick={handleLoadMoreFeedback} 
-                      className="load-more-button"
-                    >
-                      Xem thêm
-                    </Button>
-                )}
-                {visibleFeedbackCount > 2 && (
-                    <Button 
-                      variant="contained"
-                      onClick={handleLoadLessFeedback} 
-                      className="load-less-button"
-                    >
-                      Giảm bớt
-                    </Button>
-                )}
+              {feedbacks.length > visibleFeedbackCount && (
+                <Button
+                  variant="contained"
+                  onClick={handleLoadMoreFeedback} // Xử lý load thêm feedback
+                  className="load-more-button"
+                >
+                  Xem thêm
+                </Button>
+              )}
+              {visibleFeedbackCount > 2 && (
+                <Button
+                  variant="contained"
+                  onClick={handleLoadLessFeedback} // Xử lý giảm bớt feedback
+                  className="load-less-button"
+                >
+                  Giảm bớt
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>
       </Container>
-      <Footer />
+      <Footer /> 
     </div>
   );
 }
