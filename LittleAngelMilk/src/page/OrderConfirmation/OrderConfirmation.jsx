@@ -1,29 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './OrderConfirmation.css';
 import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { PiShoppingCartLight } from "react-icons/pi";
+import { useNavigate } from 'react-router-dom';
+import { useMutation, gql } from '@apollo/client';
+import toast, { Toaster } from "react-hot-toast";
+import Swal from 'sweetalert2';
+
+const CREATE_ORDER_MUTATION = gql`
+  mutation Mutation($data: OrderCreateInput!) {
+    createOrder(data: $data) {
+      createdAt
+      id
+      status
+      totalPrice
+    }
+  }
+`;
+
 const OrderConfirmation = () => {
   const initialCustomer = {
-    name: 'Nguyen Van A',
-    address: '123 Đường ABC, Quận 1, TP. HCM',
-    email: 'nguyenvana@example.com',
-    phone: '0123456789'
+    name: '',
+    address: '',
+    email: '',
+    phone: ''
   };
 
   const [customer, setCustomer] = useState(initialCustomer);
   const [isEditing, setIsEditing] = useState(false);
   const [updatedCustomer, setUpdatedCustomer] = useState(initialCustomer);
+  const [showCartStep, setShowCartStep] = useState(false);
+  const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
+  const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
 
-  const orderItems = [
-    { name: 'Item 1', quantity: 2, price: 20 },
-    { name: 'Item 2', quantity: 1, price: 50 },
-    { name: 'Item 3', quantity: 3, price: 15 }
-  ];
+  useEffect(() => {
+    const lastAction = localStorage.getItem("lastAction");
+    if (lastAction === "addToCart") {
+      setShowCartStep(true);
+    }
 
-  const totalPrice = orderItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    // Load user data from local storage
+    const storedName = localStorage.getItem("userName");
+    const storedEmail = localStorage.getItem("userEmail");
+    const storedPhone = localStorage.getItem("userPhoneNumber");
+    const storedAddress = localStorage.getItem("userAddress");
+
+    const loadedCustomer = {
+      name: storedName || '',
+      email: storedEmail || '',
+      phone: storedPhone || '',
+      address: storedAddress || ''
+    };
+
+    setCustomer(loadedCustomer);
+    setUpdatedCustomer(loadedCustomer);
+
+    // Load selected product from local storage
+    const storedProduct = localStorage.getItem("selectedProduct");
+    if (storedProduct) {
+      setProduct(JSON.parse(storedProduct));
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,18 +77,55 @@ const OrderConfirmation = () => {
   const handleSaveClick = () => {
     setCustomer(updatedCustomer);
     setIsEditing(false);
+
+    // Optionally, save updated customer data back to local storage
+    localStorage.setItem("userName", updatedCustomer.name);
+    localStorage.setItem("userEmail", updatedCustomer.email);
+    localStorage.setItem("userPhoneNumber", updatedCustomer.phone);
+    localStorage.setItem("userAddress", updatedCustomer.address);
   };
 
-  return (
+  const handleConfirmOrder = async () => {
+    try {
+      const response = await createOrder({
+        variables: {
+          data: {
+            createdAt: new Date().toISOString(),
+            status: 'published',
+            totalPrice: product.productPrice
+          }
+        }
+      });
+      const order = response.data.createOrder;
+      const orderIdCreated = response.data.createOrder.id;
+      console.log('Order created:', order);
+      console.log('OrderID:', orderIdCreated);
+      localStorage.setItem('orderId', orderIdCreated);
+      await Swal.fire({
+        title: "Khởi tạo đơn hàng thành công!",
+        icon: "success"
+      });
+      // Store the created order in local storage
+      localStorage.setItem("CreatedOrder", JSON.stringify(order));
+      navigate('/');
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
+  };
+
+  return ( 
     <div className="background-wrapper">
+      <Toaster/>
       <div className="order-container">
-      <div className="progress-container">
-          <div className="step active">
-            <div className="icon">
-              <PiShoppingCartLight />
+        <div className="progress-container">
+          {showCartStep && (
+            <div className="step active">
+              <div className="icon">
+                <PiShoppingCartLight />
+              </div>
+              <div className="label">Giỏ hàng</div>
             </div>
-            <div className="label">Giỏ hàng</div>
-          </div>
+          )}
           <div className="step active">
             <div className="icon">
               <RxPerson />
@@ -134,19 +211,19 @@ const OrderConfirmation = () => {
                 </tr>
               </thead>
               <tbody>
-                {orderItems.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.name}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.price}$</td>
-                    <td>{item.price * item.quantity}$</td>
+                {product && (
+                  <tr>
+                    <td>{product.name}</td>
+                    <td>1</td>
+                    <td>{product.productPrice}đ</td>
+                    <td>{product.productPrice}đ</td>
                   </tr>
-                ))}
+                )}
               </tbody>
               <tfoot>
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
-                  <td>{totalPrice}$</td>
+                  <td>{product ? product.productPrice : 0}đ</td>
                 </tr>
               </tfoot>
             </table>
@@ -154,7 +231,7 @@ const OrderConfirmation = () => {
         </div>
         <div className="confirmation-buttons">
           <button className="cancel-button">Hủy đơn hàng</button>
-          <button className="confirm-button">Xác nhận hoàn tất và tạo đơn hàng</button>
+          <button className="confirm-button" onClick={handleConfirmOrder}>Xác nhận hoàn tất và tạo đơn hàng</button>
         </div>
       </div>
     </div>

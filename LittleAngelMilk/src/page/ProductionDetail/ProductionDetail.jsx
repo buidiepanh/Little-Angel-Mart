@@ -49,6 +49,28 @@ const GET_PRODUCT_FEEDBACK = gql`
   }
 `;
 
+const GET_CART = gql`
+  query Cart($where: CartWhereUniqueInput!) {
+    cart(where: $where) {
+      createdAt
+      id
+      itemsCount
+      user {
+        id
+      }
+      items {
+        id
+        productId {
+          id
+          name
+        }
+        quantity
+        price
+      }
+    }
+  }
+`;
+
 const GET_CART_ITEM = gql`
   query Query($where: CartItemWhereUniqueInput!) {
     cartItem(where: $where) {
@@ -145,6 +167,15 @@ function ProductionDetail() {
     skip: !localStorage.getItem("cartItemId"),
   });
 
+  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
+    variables: {
+      where: {
+        id: localStorage.getItem("cartId"),
+      },
+    },
+    skip: !localStorage.getItem("cartId"),
+  });
+
   // Lấy token và tên người dùng từ localStorage
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
@@ -235,6 +266,7 @@ function ProductionDetail() {
 
   // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = async () => {
+    localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
     if (!cartId) {
       try {
@@ -305,7 +337,7 @@ function ProductionDetail() {
         },
       });
 
-      localStorage.setItem("cartItemId", data.createCartItem.id);
+      await refetchCart(); // Ensure cart data is refetched
 
       toast("Đã thêm vào giỏ hàng!", {
         icon: "🛒",
@@ -316,16 +348,10 @@ function ProductionDetail() {
     }
   };
 
-  const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
-
-  // Xử lý load thêm feedback
-  const handleLoadMoreFeedback = () => {
-    setVisibleFeedbackCount((prevCount) => prevCount + 2);
-  };
-
-  // Xử lý giảm bớt feedback
-  const handleLoadLessFeedback = () => {
-    setVisibleFeedbackCount((prevCount) => Math.max(prevCount - 2, 2));
+  const handleBuyNow = async () => {
+    localStorage.setItem("lastAction", "buyNow");
+    localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
+    navigate("/CustomerCartInfo");
   };
 
   return (
@@ -365,6 +391,7 @@ function ProductionDetail() {
                       variant="contained"
                       color="error"
                       className="btn-buy"
+                      onClick={handleBuyNow}
                     >
                       Mua ngay
                     </Button>

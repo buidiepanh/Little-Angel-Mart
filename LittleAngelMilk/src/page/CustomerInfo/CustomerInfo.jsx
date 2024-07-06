@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+
+
+import React, { useState, useEffect } from "react";
 import "./CustomerInfo.css";
 import { PiShoppingCartLight } from "react-icons/pi";
 import Header from "../../component/header/Header";
@@ -6,7 +8,7 @@ import Footer from "../../component/footer/footer";
 import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CustomerInfo = () => {
   const [name, setName] = useState("");
@@ -14,6 +16,26 @@ const CustomerInfo = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [errors, setErrors] = useState({});
+  const [showCartStep, setShowCartStep] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const lastAction = localStorage.getItem("lastAction");
+    if (lastAction === "addToCart") {
+      setShowCartStep(true);
+    }
+
+    // Load user data from local storage
+    const storedName = localStorage.getItem("userName");
+    const storedEmail = localStorage.getItem("userEmail");
+    const storedPhoneNumber = localStorage.getItem("userPhoneNumber");
+    const storedAddress = localStorage.getItem("userAddress");
+
+    if (storedName) setName(storedName);
+    if (storedEmail) setEmail(storedEmail);
+    if (storedPhoneNumber) setPhoneNumber(storedPhoneNumber);
+    if (storedAddress) setAddress(storedAddress);
+  }, []);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,14 +57,30 @@ const CustomerInfo = () => {
     e.preventDefault();
     const emailError = validateEmail(email);
     const phoneNumberError = validatePhoneNumber(phoneNumber);
+    const nameError = name.trim() === "" ? "Họ và tên là bắt buộc." : null;
+    const addressError = address.trim() === "" ? "Địa chỉ là bắt buộc." : null;
 
     setErrors({
+      name: nameError,
       email: emailError,
       phoneNumber: phoneNumberError,
+      address: addressError,
     });
 
-    if (!emailError && !phoneNumberError) {
+    if (!emailError && !phoneNumberError && !nameError && !addressError) {
       console.log("Form is valid. Submitting...");
+      navigate("/PaymentPage");
+    }
+  };
+
+  const handleBackClick = () => {
+    const lastAction = localStorage.getItem("lastAction");
+    if (lastAction === "buyNow") {
+      navigate("/");
+    } else if (lastAction === "addToCart") {
+      navigate("/cart");
+    } else {
+      navigate("/");
     }
   };
 
@@ -50,12 +88,14 @@ const CustomerInfo = () => {
     <div className="full-page-container">
       <div className="customer-info-form-container">
         <div className="progress-container">
-          <div className="step active">
-            <div className="icon">
-              <PiShoppingCartLight />
+          {showCartStep && (
+            <div className="step active">
+              <div className="icon">
+                <PiShoppingCartLight />
+              </div>
+              <div className="label">Giỏ hàng</div>
             </div>
-            <div className="label">Giỏ hàng</div>
-          </div>
+          )}
           <div className="step active">
             <div className="icon">
               <RxPerson />
@@ -87,6 +127,7 @@ const CustomerInfo = () => {
               className="input"
               required
             />
+            {errors.name && <p className="error">{errors.name}</p>}
           </div>
 
           <div className="form-group">
@@ -125,22 +166,18 @@ const CustomerInfo = () => {
               onChange={(e) => setAddress(e.target.value)}
               placeholder="Nhập địa chỉ"
               className="input"
-              required 
+              required
             />
+            {errors.address && <p className="error">{errors.address}</p>}
           </div>
 
           <div className="button-group">
-            <Link to="/Cart">
-              {" "}
-              <button type="button" className="button back-button">
-                Quay lại
-              </button>
-            </Link>
-            <Link to="/PaymentPage">
-              <button type="submit" className="button submit-button">
-                Xác nhận và tiếp tục thanh toán
-              </button>
-            </Link>
+            <button type="button" className="button back-button" onClick={handleBackClick}>
+              Quay lại
+            </button>
+            <button type="submit" className="button submit-button">
+              Xác nhận và tiếp tục thanh toán
+            </button>
           </div>
         </form>
       </div>

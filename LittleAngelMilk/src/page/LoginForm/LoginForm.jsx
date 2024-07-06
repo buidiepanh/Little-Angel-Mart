@@ -70,6 +70,9 @@ const LoginForm = () => {
         const { sessionToken, item } = res.data.authenticateUserWithPassword;
         localStorage.setItem("sessionToken", sessionToken);
         localStorage.setItem("userName", item.name);
+        localStorage.setItem("userEmail", item.userEmail);
+        localStorage.setItem("userPhoneNumber", item.userPhone);
+        localStorage.setItem("userAddress", item.userAddress);
         localStorage.setItem("userId", item.id);
         setErrorMess("");
         navigate("/", { state: { fromLogin: true } });
