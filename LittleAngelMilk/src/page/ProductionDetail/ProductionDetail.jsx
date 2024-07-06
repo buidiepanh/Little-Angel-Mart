@@ -156,6 +156,8 @@ function ProductionDetail() {
   const handleAddToCart = async () => {
     localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
+    let itemsCount = cartData?.cart?.quantity || 0;
+    console.log(itemsCount);
     if (!cartId) {
       try {
         const { data } = await createCart({
@@ -167,6 +169,7 @@ function ProductionDetail() {
                   id: userId,
                 },
               },
+              quantity: itemsCount + 1,
             },
           },
         });
@@ -177,33 +180,20 @@ function ProductionDetail() {
         toast.error(`Error creating cart: ${err.message}`);
         return;
       }
+    } else {
+      try {
+        await updateCart({
+          variables: {
+            where: { id: cartId },
+            data: { quantity: itemsCount + 1 },
+          },
+        });
+      } catch (err) {
+        console.error("Error updating cart quantity:", err);
+        toast.error(`Error updating cart quantity: ${err.message}`);
+        return;
+      }
     }
-
-    /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
-
-    await refetch();
-    // const existingCartItem = cartItemData?.cartItem;
-
-    // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
-    //   try {
-    //     await updateCartItemQuantity({
-    //       variables: {
-    //         where: { id: existingCartItem.id },
-    //         data: { quantity: existingCartItem.quantity + 1 },
-    //       },
-    //     });
-
-    //     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
-    //       icon: '🛒',
-    //     });
-    //   } catch (err) {
-    //     console.error("Error updating cart item quantity:", err);
-    //     toast.error(`Error updating cart item quantity: ${err.message}`);
-    //   }
-    // }
-    // else {
-
-    //add item to cart
 
     try {
       const { data } = await createCartItem({
@@ -225,8 +215,6 @@ function ProductionDetail() {
         },
       });
 
-      await refetchCart(); // Ensure cart data is refetched
-
       toast("Đã thêm vào giỏ hàng!", {
         icon: "🛒",
       });
@@ -234,6 +222,7 @@ function ProductionDetail() {
       console.error("Error adding to cart:", err);
       toast.error(`Error adding to cart: ${err.message}`);
     }
+    await refetchCart();
   };
 
   const handleBuyNow = async () => {
@@ -241,6 +230,7 @@ function ProductionDetail() {
     localStorage.setItem("productDetail", JSON.stringify(productDetail));
     navigate("/CustomerCartInfo");
   };
+
   const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
   // Xử lý load thêm feedback
   const handleLoadMoreFeedback = () => {
@@ -359,7 +349,7 @@ function ProductionDetail() {
               fullWidth
             />
             <Button
-              onClick={handleSubmit}
+              onClick={handleSubmit} // Xử lý submit feedback
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
