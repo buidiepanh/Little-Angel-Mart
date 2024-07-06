@@ -57,6 +57,28 @@ const GET_PRODUCT_FEEDBACK = gql`
   }
 `;
 
+const GET_CART = gql`
+  query Cart($where: CartWhereUniqueInput!) {
+    cart(where: $where) {
+      createdAt
+      id
+      itemsCount
+      user {
+        id
+      }
+      items {
+        id
+        productId {
+          id
+          name
+        }
+        quantity
+        price
+      }
+    }
+  }
+`;
+
 const GET_CART_ITEM = gql`
   query Query($where: CartItemWhereUniqueInput!) {
     cartItem(where: $where) {
@@ -123,8 +145,6 @@ function ProductionDetail() {
     }
   );
 
-  // console.log(feedbackOfProduct);
-
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [createCart] = useMutation(CREATE_CART);
@@ -139,6 +159,15 @@ function ProductionDetail() {
       },
     },
     skip: !localStorage.getItem("cartItemId"),
+  });
+
+  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
+    variables: {
+      where: {
+        id: localStorage.getItem("cartId"),
+      },
+    },
+    skip: !localStorage.getItem("cartId"),
   });
 
   useEffect(() => {
@@ -206,6 +235,7 @@ function ProductionDetail() {
       });
       toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
+      refetchFeedback();
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -220,19 +250,17 @@ function ProductionDetail() {
     return <Typography color="error">Product not found</Typography>;
 
   const handleAddToCart = async () => {
-    // Get cart ID.
+    localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
-    console.log("Retrieved cartId from localStorage:", cartId);
-    // If it returns null(cart has not been created), create a new cart with date created and user(userid) that creates the cart
     if (!cartId) {
       try {
         const { data } = await createCart({
           variables: {
             data: {
-              createdAt: new Date().toISOString(), // set the creation date for the cart
+              createdAt: new Date().toISOString(),
               user: {
                 connect: {
-                  id: userId, // connect the cart to the user
+                  id: userId,
                 },
               },
             },
@@ -246,62 +274,54 @@ function ProductionDetail() {
         return;
       }
     }
-    /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
 
-    await refetch();
-    // const existingCartItem = cartItemData?.cartItem;
-
-    // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
-    //   try {
-    //     await updateCartItemQuantity({
-    //       variables: {
-    //         where: { id: existingCartItem.id },
-    //         data: { quantity: existingCartItem.quantity + 1 },
-    //       },
-    //     });
-
-    //     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
-    //       icon: '🛒',
-    //     });
-    //   } catch (err) {
-    //     console.error("Error updating cart item quantity:", err);
-    //     toast.error(`Error updating cart item quantity: ${err.message}`);
-    //   }
-    // }
-    // else {
-
-    //add item to cart
     try {
-      const { data } = await createCartItem({
-        variables: {
-          data: {
-            cartId: {
-              connect: {
-                id: cartId, // connect the item to the cart
-              },
-            },
-            price: selectedProduct.productPrice, // set the product price
-            productId: {
-              connect: {
-                id: selectedProduct.id, // connect the item to the product
-              },
-            },
-            quantity: 1, // set the initial quantity to 1
+      const cartItem = cartData?.cart?.items.find(
+        (item) => item.productId.id === selectedProduct.id
+      );
+      if (cartItem) {
+        await updateCartItemQuantity({
+          variables: {
+            where: { id: cartItem.id },
+            data: { quantity: cartItem.quantity + 1 },
           },
-        },
-      });
+        });
+      } else {
+        await createCartItem({
+          variables: {
+            data: {
+              cartId: {
+                connect: {
+                  id: cartId,
+                },
+              },
+              price: selectedProduct.productPrice,
+              productId: {
+                connect: {
+                  id: selectedProduct.id,
+                },
+              },
+              quantity: 1,
+            },
+          },
+        });
+      }
 
-      localStorage.setItem("cartItemId", data.createCartItem.id);
+      await refetchCart(); // Ensure cart data is refetched
 
       toast("Đã thêm vào giỏ hàng!", {
-        // show success toast
         icon: "🛒",
       });
     } catch (err) {
       console.error("Error adding to cart:", err);
-      toast.error(`Error adding to cart: ${err.message}`); // Show error toast
+      toast.error(`Error adding to cart: ${err.message}`);
     }
-    // }
+  };
+
+  const handleBuyNow = async () => {
+    localStorage.setItem("lastAction", "buyNow");
+    localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
+    navigate("/CustomerCartInfo");
   };
 
   return (
@@ -341,6 +361,7 @@ function ProductionDetail() {
                       variant="contained"
                       color="error"
                       className="btn-buy"
+                      onClick={handleBuyNow}
                     >
                       Mua ngay
                     </Button>

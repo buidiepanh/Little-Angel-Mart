@@ -1,78 +1,68 @@
+// OrderDetailPage.jsx
 import React from 'react';
 import { Container, Typography, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useQuery, gql } from '@apollo/client';
 import './OrderDetailPage.css';
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 
+const GET_CART_QUERY = gql`
+  query Cart($where: OrderWhereUniqueInput!) {
+    order(where: $where) {
+      createdAt
+      id
+      status
+      totalPrice
+    }
+  }
+`;
+
 const OrderDetailPage = () => {
-  const order = {
-    id: '12345',
-    customerName: "Nguyen Van A",
-    email: "nguyenvana@example.com",
-    address: "123 Đường ABC, Quận 1, TP. HCM",
-    status: "Đã hoàn tất thanh toán",
-    items: [
-      { id: 1, name: "Item 1", quantity: 2, price: 20, total: 40 },
-      { id: 2, name: "Item 2", quantity: 1, price: 50, total: 50 },
-      { id: 3, name: "Item 3", quantity: 3, price: 15, total: 45 }
-    ],
-    total: 135
-  };
+  const orderId = localStorage.getItem("orderId"); // Retrieve orderId from localStorage
+
+  const { data, loading, error } = useQuery(GET_CART_QUERY, {
+    variables: {
+      where: {
+        id: orderId
+      }
+    }
+  });
+
+  if (loading) {
+    return <Typography>Loading...</Typography>;
+  }
+
+  if (error) {
+    return <Typography>Error loading order details: {error.message}</Typography>;
+  }
+
+  const order = data.order; // Assuming there's only one order per id
 
   return (
     <>
-    <Header/>
-    <Container maxWidth="md" className="order-detail-container">
-      <Box className="order-detail-box">
-        <Typography variant="h4" component="h1" gutterBottom className="order-detail-header">
-          Chi tiết đơn hàng
-        </Typography>
+      <Header />
+      <Container maxWidth="md" className="order-detail-container">
+        <Box className="order-detail-box">
+          <Typography variant="h4" component="h1" gutterBottom className="order-detail-header">
+            Chi tiết đơn hàng
+          </Typography>
 
-        <Box className="order-info">
-          <Typography variant="h6" component="h2">Thông tin đơn hàng</Typography>
-          <Typography><strong>ID đơn hàng:</strong> {order.id}</Typography>
-          <Typography><strong>Tên khách hàng:</strong> {order.customerName}</Typography>
-          <Typography><strong>Email:</strong> {order.email}</Typography>
-          <Typography><strong>Địa chỉ:</strong> {order.address}</Typography>
-          <Typography><strong>Tình trạng:</strong> {order.status}</Typography>
+          <Box className="order-info">
+            <Typography variant="h6" component="h2">Thông tin đơn hàng</Typography>
+            <Typography><strong>ID đơn hàng:</strong> {order.id}</Typography>
+            <Typography><strong>Trạng thái:</strong> {order.status}</Typography>
+            <Typography><strong>Ngày tạo:</strong> {new Date(order.createdAt).toLocaleDateString()}</Typography>
+            <Typography><strong>Tổng cộng:</strong> {order.totalPrice}đ</Typography>
+          </Box>
+
+          <Box className="order-actions">
+            <Button variant="contained" className="cancel-button1">Hủy đơn hàng</Button>
+            <Button variant="contained" component={Link} to="/" className="home-button1">Quay lại trang chủ</Button>
+          </Box>
         </Box>
-
-        <TableContainer component={Paper} className="order-detail-table">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Sản phẩm</TableCell>
-                <TableCell align="right">Số lượng</TableCell>
-                <TableCell align="right">Giá</TableCell>
-                <TableCell align="right">Tổng</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {order.items.map(item => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell align="right">{item.quantity}</TableCell>
-                  <TableCell align="right">{item.price}$</TableCell>
-                  <TableCell align="right">{item.total}$</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <Box className="order-summary">
-          <Typography variant="h6" component="h2">Tổng kết đơn hàng</Typography>
-          <Typography><strong>Tổng cộng:</strong> {order.total}$</Typography>
-        </Box>
-
-        <Box className="order-actions">
-          <Button variant="contained" className="cancel-button1">Hủy đơn hàng</Button>
-          <Button variant="contained" component={Link} to="/" className="home-button1">Quay lại trang chủ</Button>
-        </Box>
-      </Box>
-    </Container>
-    <Footer/>
+      </Container>
+      <Footer />
     </>
   );
 };

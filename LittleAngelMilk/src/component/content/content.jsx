@@ -55,7 +55,6 @@ const GET_POST = gql`
 
 function Content() {
   const location = useLocation();
-
   useEffect(() => {
     if (location.state?.fromLogin) {
       toast.success("Đăng nhập thành công!", {
@@ -71,7 +70,6 @@ function Content() {
       });
     }
   }, [location.state]);
-
   const {
     data: productData,
     loading: productLoading,
