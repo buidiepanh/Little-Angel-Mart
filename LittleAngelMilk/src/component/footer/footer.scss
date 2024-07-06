@@ -20,6 +20,11 @@
             font-weight: bold;
         }
 
+        a {
+            color: #fff;
+            text-decoration: none; // Loại bỏ dấu gạch chân
+          }
+
         .footer__address{
             display: flex;
             gap: 14px;
@@ -98,6 +103,12 @@
             .op{    
                 font-size: 15px;
                 color: #F6EDB9;
+                text-decoration: none; 
+                transition: color 0.3s; 
+
+                &:hover {
+                    color: #00209f; 
+                }
             }
         }
 
@@ -107,6 +118,12 @@
                 font-size: 15px;
                 color: #F6EDB9;
                 margin-top: 20px;
+                text-decoration: none; 
+                transition: color 0.3s; 
+
+                &:hover {
+                    color: #00209f; 
+                }
             }
         }
         &__convinient{
@@ -115,6 +132,12 @@
                 font-size: 15px;
                 color: #F6EDB9;
                 margin-top: 20px;
+                text-decoration: none; 
+                transition: color 0.3s; 
+
+                &:hover {
+                    color: #00209f;
+                }
             }
         }
     }

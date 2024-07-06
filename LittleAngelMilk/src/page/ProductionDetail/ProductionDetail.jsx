@@ -1,3 +1,4 @@
+// Import các thư viện cần thiết
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
@@ -21,7 +22,7 @@ import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
 import "./ProductionDetail.css";
 
-// Query to get product
+// GraphQL queries và mutations
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -35,15 +36,6 @@ const GET_PRODUCT = gql`
         publicUrl
       }
       productPrice
-    }
-  }
-`;
-
-// Mutation to create feedback
-const FEEDBACK_MUTATION = gql`
-  mutation Mutation($data: FeedbackCreateInput!) {
-    createFeedback(data: $data) {
-      comment
     }
   }
 `;
@@ -133,18 +125,31 @@ const UPDATE_CART_ITEM_QUANTITY = gql`
   }
 `;
 
+const FEEDBACK_MUTATION = gql`
+  mutation Mutation($data: FeedbackCreateInput!) {
+    createFeedback(data: $data) {
+      comment
+    }
+  }
+`;
+
 function ProductionDetail() {
+  // Lấy ID sản phẩm từ URL
   const { id } = useParams();
+  
+  // Lấy dữ liệu sản phẩm từ API
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const selectedProduct = data?.products?.find((product) => product.id === id);
-  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
-    GET_PRODUCT_FEEDBACK,
-    {
-      variables: { productId: selectedProduct?.id },
-      skip: !selectedProduct,
-    }
-  );
 
+
+  // Lấy feedback của sản phẩm từ API
+  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(GET_PRODUCT_FEEDBACK, {
+    variables: { productId: selectedProduct?.id },
+    skip: !selectedProduct
+  });
+
+
+  // Các state và hook cần thiết
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [createCart] = useMutation(CREATE_CART);
@@ -152,6 +157,7 @@ function ProductionDetail() {
   const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
   const userId = localStorage.getItem("userId");
 
+  // Lấy dữ liệu giỏ hàng từ API
   const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
     variables: {
       where: {
@@ -170,6 +176,7 @@ function ProductionDetail() {
     skip: !localStorage.getItem("cartId"),
   });
 
+  // Lấy token và tên người dùng từ localStorage
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
     const user = localStorage.getItem("userName");
@@ -189,6 +196,7 @@ function ProductionDetail() {
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
+  // Lưu feedback vào state và localStorage
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
       const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
@@ -206,6 +214,7 @@ function ProductionDetail() {
     );
   }, [feedbacks, selectedProduct]);
 
+  // Xử lý thay đổi input của feedback
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInput((prevInput) => ({
@@ -216,12 +225,15 @@ function ProductionDetail() {
 
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
+  // Xử lý submit feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inputFeedback.comment.trim() === "") {
       toast.error("Hãy nhập đánh giá của ba mẹ vào đây nhé !!!");
       return;
     }
+
+    const currentDate = new Date().toLocaleString(); // Get the current date and time
 
     try {
       await createFeedback({
@@ -235,7 +247,10 @@ function ProductionDetail() {
       });
       toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
-      refetchFeedback();
+      setFeedbacks([
+        ...feedbacks,
+        { comment: inputFeedback.comment, date: currentDate },
+      ]); // Store the feedback with date
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -249,6 +264,7 @@ function ProductionDetail() {
   if (!selectedProduct)
     return <Typography color="error">Product not found</Typography>;
 
+  // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = async () => {
     localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
@@ -275,37 +291,51 @@ function ProductionDetail() {
       }
     }
 
+    /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
+
+    await refetch();
+    // const existingCartItem = cartItemData?.cartItem;
+
+    // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
+    //   try {
+    //     await updateCartItemQuantity({
+    //       variables: {
+    //         where: { id: existingCartItem.id },
+    //         data: { quantity: existingCartItem.quantity + 1 },
+    //       },
+    //     });
+
+    //     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
+    //       icon: '🛒',
+    //     });
+    //   } catch (err) {
+    //     console.error("Error updating cart item quantity:", err);
+    //     toast.error(`Error updating cart item quantity: ${err.message}`);
+    //   }
+    // }
+    // else {
+
+    //add item to cart
+
     try {
-      const cartItem = cartData?.cart?.items.find(
-        (item) => item.productId.id === selectedProduct.id
-      );
-      if (cartItem) {
-        await updateCartItemQuantity({
-          variables: {
-            where: { id: cartItem.id },
-            data: { quantity: cartItem.quantity + 1 },
-          },
-        });
-      } else {
-        await createCartItem({
-          variables: {
-            data: {
-              cartId: {
-                connect: {
-                  id: cartId,
-                },
+      const { data } = await createCartItem({
+        variables: {
+          data: {
+            cartId: {
+              connect: {
+                id: cartId,
               },
-              price: selectedProduct.productPrice,
-              productId: {
-                connect: {
-                  id: selectedProduct.id,
-                },
-              },
-              quantity: 1,
             },
+            price: selectedProduct.productPrice,
+            productId: {
+              connect: {
+                id: selectedProduct.id,
+              },
+            },
+            quantity: 1,
           },
-        });
-      }
+        },
+      });
 
       await refetchCart(); // Ensure cart data is refetched
 
@@ -350,7 +380,7 @@ function ProductionDetail() {
                   {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
                 </Typography>
                 <ProductCounter />
-                {username ? (
+                {username ? (  // Kiểm tra xem người dùng đã đăng nhập chưa
                   <Box
                     className="product-actions"
                     display="flex"
@@ -369,13 +399,13 @@ function ProductionDetail() {
                       variant="contained"
                       color="primary"
                       className="btn-cart"
-                      onClick={handleAddToCart}
+                      onClick={handleAddToCart}   // Thêm sản phẩm vào giỏ hàng
                     >
                       Thêm vào giỏ hàng
                     </Button>
                   </Box>
-                ) : (
-                  <Box className="product-actions">
+                ) : ( //Nếu người dùng chưa đăng nhập, hiển thị các nút dẫn đến trang đăng nhập
+                  <Box className ="product-actions">
                     <Link to="/Login">
                       <Button
                         variant="contained"
@@ -424,7 +454,9 @@ function ProductionDetail() {
               fullWidth
             />
             <Button
-              onClick={handleSubmit}
+
+              onClick={handleSubmit} // Xử lý submit feedback
+
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
@@ -432,25 +464,48 @@ function ProductionDetail() {
               Submit Comment
             </Button>
             {/* Hiển thị feedbacks */}
-            {feedbackOfProduct?.feedbacks?.length > 0 ? (
-              feedbackOfProduct.feedbacks.map((feedback, index) => (
-                <Box key={index} className="feedback-item">
-                  <div className="feedback-content">
-                    <Typography variant="body1">{feedback.comment}</Typography>
-                    <div className="feedback-info">
-                      <span>User</span>{" "}
-                      {/* Set user name hard-coded as "User" */}
-                    </div>
+            {feedbacks.slice(0, visibleFeedbackCount).map((feedback, index) => (
+              <Box key={index} className="feedback-item">
+                <div className="icon-container">
+                  <AccountCircleOutlinedIcon style={{ fontSize: 50 }} />
+                </div>
+                <div className="feedback-content">
+                  <div className="feedback-header">
+                    <span>User</span>
+                    <span>{feedback.date}</span>
                   </div>
-                </Box>
-              ))
-            ) : (
-              <Typography variant="body2">Chưa có bình luận nào.</Typography>
-            )}
+                  <Typography variant="body1">{feedback.comment}</Typography>
+                </div>
+              </Box>
+            ))}
+            <Box className="button-container">
+              {feedbacks.length > visibleFeedbackCount && (
+                <Button
+                  variant="contained"
+
+                  onClick={handleLoadMoreFeedback} // Xử lý load thêm feedback
+
+                  className="load-more-button"
+                >
+                  Xem thêm
+                </Button>
+              )}
+              {visibleFeedbackCount > 2 && (
+                <Button
+                  variant="contained"
+
+                  onClick={handleLoadLessFeedback} // Xử lý giảm bớt feedback
+
+                  className="load-less-button"
+                >
+                  Giảm bớt
+                </Button>
+              )}
+            </Box>
           </Box>
         </Box>
       </Container>
-      <Footer />
+      <Footer /> 
     </div>
   );
 }
