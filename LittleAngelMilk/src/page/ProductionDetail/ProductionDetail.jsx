@@ -353,7 +353,15 @@ function ProductionDetail() {
     localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
     navigate("/CustomerCartInfo");
   };
-
+  const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
+  // Xử lý load thêm feedback
+  const handleLoadMoreFeedback = () => {
+    setVisibleFeedbackCount((prevCount) => prevCount + 2);
+  };
+  // Xử lý giảm bớt feedback
+  const handleLoadLessFeedback = () => {
+    setVisibleFeedbackCount((prevCount) => Math.max(prevCount - 2, 2));
+  };
   return (
     <div>
       <Toaster />
