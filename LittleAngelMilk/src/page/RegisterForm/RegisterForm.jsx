@@ -5,7 +5,7 @@ import "./RegisterForm.css";
 import milkImage from "../../assets/Logo.jpg";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { REGISTER_MUTATION } from "../Queries/user";
+import { REGISTER_MUTATION } from "../Mutations/user";
 
 const Register = () => {
   const navigate = useNavigate();
