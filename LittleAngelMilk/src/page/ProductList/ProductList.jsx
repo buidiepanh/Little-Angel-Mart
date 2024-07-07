@@ -1,38 +1,16 @@
 import { useEffect, useState } from "react";
 import "./ProductList.css";
-import { useQuery, gql } from "@apollo/client";
-import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
+import { GET_PRODUCTS } from "../Queries/product";
+import { GET_CATEGORYS } from "../Queries/category";
 
 function ProductsList() {
-  const GET_PRODUCT = gql`
-    query Products {
-      products {
-        id
-        name
-        category {
-          name
-        }
-        productDescription
-        productImage {
-          publicUrl
-        }
-        productPrice
-      }
-    }
-  `;
+  const { data } = useQuery(GET_PRODUCTS);
+  const products = data?.products;
 
-  const GET_CATEGORY = gql`
-    query Categories {
-      categories {
-        name
-      }
-    }
-  `;
-
-  const { data } = useQuery(GET_PRODUCT);
-  const products = data?.products || []; //Prevent lost data when refresh
   console.log(products);
   const [productCategory, setProductCategory] = useState("");
   const [productPrice, setProductPrice] = useState("");
@@ -45,7 +23,7 @@ function ProductsList() {
     const price = event.target.value;
     setProductPrice(price);
   };
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products?.filter((product) => {
     const priceCondition =
       productPrice === "" || product.productPrice <= parseInt(productPrice, 10);
     const categoryCondition =
@@ -60,7 +38,7 @@ function ProductsList() {
     data: categoryData,
     loading: categoryLoading,
     error: categoryError,
-  } = useQuery(GET_CATEGORY);
+  } = useQuery(GET_CATEGORYS);
 
   // console.log(categoryData);
 
@@ -95,21 +73,21 @@ function ProductsList() {
         </div>
         <div className="product-list-container">
           <div className="products">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
-                <Link to={`/ProductDetail/${product.id}`}>
-                  {/* <img src={img1} alt={product.name} /> */}
-                  {product.productImage?.publicUrl && (
-                    <img
-                      src={product.productImage.publicUrl}
-                      alt={product.name}
-                    />
-                  )}
-                  <div>{product.name}</div>
-                  <div>{product.price}</div>
-                </Link>
-              </div>
-            ))}
+            {filteredProducts?.length > 0 &&
+              filteredProducts.map((product) => (
+                <div key={product.id} className="product-card">
+                  <Link to={`/ProductDetail/${product.id}`}>
+                    {product.productImage?.publicUrl && (
+                      <img
+                        src={product.productImage.publicUrl}
+                        alt={product.name}
+                      />
+                    )}
+                    <div>{product.name}</div>
+                    <div>{product.price}</div>
+                  </Link>
+                </div>
+              ))}
           </div>
         </div>
       </div>

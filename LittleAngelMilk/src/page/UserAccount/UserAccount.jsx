@@ -1,29 +1,11 @@
 import "./UserAccount.scss";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_PROFILE } from "../Queries/user";
+import { UPDATE_PROFILE } from "../Mutations/user";
 import { useState } from "react";
-const GET_PROFILE = gql`
-  query Query {
-    users {
-      name
-      userEmail
-      userAddress
-      userPhone
-    }
-  }
-`;
 
-const UPDATE_PROFILE = gql`
-  mutation UpdateUser($where: UserWhereUniqueInput!, $data: UserUpdateInput!) {
-    updateUser(where: $where, data: $data) {
-      name
-      userEmail
-      userPhone
-      userAddress
-    }
-  }
-`;
 function UserAccount() {
   const [newName, setNewName] = useState(
     localStorage.getItem("userName") || ""
@@ -66,7 +48,6 @@ function UserAccount() {
     };
     try {
       const result = await updateUserProfile({ variables });
-      console.log(result);
       //if update success, set new information in localStrorage
       if (result.data.updateUser) {
         localStorage.setItem("userName", result.data.updateUser.name);

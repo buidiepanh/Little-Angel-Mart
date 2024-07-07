@@ -1,4 +1,3 @@
-// Import các thư viện cần thiết
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, gql } from "@apollo/client";
@@ -20,184 +19,54 @@ import ProductCounter from "../../component/ProductionDetail/ProductCounter";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
+import { formatMoney } from "../../utils/formatMoney";
 import "./ProductionDetail.css";
-
-// GraphQL queries và mutations
-const GET_PRODUCT = gql`
-  query Products {
-    products {
-      id
-      name
-      category {
-        name
-      }
-      productDescription
-      productImage {
-        publicUrl
-      }
-      productPrice
-    }
-  }
-`;
-
-const GET_PRODUCT_FEEDBACK = gql`
-  query Query($productId: ID!) {
-    feedbacks(where: { product: { id: { equals: $productId } } }) {
-      id
-      comment
-    }
-  }
-`;
-
-const GET_CART = gql`
-  query Cart($where: CartWhereUniqueInput!) {
-    cart(where: $where) {
-      createdAt
-      id
-      itemsCount
-      user {
-        id
-      }
-      items {
-        id
-        productId {
-          id
-          name
-        }
-        quantity
-        price
-      }
-    }
-  }
-`;
-
-const GET_CART_ITEM = gql`
-  query Query($where: CartItemWhereUniqueInput!) {
-    cartItem(where: $where) {
-      id
-      productId {
-        id
-      }
-      quantity
-    }
-  }
-`;
-
-const CREATE_CART = gql`
-  mutation CreateCart($data: CartCreateInput!) {
-    createCart(data: $data) {
-      createdAt
-      id
-      itemsCount
-      user {
-        id
-      }
-    }
-  }
-`;
-
-const CREATE_CART_ITEM = gql`
-  mutation CreateCartItem($data: CartItemCreateInput!) {
-    createCartItem(data: $data) {
-      cartId {
-        id
-      }
-      id
-      productId {
-        id
-        name
-      }
-      quantity
-      price
-    }
-  }
-`;
-
-const UPDATE_CART_ITEM_QUANTITY = gql`
-  mutation UpdateCartItem(
-    $where: CartItemWhereUniqueInput!
-    $data: CartItemUpdateInput!
-  ) {
-    updateCartItem(where: $where, data: $data) {
-      id
-      quantity
-    }
-  }
-`;
-
-const FEEDBACK_MUTATION = gql`
-  mutation Mutation($data: FeedbackCreateInput!) {
-    createFeedback(data: $data) {
-      comment
-    }
-  }
-`;
+import { GET_PRODUCT } from "../Queries/product";
+import { FEEDBACK_MUTATION } from "../Mutations/feedback";
+import { GET_PRODUCT_FEEDBACK } from "../Queries/feedback";
+import { GET_CART, GET_CART_ITEM } from "../Queries/cart";
+import {
+  CREATE_CART,
+  CREATE_CART_ITEM,
+  UPDATE_CART_ITEM_QUANTITY,
+} from "../Mutations/cart";
 
 function ProductionDetail() {
-  // Lấy ID sản phẩm từ URL
   const { id } = useParams();
-
-  // Lấy dữ liệu sản phẩm từ API
-  const { data, loading, error } = useQuery(GET_PRODUCT);
-  const selectedProduct = data?.products?.find((product) => product.id === id);
-
-  // Lấy feedback của sản phẩm từ API
-  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
-    GET_PRODUCT_FEEDBACK,
-    {
-      variables: { productId: selectedProduct?.id },
-      skip: !selectedProduct,
-    }
-  );
-
-  // Các state và hook cần thiết
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [createCart] = useMutation(CREATE_CART);
-  const [createCartItem] = useMutation(CREATE_CART_ITEM);
-  const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
+  const token = localStorage.getItem("sessionToken");
+  const username = localStorage.getItem("userName") || "";
   const userId = localStorage.getItem("userId");
+  const navigate = useNavigate();
 
-  // Lấy dữ liệu giỏ hàng từ API
-  const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
-    variables: {
-      where: {
-        id: localStorage.getItem("cartItemId"),
-      },
-    },
-    skip: !localStorage.getItem("cartItemId"),
+  const {
+    data: productDetail,
+    loading,
+    error,
+  } = useQuery(GET_PRODUCT, {
+    variables: { where: { id } },
   });
 
-  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
-    variables: {
-      where: {
-        id: localStorage.getItem("cartId"),
-      },
-    },
-    skip: !localStorage.getItem("cartId"),
-  });
-
-  // Lấy token và tên người dùng từ localStorage
-  useEffect(() => {
-    const token = localStorage.getItem("sessionToken");
-    const user = localStorage.getItem("userName");
-    if (token && user) {
-      setUsername(user);
-    }
-  }, []);
-
+  //useState
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
 
   const [feedbacks, setFeedbacks] = useState(() => {
     const storedFeedbacks = localStorage.getItem(
-      `feedbacks_${selectedProduct?.id}`
+      `feedbacks_${productDetail?.product.id}`
     );
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
-  // Lưu feedback vào state và localStorage
+  // useQuery
+  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
+    GET_PRODUCT_FEEDBACK,
+    {
+      variables: { productId: productDetail?.product.id },
+    }
+  );
+
+  //useEffect
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
       const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
@@ -210,13 +79,41 @@ function ProductionDetail() {
 
   useEffect(() => {
     localStorage.setItem(
-      `feedbacks_${selectedProduct?.id}`,
+      `feedbacks_${productDetail?.product.id}`,
       JSON.stringify(feedbacks)
     );
-  }, [feedbacks, selectedProduct]);
+  }, [feedbacks, productDetail]);
 
-  // Xử lý thay đổi input của feedback
-  const handleChange = (e) => {
+  // const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
+
+  // Lấy dữ liệu giỏ hàng từ API
+  // const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
+  //   variables: {
+  //     where: {
+  //       id: localStorage.getItem("cartItemId"),
+  //     },
+  //   },
+  //   skip: !localStorage.getItem("cartItemId"),
+  // });
+
+  // const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
+  //   variables: {
+  //     where: {
+  //       id: localStorage.getItem("cartId"),
+  //     },
+  //   },
+  //   skip: !localStorage.getItem("cartId"),
+  // });
+
+  // const [createCart] = useMutation(CREATE_CART);
+  // const [createCartItem] = useMutation(CREATE_CART_ITEM);
+
+  // console.log(productDetail);
+
+  const [createFeedback] = useMutation(FEEDBACK_MUTATION);
+
+  // Handle event
+  const handleFeedbackChange = (e) => {
     const { name, value } = e.target;
     setInput((prevInput) => ({
       ...prevInput,
@@ -224,9 +121,6 @@ function ProductionDetail() {
     }));
   };
 
-  const [createFeedback] = useMutation(FEEDBACK_MUTATION);
-
-  // Xử lý submit feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inputFeedback.comment.trim() === "") {
@@ -240,7 +134,7 @@ function ProductionDetail() {
       await createFeedback({
         variables: {
           data: {
-            product: { connect: { id: selectedProduct.id } },
+            product: { connect: { id: productDetail.product.id } },
             user: { connect: { id: userId } },
             comment: inputFeedback.comment,
           },
@@ -251,70 +145,55 @@ function ProductionDetail() {
       setFeedbacks([
         ...feedbacks,
         { comment: inputFeedback.comment, date: currentDate },
-      ]); // Store the feedback with date
+      ]);
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
     }
   };
 
-  if (loading) return <CircularProgress />;
-  if (error)
-    return <Typography color="error">Error loading product details</Typography>;
-
-  if (!selectedProduct)
-    return <Typography color="error">Product not found</Typography>;
-
   // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = async () => {
     localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
-    try {
-      const { data } = await createCart({
-        variables: {
-          data: {
-            createdAt: new Date().toISOString(),
-            user: {
-              connect: {
-                id: userId,
+    let itemsCount = cartData?.cart?.quantity || 0;
+    console.log(itemsCount);
+    if (!cartId) {
+      try {
+        const { data } = await createCart({
+          variables: {
+            data: {
+              createdAt: new Date().toISOString(),
+              user: {
+                connect: {
+                  id: userId,
+                },
               },
+              quantity: itemsCount + 1,
             },
           },
-        },
-      });
-      cartId = data.createCart.id;
-      localStorage.setItem("cartId", cartId);
-    } catch (err) {
-      console.error("Error creating cart:", err);
-      toast.error(`Error creating cart: ${err.message}`);
-      return;
+        });
+        cartId = data.createCart.id;
+        localStorage.setItem("cartId", cartId);
+      } catch (err) {
+        console.error("Error creating cart:", err);
+        toast.error(`Error creating cart: ${err.message}`);
+        return;
+      }
+    } else {
+      try {
+        await updateCart({
+          variables: {
+            where: { id: cartId },
+            data: { quantity: itemsCount + 1 },
+          },
+        });
+      } catch (err) {
+        console.error("Error updating cart quantity:", err);
+        toast.error(`Error updating cart quantity: ${err.message}`);
+        return;
+      }
     }
-
-    /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
-
-    // await refetch();
-    // const existingCartItem = cartItemData?.cartItem;
-
-    // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
-    //   try {
-    //     await updateCartItemQuantity({
-    //       variables: {
-    //         where: { id: existingCartItem.id },
-    //         data: { quantity: existingCartItem.quantity + 1 },
-    //       },
-    //     });
-
-    //     toast('Đã cập nhật số lượng sản phẩm trong giỏ hàng!', {
-    //       icon: '🛒',
-    //     });
-    //   } catch (err) {
-    //     console.error("Error updating cart item quantity:", err);
-    //     toast.error(`Error updating cart item quantity: ${err.message}`);
-    //   }
-    // }
-    // else {
-
-    //add item to cart
 
     try {
       const { data } = await createCartItem({
@@ -325,18 +204,16 @@ function ProductionDetail() {
                 id: cartId,
               },
             },
-            price: selectedProduct.productPrice,
+            price: productDetail.productPrice,
             productId: {
               connect: {
-                id: selectedProduct.id,
+                id: productDetail.id,
               },
             },
             quantity: 1,
           },
         },
       });
-
-      // await refetchCart(); // Ensure cart data is refetched
 
       toast("Đã thêm vào giỏ hàng!", {
         icon: "🛒",
@@ -345,13 +222,15 @@ function ProductionDetail() {
       console.error("Error adding to cart:", err);
       toast.error(`Error adding to cart: ${err.message}`);
     }
+    await refetchCart();
   };
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
+    localStorage.setItem("productDetail", JSON.stringify(productDetail));
     navigate("/CustomerCartInfo");
   };
+
   const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
   // Xử lý load thêm feedback
   const handleLoadMoreFeedback = () => {
@@ -361,6 +240,14 @@ function ProductionDetail() {
   const handleLoadLessFeedback = () => {
     setVisibleFeedbackCount((prevCount) => Math.max(prevCount - 2, 2));
   };
+
+  if (loading) return <CircularProgress />;
+  if (error)
+    return <Typography color="error">Error loading product details</Typography>;
+
+  if (!productDetail)
+    return <Typography color="error">Product not found</Typography>;
+
   return (
     <div>
       <Toaster />
@@ -369,11 +256,11 @@ function ProductionDetail() {
         <Card className="product-upper">
           <Grid container spacing={4}>
             <Grid item xs={12} md={6} className="product-image">
-              {selectedProduct.productImage?.publicUrl && (
+              {productDetail.product.productImage?.publicUrl && (
                 <CardMedia
                   component="img"
-                  image={selectedProduct.productImage.publicUrl}
-                  alt={selectedProduct.name}
+                  image={productDetail.product.productImage.publicUrl}
+                  alt={productDetail.product.name}
                   className="product-image"
                 />
               )}
@@ -381,10 +268,10 @@ function ProductionDetail() {
             <Grid item xs={12} md={6} className="product-info">
               <CardContent>
                 <Typography variant="h4" gutterBottom>
-                  {selectedProduct.name}
+                  {productDetail.product.name}
                 </Typography>
                 <Typography variant="h5" gutterBottom>
-                  {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
+                  {formatMoney(productDetail.product.productPrice)}
                 </Typography>
                 <ProductCounter />
                 {username ? ( // Kiểm tra xem người dùng đã đăng nhập chưa
@@ -442,7 +329,7 @@ function ProductionDetail() {
           <Box className="product-description">
             <Typography variant="h6">Mô tả sản phẩm</Typography>
             <Typography variant="body1">
-              {selectedProduct.productDescription}
+              {productDetail.product.productDescription}
             </Typography>
           </Box>
           <Box className="product-recommendations">
@@ -454,7 +341,7 @@ function ProductionDetail() {
             <TextField
               name="comment"
               value={inputFeedback.comment}
-              onChange={handleChange}
+              onChange={handleFeedbackChange}
               placeholder="Hãy viết nội dung..."
               multiline
               rows={4}
