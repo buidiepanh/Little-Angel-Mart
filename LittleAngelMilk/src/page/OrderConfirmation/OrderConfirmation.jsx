@@ -86,6 +86,7 @@ const OrderConfirmation = () => {
   };
 
   const handleConfirmOrder = async () => {
+    
     try {
       const response = await createOrder({
         variables: {
