@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./ProductList.css";
 import { useQuery, gql } from "@apollo/client";
-import img1 from "/src/assets/anh1.png";
 import { Link, useParams } from "react-router-dom";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
@@ -33,8 +32,6 @@ function ProductsList() {
   `;
 
   const { data } = useQuery(GET_PRODUCT);
-  const { searchUrl } = useParams();
-  const searchValue = (searchUrl || "").toLowerCase();
   const products = data?.products || []; //Prevent lost data when refresh
   console.log(products);
   const [productCategory, setProductCategory] = useState("");
@@ -53,10 +50,7 @@ function ProductsList() {
       productPrice === "" || product.productPrice <= parseInt(productPrice, 10);
     const categoryCondition =
       productCategory === "" || product.category.name === productCategory;
-    const searchCondition = data.products.filter((product) =>
-      product.name.toLowerCase().includes(searchValue)
-    );
-    return priceCondition && categoryCondition && searchCondition;
+    return priceCondition && categoryCondition;
   });
   useEffect(() => {
     console.log(productCategory);

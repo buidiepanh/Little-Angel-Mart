@@ -136,18 +136,19 @@ const FEEDBACK_MUTATION = gql`
 function ProductionDetail() {
   // Lấy ID sản phẩm từ URL
   const { id } = useParams();
-  
+
   // Lấy dữ liệu sản phẩm từ API
   const { data, loading, error } = useQuery(GET_PRODUCT);
   const selectedProduct = data?.products?.find((product) => product.id === id);
 
-
   // Lấy feedback của sản phẩm từ API
-  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(GET_PRODUCT_FEEDBACK, {
-    variables: { productId: selectedProduct?.id },
-    skip: !selectedProduct
-  });
-
+  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
+    GET_PRODUCT_FEEDBACK,
+    {
+      variables: { productId: selectedProduct?.id },
+      skip: !selectedProduct,
+    }
+  );
 
   // Các state và hook cần thiết
   const navigate = useNavigate();
@@ -268,32 +269,30 @@ function ProductionDetail() {
   const handleAddToCart = async () => {
     localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
-    if (!cartId) {
-      try {
-        const { data } = await createCart({
-          variables: {
-            data: {
-              createdAt: new Date().toISOString(),
-              user: {
-                connect: {
-                  id: userId,
-                },
+    try {
+      const { data } = await createCart({
+        variables: {
+          data: {
+            createdAt: new Date().toISOString(),
+            user: {
+              connect: {
+                id: userId,
               },
             },
           },
-        });
-        cartId = data.createCart.id;
-        localStorage.setItem("cartId", cartId);
-      } catch (err) {
-        console.error("Error creating cart:", err);
-        toast.error(`Error creating cart: ${err.message}`);
-        return;
-      }
+        },
+      });
+      cartId = data.createCart.id;
+      localStorage.setItem("cartId", cartId);
+    } catch (err) {
+      console.error("Error creating cart:", err);
+      toast.error(`Error creating cart: ${err.message}`);
+      return;
     }
 
     /*commented piece of code for increasing quantity when adding the same product, will be implemented and updated later*/
 
-    await refetch();
+    // await refetch();
     // const existingCartItem = cartItemData?.cartItem;
 
     // if (existingCartItem && existingCartItem.productId.id === selectedProduct.id) {
@@ -337,7 +336,7 @@ function ProductionDetail() {
         },
       });
 
-      await refetchCart(); // Ensure cart data is refetched
+      // await refetchCart(); // Ensure cart data is refetched
 
       toast("Đã thêm vào giỏ hàng!", {
         icon: "🛒",
@@ -388,7 +387,7 @@ function ProductionDetail() {
                   {selectedProduct.productPrice.toLocaleString("vi-VN")}đ
                 </Typography>
                 <ProductCounter />
-                {username ? (  // Kiểm tra xem người dùng đã đăng nhập chưa
+                {username ? ( // Kiểm tra xem người dùng đã đăng nhập chưa
                   <Box
                     className="product-actions"
                     display="flex"
@@ -407,13 +406,14 @@ function ProductionDetail() {
                       variant="contained"
                       color="primary"
                       className="btn-cart"
-                      onClick={handleAddToCart}   // Thêm sản phẩm vào giỏ hàng
+                      onClick={handleAddToCart} // Thêm sản phẩm vào giỏ hàng
                     >
                       Thêm vào giỏ hàng
                     </Button>
                   </Box>
-                ) : ( //Nếu người dùng chưa đăng nhập, hiển thị các nút dẫn đến trang đăng nhập
-                  <Box className ="product-actions">
+                ) : (
+                  //Nếu người dùng chưa đăng nhập, hiển thị các nút dẫn đến trang đăng nhập
+                  <Box className="product-actions">
                     <Link to="/Login">
                       <Button
                         variant="contained"
@@ -462,9 +462,7 @@ function ProductionDetail() {
               fullWidth
             />
             <Button
-
               onClick={handleSubmit} // Xử lý submit feedback
-
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
@@ -490,9 +488,7 @@ function ProductionDetail() {
               {feedbacks.length > visibleFeedbackCount && (
                 <Button
                   variant="contained"
-
                   onClick={handleLoadMoreFeedback} // Xử lý load thêm feedback
-
                   className="load-more-button"
                 >
                   Xem thêm
@@ -501,9 +497,7 @@ function ProductionDetail() {
               {visibleFeedbackCount > 2 && (
                 <Button
                   variant="contained"
-
                   onClick={handleLoadLessFeedback} // Xử lý giảm bớt feedback
-
                   className="load-less-button"
                 >
                   Giảm bớt
@@ -513,7 +507,7 @@ function ProductionDetail() {
           </Box>
         </Box>
       </Container>
-      <Footer /> 
+      <Footer />
     </div>
   );
 }
