@@ -232,7 +232,7 @@ function ProductionDetail() {
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("productDetail", JSON.stringify(selectedProduct));
+    localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
     navigate("/CustomerCartInfo");
   };
 
