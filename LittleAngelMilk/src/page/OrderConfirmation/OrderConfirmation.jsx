@@ -280,7 +280,6 @@ const OrderConfirmation = () => {
           </div>
         </div>
         <div className="confirmation-buttons">
-          <button className="cancel-button">Hủy đơn hàng</button>
           <button className="confirm-button" onClick={handleConfirmOrder}>Xác nhận hoàn tất và tạo đơn hàng</button>
         </div>
       </div>
