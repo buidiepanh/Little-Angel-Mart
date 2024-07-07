@@ -14,17 +14,16 @@ function UserAccount() {
     localStorage.getItem("userEmail") || ""
   );
   const [newPhone, setNewPhone] = useState(
-    localStorage.getItem("userPhone") || ""
+    localStorage.getItem("userPhoneNumber") || ""
   );
   const [newAddress, setNewAddress] = useState(
     localStorage.getItem("userAddress") || ""
   );
   //=================GET USER PROFILE===============
   const { data, loading, error } = useQuery(GET_PROFILE);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
   const user = data?.users?.[0] || {};
   if (!user) return <p>No user data found.</p>;
+  console.log(user);
   //==============UPDATE PROFILE==================
 
   const [
@@ -52,7 +51,10 @@ function UserAccount() {
       if (result.data.updateUser) {
         localStorage.setItem("userName", result.data.updateUser.name);
         localStorage.setItem("userEmail", result.data.updateUser.userEmail);
-        localStorage.setItem("userPhone", result.data.updateUser.userPhone);
+        localStorage.setItem(
+          "userPhoneNumber",
+          result.data.updateUser.userPhone
+        );
         localStorage.setItem("userAddress", result.data.updateUser.userAddress);
       }
     } catch (error) {
@@ -65,6 +67,9 @@ function UserAccount() {
       }
     }
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   const handleNewName = (event) => {
     setNewName(event.target.value);

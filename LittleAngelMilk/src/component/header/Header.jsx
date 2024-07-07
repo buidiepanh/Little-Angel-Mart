@@ -1,29 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { FaAngleDown } from "react-icons/fa";
 import { BsCartCheck } from "react-icons/bs";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { GET_PRODUCTS } from "../../page/Queries/product";
 import "./Header.css";
 import logo from "/src/assets/raw_logo.png";
-
-const GET_PRODUCT = gql`
-  query Products {
-    products {
-      id
-      name
-      category {
-        name
-      }
-      productDescription
-      productImage {
-        publicUrl
-      }
-      productPrice
-    }
-  }
-`;
 
 const Header = () => {
   const navigate = useNavigate();
@@ -60,8 +44,8 @@ const Header = () => {
     localStorage.removeItem("userName");
     localStorage.removeItem("userId");
     localStorage.removeItem("cartItems");
-    localStorage.removeItem("cartId");  // Remove cartId
-    localStorage.removeItem("cartItemId");  // Remove cartItemId
+    localStorage.removeItem("cartId"); // Remove cartId
+    localStorage.removeItem("cartItemId"); // Remove cartItemId
     setUsername("");
     navigate("/login");
   };
@@ -70,7 +54,7 @@ const Header = () => {
     setSearchValue(event.target.value);
   };
 
-  const { data, loading, error } = useQuery(GET_PRODUCT);
+  const { data, loading, error } = useQuery(GET_PRODUCTS);
 
   useEffect(() => {
     if (data && !loading && !error) {
@@ -187,16 +171,10 @@ const Header = () => {
       <div className="mainNavs">
         <Link to="/">Trang chủ</Link>
         <div className="dropdown">
-          <Link to="/products" className="productNav">
-            Sản phẩm <FaAngleDown />
+          <Link to="/product-list" className="productNav">
+            Sản phẩm
           </Link>
-          <div className="dropdown-content">
-            <div>
-              <Link to="/product1">Sản phẩm 1</Link>
-              <Link to="/product2">Sản phẩm 2</Link>
-              <Link to="/product3">Sản phẩm 3</Link>
-            </div>
-          </div>
+          <div className="dropdown-content"></div>
         </div>
         <Link to="/#articles">Bài viết</Link>
         <Link to="/">Shop chúng tôi</Link>
