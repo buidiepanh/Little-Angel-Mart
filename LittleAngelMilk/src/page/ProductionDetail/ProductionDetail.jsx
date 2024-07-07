@@ -162,6 +162,7 @@ function ProductionDetail() {
     let itemsCount = cartData?.cart?.quantity || 0;
     console.log(itemsCount);
     console.log(cartId.length);
+    console.log("cart Id:", cartId);
     console.log("product id:", productDetail.product.id )
     console.log("product price:", productDetail.product.productPrice);
     if (cartId.length <= 0) {

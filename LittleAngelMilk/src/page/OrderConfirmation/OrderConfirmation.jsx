@@ -5,7 +5,7 @@ import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
 import { PiShoppingCartLight } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
-import { useMutation, gql } from '@apollo/client';
+import { useQuery, useMutation, gql } from '@apollo/client';
 import toast, { Toaster } from "react-hot-toast";
 import Swal from 'sweetalert2';
 
@@ -16,6 +16,24 @@ const CREATE_ORDER_MUTATION = gql`
       id
       status
       totalPrice
+    }
+  }
+`;
+
+const GET_CART_ITEMS = gql`
+  query GetCartItems($where: CartItemWhereInput!) {
+    cartItems(where: $where) {
+      id
+      productId {
+        id
+        name
+        productImage {
+          publicUrl
+        }
+        productPrice
+      }
+      quantity
+      price
     }
   }
 `;
@@ -33,8 +51,30 @@ const OrderConfirmation = () => {
   const [updatedCustomer, setUpdatedCustomer] = useState(initialCustomer);
   const [showCartStep, setShowCartStep] = useState(false);
   const [product, setProduct] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
+
+  const cartId = localStorage.getItem("cartId");
+
+  const { data: cartItemsData, loading: cartItemsLoading, error: cartItemsError } = useQuery(GET_CART_ITEMS, {
+    variables: {
+      where: {
+        cartId: {
+          id: {
+            equals: cartId || ""
+          }
+        }
+      }
+    },
+    skip: !cartId,
+  });
+
+  useEffect(() => {
+    if (cartItemsData && cartItemsData.cartItems) {
+      setCartItems(cartItemsData.cartItems);
+    }
+  }, [cartItemsData]);
 
   useEffect(() => {
     const lastAction = localStorage.getItem("lastAction");
@@ -42,7 +82,6 @@ const OrderConfirmation = () => {
       setShowCartStep(true);
     }
 
-    // Load user data from local storage
     const storedName = localStorage.getItem("userName");
     const storedEmail = localStorage.getItem("userEmail");
     const storedPhone = localStorage.getItem("userPhoneNumber");
@@ -58,7 +97,6 @@ const OrderConfirmation = () => {
     setCustomer(loadedCustomer);
     setUpdatedCustomer(loadedCustomer);
 
-    // Load selected product from local storage
     const storedProduct = localStorage.getItem("selectedProduct");
     if (storedProduct) {
       setProduct(JSON.parse(storedProduct));
@@ -78,7 +116,6 @@ const OrderConfirmation = () => {
     setCustomer(updatedCustomer);
     setIsEditing(false);
 
-    // Optionally, save updated customer data back to local storage
     localStorage.setItem("userName", updatedCustomer.name);
     localStorage.setItem("userEmail", updatedCustomer.email);
     localStorage.setItem("userPhoneNumber", updatedCustomer.phone);
@@ -86,14 +123,15 @@ const OrderConfirmation = () => {
   };
 
   const handleConfirmOrder = async () => {
-    
+    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
     try {
       const response = await createOrder({
         variables: {
           data: {
             createdAt: new Date().toISOString(),
             status: 'published',
-            totalPrice: product.productPrice
+            totalPrice: totalPrice
           }
         }
       });
@@ -106,7 +144,6 @@ const OrderConfirmation = () => {
         title: "Khởi tạo đơn hàng thành công!",
         icon: "success"
       });
-      // Store the created order in local storage
       localStorage.setItem("CreatedOrder", JSON.stringify(order));
       navigate('/');
     } catch (error) {
@@ -114,9 +151,9 @@ const OrderConfirmation = () => {
     }
   };
 
-  return ( 
+  return (
     <div className="background-wrapper">
-      <Toaster/>
+      <Toaster />
       <div className="order-container">
         <div className="progress-container">
           {showCartStep && (
@@ -212,22 +249,34 @@ const OrderConfirmation = () => {
                 </tr>
               </thead>
               <tbody>
-                {product && (
-                  <tr>
-                    <td>{product.name}</td>
-                    <td>1</td>
-                    <td>{product.productPrice}đ</td>
-                    <td>{product.productPrice}đ</td>
+                {cartItems.map(item => (
+                  <tr key={item.id}>
+                    <td>{item.productId.name}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.price}đ</td>
+                    <td>{item.price * item.quantity}đ</td>
                   </tr>
-                )}
+                ))}
               </tbody>
               <tfoot>
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
-                  <td>{product ? product.productPrice : 0}đ</td>
+                  <td>{cartItems.reduce((total, item) => total + item.price * item.quantity, 0)}đ</td>
                 </tr>
               </tfoot>
             </table>
+            {product && (
+              <div className="product-details">
+                <h3>Chi tiết sản phẩm</h3>
+                <div className="product-card">
+                  <img src={product.productImage?.publicUrl} alt={product.name} />
+                  <div className="product-info">
+                    <h4>{product.name}</h4>
+                    <p>Giá: {product.productPrice}đ</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="confirmation-buttons">

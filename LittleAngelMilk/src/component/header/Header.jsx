@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaShoppingCart } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -38,6 +38,17 @@ const Header = () => {
     if (token && user) {
       setUsername(user);
     }
+
+    // Event listener to clear localStorage on page close
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("cartId");
+      localStorage.removeItem("cartItemId");
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
   const toggleMenu = () => {
@@ -49,6 +60,8 @@ const Header = () => {
     localStorage.removeItem("userName");
     localStorage.removeItem("userId");
     localStorage.removeItem("cartItems");
+    localStorage.removeItem("cartId");  // Remove cartId
+    localStorage.removeItem("cartItemId");  // Remove cartItemId
     setUsername("");
     navigate("/login");
   };
