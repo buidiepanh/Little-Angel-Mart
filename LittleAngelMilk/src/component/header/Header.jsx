@@ -8,8 +8,6 @@ import { useQuery, gql } from "@apollo/client";
 import "./Header.css";
 import logo from "/src/assets/raw_logo.png";
 
-export const ProductContext = createContext();
-
 const GET_PRODUCT = gql`
   query Products {
     products {
@@ -76,6 +74,7 @@ const Header = () => {
         product.name.toLowerCase().includes(searchValue.toLowerCase())
       );
       setProductList(availableProducts);
+      console.log(productList);
     }
   };
 
@@ -106,7 +105,7 @@ const Header = () => {
             onChange={handleSearchValue}
           />
           <div className="SearchBtn">
-            <Link to={`/product-list/:${productList}`}>
+            <Link to={"/product-list"}>
               <FaMagnifyingGlass
                 className="SearchCircle"
                 onClick={handleSearch}

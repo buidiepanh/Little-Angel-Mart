@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import "./ProductList.css";
-import { useQuery, gql } from "@apollo/client";
-import img1 from "/src/assets/anh1.png";
-import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 import { GET_PRODUCTS } from "../Queries/product";
@@ -10,8 +9,6 @@ import { GET_CATEGORYS } from "../Queries/category";
 
 function ProductsList() {
   const { data } = useQuery(GET_PRODUCTS);
-  const { searchUrl } = useParams();
-  const searchValue = (searchUrl || "").toLowerCase();
   const products = data?.products;
 
   console.log(products);
@@ -31,10 +28,7 @@ function ProductsList() {
       productPrice === "" || product.productPrice <= parseInt(productPrice, 10);
     const categoryCondition =
       productCategory === "" || product.category.name === productCategory;
-    const searchCondition = data.products.filter((product) =>
-      product.name.toLowerCase().includes(searchValue)
-    );
-    return priceCondition && categoryCondition && searchCondition;
+    return priceCondition && categoryCondition;
   });
   useEffect(() => {
     console.log(productCategory);
@@ -83,7 +77,6 @@ function ProductsList() {
               filteredProducts.map((product) => (
                 <div key={product.id} className="product-card">
                   <Link to={`/ProductDetail/${product.id}`}>
-                    {/* <img src={img1} alt={product.name} /> */}
                     {product.productImage?.publicUrl && (
                       <img
                         src={product.productImage.publicUrl}

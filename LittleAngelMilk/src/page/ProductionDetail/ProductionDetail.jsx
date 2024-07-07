@@ -21,7 +21,7 @@ import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
 import { formatMoney } from "../../utils/formatMoney";
 import "./ProductionDetail.css";
-import { GET_PRODUCT } from "../Queries/product";
+import { GET_PRODUCT, GET_PRODUCTS } from "../Queries/product";
 import { FEEDBACK_MUTATION } from "../Mutations/feedback";
 import { GET_PRODUCT_FEEDBACK } from "../Queries/feedback";
 import { GET_CART, GET_CART_ITEM } from "../Queries/cart";
@@ -29,6 +29,7 @@ import {
   CREATE_CART,
   CREATE_CART_ITEM,
   UPDATE_CART_ITEM_QUANTITY,
+  UPDATE_CART
 } from "../Mutations/cart";
 
 function ProductionDetail() {
@@ -37,6 +38,7 @@ function ProductionDetail() {
   const username = localStorage.getItem("userName") || "";
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
+  const [updateCart] = useMutation(UPDATE_CART);
 
   const {
     data: productDetail,
@@ -45,7 +47,8 @@ function ProductionDetail() {
   } = useQuery(GET_PRODUCT, {
     variables: { where: { id } },
   });
-
+  const { data: productList } = useQuery(GET_PRODUCTS);
+  const selectedProduct = productList?.products?.find((product) => product.id === id);
   //useState
   const [inputFeedback, setInput] = useState({
     comment: "",
@@ -87,28 +90,28 @@ function ProductionDetail() {
   // const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
 
   // Lấy dữ liệu giỏ hàng từ API
-  // const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
-  //   variables: {
-  //     where: {
-  //       id: localStorage.getItem("cartItemId"),
-  //     },
-  //   },
-  //   skip: !localStorage.getItem("cartItemId"),
-  // });
+  const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
+    variables: {
+      where: {
+        id: localStorage.getItem("cartItemId"),
+      },
+    },
+    skip: !localStorage.getItem("cartItemId"),
+  });
 
-  // const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
-  //   variables: {
-  //     where: {
-  //       id: localStorage.getItem("cartId"),
-  //     },
-  //   },
-  //   skip: !localStorage.getItem("cartId"),
-  // });
+  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
+    variables: {
+      where: {
+        id: localStorage.getItem("cartId"),
+      },
+    },
+    skip: !localStorage.getItem("cartId"),
+  });
 
-  // const [createCart] = useMutation(CREATE_CART);
-  // const [createCartItem] = useMutation(CREATE_CART_ITEM);
+  const [createCart] = useMutation(CREATE_CART);
+  const [createCartItem] = useMutation(CREATE_CART_ITEM);
 
-  // console.log(productDetail);
+  console.log(productDetail);
 
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
@@ -158,7 +161,9 @@ function ProductionDetail() {
     let cartId = localStorage.getItem("cartId");
     let itemsCount = cartData?.cart?.quantity || 0;
     console.log(itemsCount);
-    if (!cartId) {
+    console.log(cartId.length);
+    console.log("product id:", selectedProduct.id )
+    if (cartId.length <= 0) {
       try {
         const { data } = await createCart({
           variables: {
@@ -204,10 +209,10 @@ function ProductionDetail() {
                 id: cartId,
               },
             },
-            price: productDetail.productPrice,
+            price: selectedProduct.productPrice,
             productId: {
               connect: {
-                id: productDetail.id,
+                id:selectedProduct.id,
               },
             },
             quantity: 1,
@@ -227,7 +232,7 @@ function ProductionDetail() {
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("productDetail", JSON.stringify(productDetail));
+    localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
     navigate("/CustomerCartInfo");
   };
 

@@ -19,6 +19,7 @@ export const GET_CART = gql`
         quantity
         price
       }
+        quantity
     }
   }
 `;

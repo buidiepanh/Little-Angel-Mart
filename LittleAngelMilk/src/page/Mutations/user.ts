@@ -35,3 +35,15 @@ export const REGISTER_MUTATION = gql`
     }
   }
 `;
+
+//Mutation for update User's profile
+export const UPDATE_PROFILE = gql`
+  mutation UpdateUser($where: UserWhereUniqueInput!, $data: UserUpdateInput!) {
+    updateUser(where: $where, data: $data) {
+      name
+      userEmail
+      userPhone
+      userAddress
+    }
+  }
+`;
