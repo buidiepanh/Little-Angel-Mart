@@ -29,7 +29,7 @@ import {
   CREATE_CART,
   CREATE_CART_ITEM,
   UPDATE_CART_ITEM_QUANTITY,
-  UPDATE_CART
+  UPDATE_CART,
 } from "../Mutations/cart";
 
 function ProductionDetail() {
@@ -48,7 +48,9 @@ function ProductionDetail() {
     variables: { where: { id } },
   });
   const { data: productList } = useQuery(GET_PRODUCTS);
-  const selectedProduct = productList?.products?.find((product) => product.id === id);
+  const selectedProduct = productList?.products?.find(
+    (product) => product.id === id
+  );
   //useState
   const [inputFeedback, setInput] = useState({
     comment: "",
@@ -162,7 +164,7 @@ function ProductionDetail() {
     let itemsCount = cartData?.cart?.quantity || 0;
     console.log(itemsCount);
     console.log(cartId.length);
-    console.log("product id:", selectedProduct.id )
+    console.log("product id:", selectedProduct.id);
     if (cartId.length <= 0) {
       try {
         const { data } = await createCart({
@@ -212,7 +214,7 @@ function ProductionDetail() {
             price: selectedProduct.productPrice,
             productId: {
               connect: {
-                id:selectedProduct.id,
+                id: selectedProduct.id,
               },
             },
             quantity: 1,
