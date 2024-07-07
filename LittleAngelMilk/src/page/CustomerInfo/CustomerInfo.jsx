@@ -104,12 +104,6 @@ const CustomerInfo = () => {
           </div>
           <div className="step">
             <div className="icon">
-              <GoCreditCard />
-            </div>
-            <div className="label">Thanh toán</div>
-          </div>
-          <div className="step">
-            <div className="icon">
               <FaCheck />
             </div>
             <div className="label">Xác nhận đơn hàng</div>

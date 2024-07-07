@@ -172,12 +172,6 @@ const OrderConfirmation = () => {
           </div>
           <div className="step active">
             <div className="icon">
-              <GoCreditCard />
-            </div>
-            <div className="label">Thanh toán</div>
-          </div>
-          <div className="step active">
-            <div className="icon">
               <FaCheck />
             </div>
             <div className="label">Xác nhận đơn hàng</div>
