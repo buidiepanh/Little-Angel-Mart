@@ -16,6 +16,7 @@ import OrderConfirmation from "./page/OrderConfirmation/OrderConfirmation";
 import UserAccount from "./page/UserAccount/UserAccount";
 import CustomerPolicy from "./page/CustomerPolicy/CustomerPolicy";
 import WarrantyPolicy from "./page/WarrantyPolicy/WarrantyPolicy";
+import ContactPage from "./page/ContactPage/ContactPage";
 const App = () => {
   return (
     <Router>
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/posts" element={<PostPage />} />
         <Route path="/customer-policy" element={<CustomerPolicy />} />
         <Route path="/warranty-policy" element={<WarrantyPolicy />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </Router>
   );
