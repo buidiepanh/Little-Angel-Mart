@@ -44,3 +44,10 @@ export const UPDATE_CART_ITEM_QUANTITY = gql`
     }
   }
 `;
+export const UPDATE_CART = gql`
+  mutation UpdateCart($where: CartWhereUniqueInput!, $data: CartUpdateInput!) {
+    updateCart(where: $where, data: $data) {
+      quantity
+    }
+  }
+`;
