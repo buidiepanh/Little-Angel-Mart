@@ -47,8 +47,8 @@ function ProductionDetail() {
   } = useQuery(GET_PRODUCT, {
     variables: { where: { id } },
   });
-  const { data: productList } = useQuery(GET_PRODUCTS);
-  const selectedProduct = productList?.products?.find((product) => product.id === id);
+  // const { data: productList } = useQuery(GET_PRODUCTS);
+  // const selectedProduct = productList?.products?.find((product) => product.id === id);
   //useState
   const [inputFeedback, setInput] = useState({
     comment: "",
@@ -162,7 +162,8 @@ function ProductionDetail() {
     let itemsCount = cartData?.cart?.quantity || 0;
     console.log(itemsCount);
     console.log(cartId.length);
-    console.log("product id:", selectedProduct.id )
+    console.log("product id:", productDetail.product.id )
+    console.log("product price:", productDetail.product.productPrice);
     if (cartId.length <= 0) {
       try {
         const { data } = await createCart({
@@ -209,10 +210,10 @@ function ProductionDetail() {
                 id: cartId,
               },
             },
-            price: selectedProduct.productPrice,
+            price: productDetail.product.productPrice,
             productId: {
               connect: {
-                id:selectedProduct.id,
+                id:productDetail.product.id,
               },
             },
             quantity: 1,
@@ -232,7 +233,7 @@ function ProductionDetail() {
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct));
+    localStorage.setItem("selectedProduct", JSON.stringify(productDetail.product));
     navigate("/CustomerCartInfo");
   };
 
