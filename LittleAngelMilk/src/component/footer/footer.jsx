@@ -72,7 +72,7 @@ function Footer() {
           <br /> <br />
           <Link className="op" to="/posts">Cẩm nang cho mẹ</Link>
           <br /> <br />
-          <Link className="op">Liên hệ</Link>
+          <Link className="op" to="/contact">Liên hệ</Link>
         </div>
         <div className="footer__bot__support">
           <h4>Hỗ trợ khách hàng</h4>

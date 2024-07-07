@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SimilarProducts from "../SimilarProducts/SimilarProducts";
 import {
@@ -21,7 +21,7 @@ import Footer from "../../component/footer/footer";
 import toast, { Toaster } from "react-hot-toast";
 import { formatMoney } from "../../utils/formatMoney";
 import "./ProductionDetail.css";
-import { GET_PRODUCT, GET_PRODUCTS } from "../Queries/product";
+import { GET_PRODUCT } from "../Queries/product";
 import { FEEDBACK_MUTATION } from "../Mutations/feedback";
 import { GET_PRODUCT_FEEDBACK } from "../Queries/feedback";
 import { GET_CART, GET_CART_ITEM } from "../Queries/cart";
@@ -29,7 +29,7 @@ import {
   CREATE_CART,
   CREATE_CART_ITEM,
   UPDATE_CART_ITEM_QUANTITY,
-  UPDATE_CART
+  UPDATE_CART,
 } from "../Mutations/cart";
 
 function ProductionDetail() {
@@ -47,71 +47,53 @@ function ProductionDetail() {
   } = useQuery(GET_PRODUCT, {
     variables: { where: { id } },
   });
-  // const { data: productList } = useQuery(GET_PRODUCTS);
-  // const selectedProduct = productList?.products?.find((product) => product.id === id);
-  //useState
+
+  // useState
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
 
   const [feedbacks, setFeedbacks] = useState(() => {
-    const storedFeedbacks = localStorage.getItem(
-      `feedbacks_${productDetail?.product.id}`
-    );
+    const storedFeedbacks = localStorage.getItem(`feedbacks_${id}`);
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
   // useQuery
-  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
-    GET_PRODUCT_FEEDBACK,
-    {
-      variables: { productId: productDetail?.product.id },
-    }
-  );
+  const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(GET_PRODUCT_FEEDBACK, {
+    variables: { productId: id },
+  });
 
-  //useEffect
+  // useEffect
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
       const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
         comment: fb.comment,
-        date: fb.date || new Date().toLocaleString(), // Use the date from feedback or current date for existing feedbacks
+        date: fb.date || new Date().toLocaleString(), // Use the date from feedback
       }));
       setFeedbacks(initialFeedbacks);
     }
   }, [feedbackOfProduct]);
 
   useEffect(() => {
-    localStorage.setItem(
-      `feedbacks_${productDetail?.product.id}`,
-      JSON.stringify(feedbacks)
-    );
-  }, [feedbacks, productDetail]);
+    const storedFeedbacks = localStorage.getItem(`feedbacks_${id}`);
+    if (storedFeedbacks) {
+      setFeedbacks(JSON.parse(storedFeedbacks));
+    } else {
+      // If there are no stored feedbacks, attempt to fetch from the server and initialize
+      if (feedbackOfProduct?.feedbacks) {
+        const initialFeedbacks = feedbackOfProduct.feedbacks.map(fb => ({
+          comment: fb.comment,
+          date: fb.date || new Date().toLocaleString() // Fallback to new date if none is provided (initial load from server)
+        }));
+        setFeedbacks(initialFeedbacks);
+        localStorage.setItem(`feedbacks_${id}`, JSON.stringify(initialFeedbacks)); // Store initially fetched feedbacks
+      }
+    }
+  }, [id, feedbackOfProduct]);
 
-  // const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
-
-  // Lấy dữ liệu giỏ hàng từ API
-  const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
-    variables: {
-      where: {
-        id: localStorage.getItem("cartItemId"),
-      },
-    },
-    skip: !localStorage.getItem("cartItemId"),
-  });
-
-  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
-    variables: {
-      where: {
-        id: localStorage.getItem("cartId"),
-      },
-    },
-    skip: !localStorage.getItem("cartId"),
-  });
-
-  const [createCart] = useMutation(CREATE_CART);
-  const [createCartItem] = useMutation(CREATE_CART_ITEM);
-
-  console.log(productDetail);
+  useEffect(() => {
+    localStorage.setItem(`feedbacks_${id}`, JSON.stringify(feedbacks));
+  }, [feedbacks, id]);
 
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
@@ -131,24 +113,23 @@ function ProductionDetail() {
       return;
     }
 
-    const currentDate = new Date().toLocaleString(); // Get the current date and time
-
     try {
-      await createFeedback({
+      const { data } = await createFeedback({
         variables: {
           data: {
-            product: { connect: { id: productDetail.product.id } },
+            product: { connect: { id } },
             user: { connect: { id: userId } },
             comment: inputFeedback.comment,
           },
         },
       });
+
+      const feedbackDate = new Date().toLocaleString(); 
+
       toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
-      setFeedbacks([
-        ...feedbacks,
-        { comment: inputFeedback.comment, date: currentDate },
-      ]);
+      setFeedbacks(prevFeedbacks => [...prevFeedbacks, { comment: inputFeedback.comment, date: feedbackDate }]);
+      localStorage.setItem(`feedbacks_${id}`, JSON.stringify([...feedbacks, { comment: inputFeedback.comment, date: feedbackDate }]));
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -162,7 +143,7 @@ function ProductionDetail() {
     let itemsCount = cartData?.cart?.quantity || 0;
     console.log(itemsCount);
     console.log(cartId.length);
-    console.log("product id:", productDetail.product.id )
+    console.log("product id:", productDetail.product.id);
     console.log("product price:", productDetail.product.productPrice);
     if (cartId.length <= 0) {
       try {
@@ -213,7 +194,7 @@ function ProductionDetail() {
             price: productDetail.product.productPrice,
             productId: {
               connect: {
-                id:productDetail.product.id,
+                id: productDetail.product.id,
               },
             },
             quantity: 1,
@@ -233,7 +214,10 @@ function ProductionDetail() {
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("selectedProduct", JSON.stringify(productDetail.product));
+    localStorage.setItem(
+      "selectedProduct",
+      JSON.stringify(productDetail.product)
+    );
     navigate("/CustomerCartInfo");
   };
 
@@ -248,11 +232,9 @@ function ProductionDetail() {
   };
 
   if (loading) return <CircularProgress />;
-  if (error)
-    return <Typography color="error">Error loading product details</Typography>;
+  if (error) return <Typography color="error">Error loading product details</Typography>;
 
-  if (!productDetail)
-    return <Typography color="error">Product not found</Typography>;
+  if (!productDetail) return <Typography color="error">Product not found</Typography>;
 
   return (
     <div>
@@ -280,13 +262,9 @@ function ProductionDetail() {
                   {formatMoney(productDetail.product.productPrice)}
                 </Typography>
                 <ProductCounter />
-                {username ? ( // Kiểm tra xem người dùng đã đăng nhập chưa
-                  <Box
-                    className="product-actions"
-                    display="flex"
-                    gap={2}
-                    marginTop={2}
-                  >
+                {username ? (
+                  // Kiểm tra xem người dùng đã đăng nhập chưa
+                  <Box className="product-actions" display="flex" gap={2} marginTop={2}>
                     <Button
                       variant="contained"
                       color="error"
@@ -308,20 +286,12 @@ function ProductionDetail() {
                   //Nếu người dùng chưa đăng nhập, hiển thị các nút dẫn đến trang đăng nhập
                   <Box className="product-actions">
                     <Link to="/Login">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className="btn-buy"
-                      >
+                      <Button variant="contained" color="secondary" className="btn-buy">
                         Mua ngay
                       </Button>
                     </Link>
                     <Link to="/Login">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className="btn-cart"
-                      >
+                      <Button variant="contained" color="primary" className="btn-cart">
                         Thêm vào giỏ hàng
                       </Button>
                     </Link>
@@ -334,9 +304,7 @@ function ProductionDetail() {
         <Box className="product-lower">
           <Box className="product-description">
             <Typography variant="h6">Mô tả sản phẩm</Typography>
-            <Typography variant="body1">
-              {productDetail.product.productDescription}
-            </Typography>
+            <Typography variant="body1">{productDetail.product.productDescription}</Typography>
           </Box>
           <Box className="product-recommendations">
             <Typography variant="h6">Các sản phẩm khác</Typography>

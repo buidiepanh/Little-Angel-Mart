@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-//Quert to get cart
+//Query to get cart
 export const GET_CART = gql`
   query Cart($where: CartWhereUniqueInput!) {
     cart(where: $where) {
@@ -19,7 +19,7 @@ export const GET_CART = gql`
         quantity
         price
       }
-        quantity
+      quantity
     }
   }
 `;

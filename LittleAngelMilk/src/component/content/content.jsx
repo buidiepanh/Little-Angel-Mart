@@ -162,7 +162,7 @@ function Content() {
                       {link ? (
                         <a
                           href={link}
-                          target="_blank"
+                          target="_blank" //open in new tab
                           rel="noopener noreferrer"
                         >
                           <div className="article">
