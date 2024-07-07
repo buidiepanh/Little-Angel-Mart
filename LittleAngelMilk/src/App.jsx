@@ -7,7 +7,6 @@ import ForgotPagePassword from "./page/ForgotPagePassword/ForgotPagePassword";
 import CartPage from "./page/CartPage/CartPage";
 import Content from "./component/content/content";
 import CustomerInfo from "./page/CustomerInfo/CustomerInfo";
-import Payment from "./page/PaymentPage/payment";
 import AboutUsPage from "./page/AboutUsPage/AboutUsPage";
 import ProductList from "./page/ProductList/ProductList";
 import OrderDetailPage from "./page/OrderDetailPage/OrderDetailPage";
@@ -29,7 +28,6 @@ const App = () => {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/CustomerCartInfo" element={<CustomerInfo />} />
         <Route path="/ProductDetail/:id" element={<ProductionDetail />} />
-        <Route path="/PaymentPage" element={<Payment />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/product-list" element={<ProductList />} />
         <Route path="/profile" element={<UserAccount />} />

@@ -22,6 +22,17 @@ const Header = () => {
     if (token && user) {
       setUsername(user);
     }
+
+    // Event listener to clear localStorage on page close
+    // const handleBeforeUnload = () => {
+    //   localStorage.removeItem("cartId");
+    //   localStorage.removeItem("cartItemId");
+    // };
+    // window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // return () => {
+    //   window.removeEventListener("beforeunload", handleBeforeUnload);
+    // };
   }, []);
 
   const toggleMenu = () => {
@@ -33,6 +44,8 @@ const Header = () => {
     localStorage.removeItem("userName");
     localStorage.removeItem("userId");
     localStorage.removeItem("cartItems");
+    localStorage.removeItem("cartId"); // Remove cartId
+    localStorage.removeItem("cartItemId"); // Remove cartItemId
     setUsername("");
     navigate("/login");
   };
