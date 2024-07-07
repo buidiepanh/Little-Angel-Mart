@@ -8,7 +8,6 @@ import { PiShoppingCartLight } from "react-icons/pi";
 import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
-
 const GET_CART = gql`
   query Cart($where: CartWhereUniqueInput!) {
     cart(where: $where) {
@@ -27,11 +26,10 @@ const GET_CART = gql`
         quantity
         price
       }
-      quantity
+        quantity
     }
   }
 `;
-
 const GET_CART_ITEMS = gql`
   query Query($where: CartItemWhereInput!) {
     cartItems(where: $where) {
@@ -86,13 +84,12 @@ const CartPage = () => {
     },
     skip: !localStorage.getItem("cartId"),
   });
-
   const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
   const [updateCart] = useMutation(UPDATE_CART);
   const cartId = localStorage.getItem("cartId");
 
-  const { data, loading, error: queryError, refetch: refetchItems } = useQuery(GET_CART_ITEMS, {
+  const { data, loading, error: queryError, refetch:refetchItems } = useQuery(GET_CART_ITEMS, {
     variables: {
       where: {
         cartId: {
@@ -147,7 +144,7 @@ const CartPage = () => {
     } catch (err) {
       setError(`Error deleting cart item: ${err.message}`);
     }
-    await refetchCart();
+    await refetchCart();  
   };
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);

@@ -40,15 +40,15 @@ const Header = () => {
     }
 
     // Event listener to clear localStorage on page close
-    const handleBeforeUnload = () => {
-      localStorage.removeItem("cartId");
-      localStorage.removeItem("cartItemId");
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    // const handleBeforeUnload = () => {
+    //   localStorage.removeItem("cartId");
+    //   localStorage.removeItem("cartItemId");
+    // };
+    // window.addEventListener("beforeunload", handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    // return () => {
+    //   window.removeEventListener("beforeunload", handleBeforeUnload);
+    // };
   }, []);
 
   const toggleMenu = () => {
