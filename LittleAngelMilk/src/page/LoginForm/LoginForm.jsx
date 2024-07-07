@@ -13,10 +13,13 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  //useState
+  //Receive value when change
   const [input, setInput] = useState({
-    password: "",
     email: "",
+    password: "",
   });
+  const [errorMess, setErrorMess] = useState("");
 
   // const handleLoginGoogle = () => {
   //   signInWithPopup(auth, googleProvider)
@@ -29,8 +32,8 @@ const LoginForm = () => {
   //     });
   // };
 
-  const [errorMess, setErrorMess] = useState("");
-
+  //handle event
+  //Take value when change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInput({
@@ -38,10 +41,6 @@ const LoginForm = () => {
       [name]: value,
     });
   };
-
-  const [login] = useMutation(LOGIN_MUTATION, {
-    variables: input,
-  });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -65,6 +64,11 @@ const LoginForm = () => {
       setErrorMess("An error occurred. Please try again.");
     }
   }
+
+  //useMutation
+  const [login] = useMutation(LOGIN_MUTATION, {
+    variables: input,
+  });
 
   useEffect(() => {
     if (location.state?.fromRegister) {

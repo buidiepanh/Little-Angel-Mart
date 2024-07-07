@@ -141,8 +141,11 @@ function ProductionDetail() {
     localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
     let itemsCount = cartData?.cart?.quantity || 0;
-
-    if (!cartId) {
+    console.log(itemsCount);
+    console.log(cartId.length);
+    console.log("product id:", productDetail.product.id);
+    console.log("product price:", productDetail.product.productPrice);
+    if (cartId.length <= 0) {
       try {
         const { data } = await createCart({
           variables: {
@@ -211,7 +214,10 @@ function ProductionDetail() {
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("selectedProduct", JSON.stringify(productDetail.product));
+    localStorage.setItem(
+      "selectedProduct",
+      JSON.stringify(productDetail.product)
+    );
     navigate("/CustomerCartInfo");
   };
 
