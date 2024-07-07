@@ -69,7 +69,7 @@ const CustomerInfo = () => {
 
     if (!emailError && !phoneNumberError && !nameError && !addressError) {
       console.log("Form is valid. Submitting...");
-      navigate("/PaymentPage");
+      navigate("/OrderConfirmation");
     }
   };
 
