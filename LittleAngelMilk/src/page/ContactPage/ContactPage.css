@@ -1,0 +1,25 @@
+/* ContactPage.css */
+.contact-page {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-top: 160px;
+  }
+
+  
+  .contact-info {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .contact-info-item {
+    text-align: center;
+    margin: 0 10px;
+  }
+  
+  .contact-info-item p {
+    margin-top: 8px;
+  }
+  
