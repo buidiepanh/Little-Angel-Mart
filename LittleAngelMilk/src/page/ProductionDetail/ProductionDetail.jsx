@@ -77,14 +77,14 @@ function ProductionDetail() {
     if (storedFeedbacks) {
       setFeedbacks(JSON.parse(storedFeedbacks));
     } else {
-      // If there are no stored feedbacks, attempt to fetch from the server and initialize
+    // Nếu không có feedback được lưu trữ, thử lấy từ server và khởi tạo  
       if (feedbackOfProduct?.feedbacks) {
         const initialFeedbacks = feedbackOfProduct.feedbacks.map(fb => ({
           comment: fb.comment,
-          date: fb.date || new Date().toLocaleString() // Fallback to new date if none is provided (initial load from server)
+          date: fb.date || new Date().toLocaleString() // Sử dụng thời gian hiện tại nếu không có thời gian được cung cấp (lần tải ban đầu từ server)
         }));
         setFeedbacks(initialFeedbacks);
-        localStorage.setItem(`feedbacks_${id}`, JSON.stringify(initialFeedbacks)); // Store initially fetched feedbacks
+        localStorage.setItem(`feedbacks_${id}`, JSON.stringify(initialFeedbacks)); // Lưu feedback ban đầu vào localStorage
       }
     }
   }, [id, feedbackOfProduct]);
@@ -379,7 +379,7 @@ function ProductionDetail() {
               color="primary"
               style={{ marginTop: "10px" }}
             >
-              Submit Comment
+              Đăng Bình Luận
             </Button>
             {/* Hiển thị feedbacks */}
             {feedbacks.slice(0, visibleFeedbackCount).map((feedback, index) => (
