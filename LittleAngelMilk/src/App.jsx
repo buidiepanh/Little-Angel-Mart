@@ -16,6 +16,8 @@ import UserAccount from "./page/UserAccount/UserAccount";
 import CustomerPolicy from "./page/CustomerPolicy/CustomerPolicy";
 import WarrantyPolicy from "./page/WarrantyPolicy/WarrantyPolicy";
 import ContactPage from "./page/ContactPage/ContactPage";
+import Checkout from "./page/Checkout/Checkout";
+
 const App = () => {
   return (
     <Router>
@@ -37,6 +39,7 @@ const App = () => {
         <Route path="/customer-policy" element={<CustomerPolicy />} />
         <Route path="/warranty-policy" element={<WarrantyPolicy />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </Router>
   );

@@ -29,7 +29,7 @@ import {
   CREATE_CART,
   CREATE_CART_ITEM,
   UPDATE_CART_ITEM_QUANTITY,
-  UPDATE_CART
+  UPDATE_CART,
 } from "../Mutations/cart";
 
 function ProductionDetail() {
@@ -161,7 +161,7 @@ function ProductionDetail() {
     let cartId = localStorage.getItem("cartId");
     let itemsCount = cartData?.cart?.quantity || 0;
     console.log(itemsCount);
-    console.log("product id:", productDetail.product.id )
+    console.log("product id:", productDetail.product.id);
     console.log("product price:", productDetail.product.productPrice);
     if (!cartId) {
       try {
@@ -212,7 +212,7 @@ function ProductionDetail() {
             price: productDetail.product.productPrice,
             productId: {
               connect: {
-                id:productDetail.product.id,
+                id: productDetail.product.id,
               },
             },
             quantity: 1,
@@ -232,7 +232,11 @@ function ProductionDetail() {
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("selectedProduct", JSON.stringify(productDetail.product));
+    //Parse object into string
+    localStorage.setItem(
+      "selectedProduct",
+      JSON.stringify(productDetail.product)
+    );
     navigate("/CustomerCartInfo");
   };
 
