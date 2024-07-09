@@ -47,8 +47,8 @@ const Header = () => {
     localStorage.removeItem("userAddress");
     localStorage.removeItem("userId");
     localStorage.removeItem("cartItems");
-    localStorage.removeItem("cartId"); // Remove cartId
-    localStorage.removeItem("cartItemId"); // Remove cartItemId
+    localStorage.removeItem("cartId");
+    localStorage.removeItem("cartItemId");
     localStorage.removeItem("feedbackId");
     localStorage.removeItem("userAddress");
     localStorage.removeItem("userPhoneNumber");

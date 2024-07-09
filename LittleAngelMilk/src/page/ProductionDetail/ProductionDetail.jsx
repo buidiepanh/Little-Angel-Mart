@@ -101,7 +101,7 @@ function ProductionDetail() {
   }, [id]);
 
   // const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
-// const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
+const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
 
   // Lấy dữ liệu giỏ hàng từ API
   const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
@@ -214,16 +214,15 @@ function ProductionDetail() {
     }
 
     const existingCartItem = cartItemData?.cartItems?.find(
-      (item) => item.productId.id === productDetail.product.id
+      (item) => item.productId[0].id === productDetail.product.id
     );
-    
-    console.log("cartitem: ", existingCartItem);
-    console.log("cartItemData:", cartItemData);
+  
     console.log("productDetail.product.id:", productDetail?.product?.id);
     console.log(`productId:`, id);
+    console.log("existing cart item: ", existingCartItem);
     if (cartItemData && cartItemData.cartItems) {
       cartItemData.cartItems.forEach((item, index) => {
-        console.log(`Item ${index}:`, item.productId.id);
+        console.log(`Item product Id${index}:`, item.productId[0].id);
         // cartItemData.cartItems.productId.forEach((productItem, index1) => {
         //   console.log(`Item Product${index1}:`, productItem);
         // })
