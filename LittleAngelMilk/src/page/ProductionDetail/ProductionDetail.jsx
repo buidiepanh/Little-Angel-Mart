@@ -29,7 +29,7 @@ import {
   CREATE_CART,
   CREATE_CART_ITEM,
   UPDATE_CART_ITEM_QUANTITY,
-  UPDATE_CART
+  UPDATE_CART,
 } from "../Mutations/cart";
 
 function ProductionDetail() {
@@ -50,14 +50,15 @@ function ProductionDetail() {
   // const { data: productList } = useQuery(GET_PRODUCTS);
   // const selectedProduct = productList?.products?.find((product) => product.id === id);
   //useState
+
+  // Khởi tạo trạng thái để lưu trữ nội dung phản hồi người dùng đang nhập
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
 
+  // Khởi tạo trạng thái để lưu trữ danh sách các phản hồi từ localStorage
   const [feedbacks, setFeedbacks] = useState(() => {
-    const storedFeedbacks = localStorage.getItem(
-      `feedbacks_${productDetail?.product.id}`
-    );
+    const storedFeedbacks = localStorage.getItem(`feedbacks_${id}`);
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
@@ -70,22 +71,29 @@ function ProductionDetail() {
   );
 
   //useEffect
+  // useEffect để kiểm tra và khởi tạo feedback từ localStorage hoặc server
   useEffect(() => {
-    if (feedbackOfProduct?.feedbacks) {
-      const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
-        comment: fb.comment,
-        date: fb.date || new Date().toLocaleString(), // Use the date from feedback or current date for existing feedbacks
-      }));
-      setFeedbacks(initialFeedbacks);
+    const storedFeedbacks = localStorage.getItem(`feedbacks_${id}`);
+    if (storedFeedbacks) {
+      setFeedbacks(JSON.parse(storedFeedbacks));
+    } else {
+      // If there are no stored feedbacks, attempt to fetch from the server and initialize
+      if (feedbackOfProduct?.feedbacks) {
+        const initialFeedbacks = feedbackOfProduct.feedbacks.map(fb => ({
+          comment: fb.comment,
+          date: fb.date || new Date().toLocaleString() // Fallback to new date if none is provided (initial load from server)
+        }));
+        setFeedbacks(initialFeedbacks);
+        localStorage.setItem(`feedbacks_${id}`, JSON.stringify(initialFeedbacks)); // Store initially fetched feedbacks
+      }
     }
-  }, [feedbackOfProduct]);
+  }, [id, feedbackOfProduct]);
 
+   // useEffect để lưu feedback vào localStorage khi feedback thay đổi
   useEffect(() => {
-    localStorage.setItem(
-      `feedbacks_${productDetail?.product.id}`,
-      JSON.stringify(feedbacks)
-    );
-  }, [feedbacks, productDetail]);
+    localStorage.setItem(`feedbacks_${id}`, JSON.stringify(feedbacks));
+  }, [feedbacks, id]);
+
 
   // const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
 
@@ -115,7 +123,7 @@ function ProductionDetail() {
 
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
-  // Handle event
+    // Xử lý thay đổi trong input feedback
   const handleFeedbackChange = (e) => {
     const { name, value } = e.target;
     setInput((prevInput) => ({
@@ -124,6 +132,9 @@ function ProductionDetail() {
     }));
   };
 
+  // Handle event
+
+   // Xử lý submit feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inputFeedback.comment.trim() === "") {
@@ -131,24 +142,29 @@ function ProductionDetail() {
       return;
     }
 
-    const currentDate = new Date().toLocaleString(); // Get the current date and time
-
     try {
-      await createFeedback({
+      const { data } = await createFeedback({
         variables: {
           data: {
-            product: { connect: { id: productDetail.product.id } },
+            product: { connect: { id } },
             user: { connect: { id: userId } },
             comment: inputFeedback.comment,
           },
         },
       });
+
+      const feedbackDate = new Date().toLocaleString(); // Lấy thời gian hiện tại khi submit feedback
+
       toast.success("Feedback submitted successfully!");
       setInput({ comment: "" });
-      setFeedbacks([
-        ...feedbacks,
-        { comment: inputFeedback.comment, date: currentDate },
+      setFeedbacks((prevFeedbacks) => [
+        ...prevFeedbacks, // Giữ lại các phản hồi cũ
+        { comment: inputFeedback.comment, date: feedbackDate },// Thêm phản hồi mới với thời gian hiện tại
       ]);
+      localStorage.setItem(
+        `feedbacks_${id}`,
+        JSON.stringify([...feedbacks, { comment: inputFeedback.comment, date: feedbackDate }])// Lưu phản hồi mới vào localStorage
+      );
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -161,7 +177,7 @@ function ProductionDetail() {
     let cartId = localStorage.getItem("cartId");
     let itemsCount = cartData?.cart?.quantity || 0;
     console.log(itemsCount);
-    console.log("product id:", productDetail.product.id )
+    console.log("product id:", productDetail.product.id);
     console.log("product price:", productDetail.product.productPrice);
     if (!cartId) {
       try {
@@ -212,7 +228,7 @@ function ProductionDetail() {
             price: productDetail.product.productPrice,
             productId: {
               connect: {
-                id:productDetail.product.id,
+                id: productDetail.product.id,
               },
             },
             quantity: 1,
@@ -232,7 +248,11 @@ function ProductionDetail() {
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    localStorage.setItem("selectedProduct", JSON.stringify(productDetail.product));
+    //Parse object into string
+    localStorage.setItem(
+      "selectedProduct",
+      JSON.stringify(productDetail.product)
+    );
     navigate("/CustomerCartInfo");
   };
 

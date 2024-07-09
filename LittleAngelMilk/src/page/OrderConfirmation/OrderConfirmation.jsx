@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import './OrderConfirmation.css';
+import React, { useState, useEffect } from "react";
+import "./OrderConfirmation.css";
 import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
 import { PiShoppingCartLight } from "react-icons/pi";
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, gql } from '@apollo/client';
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, gql } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import { formatMoney } from "../../utils/formatMoney";
 
 const CREATE_ORDER_MUTATION = gql`
   mutation Mutation($data: OrderCreateInput!) {
@@ -39,11 +41,13 @@ const GET_CART_ITEMS = gql`
 `;
 
 const OrderConfirmation = () => {
+  const productCount = useSelector((state) => state.counter.value);
+
   const initialCustomer = {
-    name: '',
-    address: '',
-    email: '',
-    phone: ''
+    name: "",
+    address: "",
+    email: "",
+    phone: "",
   };
 
   const [customer, setCustomer] = useState(initialCustomer);
@@ -57,15 +61,19 @@ const OrderConfirmation = () => {
 
   const cartId = localStorage.getItem("cartId");
 
-  const { data: cartItemsData, loading: cartItemsLoading, error: cartItemsError } = useQuery(GET_CART_ITEMS, {
+  const {
+    data: cartItemsData,
+    loading: cartItemsLoading,
+    error: cartItemsError,
+  } = useQuery(GET_CART_ITEMS, {
     variables: {
       where: {
         cartId: {
           id: {
-            equals: cartId || ""
-          }
-        }
-      }
+            equals: cartId || "",
+          },
+        },
+      },
     },
     skip: !cartId,
   });
@@ -88,10 +96,10 @@ const OrderConfirmation = () => {
     const storedAddress = localStorage.getItem("userAddress");
 
     const loadedCustomer = {
-      name: storedName || '',
-      email: storedEmail || '',
-      phone: storedPhone || '',
-      address: storedAddress || ''
+      name: storedName || "",
+      email: storedEmail || "",
+      phone: storedPhone || "",
+      address: storedAddress || "",
     };
 
     setCustomer(loadedCustomer);
@@ -123,32 +131,35 @@ const OrderConfirmation = () => {
   };
 
   const handleConfirmOrder = async () => {
-    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-    try {
-      const response = await createOrder({
-        variables: {
-          data: {
-            createdAt: new Date().toISOString(),
-            status: 'published',
-            totalPrice: totalPrice
-          }
-        }
-      });
-      const order = response.data.createOrder;
-      const orderIdCreated = response.data.createOrder.id;
-      console.log('Order created:', order);
-      console.log('OrderID:', orderIdCreated);
-      localStorage.setItem('orderId', orderIdCreated);
-      await Swal.fire({
-        title: "Khởi tạo đơn hàng thành công!",
-        icon: "success"
-      });
-      localStorage.setItem("CreatedOrder", JSON.stringify(order));
-      navigate('/');
-    } catch (error) {
-      console.error('Error creating order:', error);
-    }
+    navigate("/checkout");
+    // const totalPrice = cartItems.reduce(
+    //   (total, item) => total + item.price * item.quantity,
+    //   0
+    // );
+    // try {
+    //   const response = await createOrder({
+    //     variables: {
+    //       data: {
+    //         createdAt: new Date().toISOString(),
+    //         status: "published",
+    //         totalPrice: totalPrice,
+    //       },
+    //     },
+    //   });
+    //   const order = response.data.createOrder;
+    //   const orderIdCreated = response.data.createOrder.id;
+    //   console.log("Order created:", order);
+    //   console.log("OrderID:", orderIdCreated);
+    //   localStorage.setItem("orderId", orderIdCreated);
+    //   await Swal.fire({
+    //     title: "Khởi tạo đơn hàng thành công!",
+    //     icon: "success",
+    //   });
+    //   localStorage.setItem("CreatedOrder", JSON.stringify(order));
+    //   navigate("/");
+    // } catch (error) {
+    //   console.error("Error creating order:", error);
+    // }
   };
 
   return (
@@ -169,12 +180,6 @@ const OrderConfirmation = () => {
               <RxPerson />
             </div>
             <div className="label">Thông tin khách hàng</div>
-          </div>
-          <div className="step active">
-            <div className="icon">
-              <GoCreditCard />
-            </div>
-            <div className="label">Thanh toán</div>
           </div>
           <div className="step active">
             <div className="icon">
@@ -225,15 +230,27 @@ const OrderConfirmation = () => {
                     onChange={handleInputChange}
                   />
                 </p>
-                <button className="save-button" onClick={handleSaveClick}>Lưu</button>
+                <button className="save-button" onClick={handleSaveClick}>
+                  Lưu
+                </button>
               </div>
             ) : (
               <div>
-                <p><strong>Tên:</strong> {customer.name}</p>
-                <p><strong>Địa chỉ:</strong> {customer.address}</p>
-                <p><strong>Email:</strong> {customer.email}</p>
-                <p><strong>Số điện thoại:</strong> {customer.phone}</p>
-                <button className="update-button" onClick={handleUpdateClick}>Cập nhật thông tin</button>
+                <p>
+                  <strong>Tên:</strong> {customer.name}
+                </p>
+                <p>
+                  <strong>Địa chỉ:</strong> {customer.address}
+                </p>
+                <p>
+                  <strong>Email:</strong> {customer.email}
+                </p>
+                <p>
+                  <strong>Số điện thoại:</strong> {customer.phone}
+                </p>
+                <button className="update-button" onClick={handleUpdateClick}>
+                  Cập nhật thông tin
+                </button>
               </div>
             )}
           </div>
@@ -249,19 +266,26 @@ const OrderConfirmation = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map(item => (
+                {cartItems.map((item) => (
                   <tr key={item.id}>
                     <td>{item.productId.name}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.price}đ</td>
-                    <td>{item.price * item.quantity}đ</td>
+                    <td>{productCount}</td>
+                    <td>{formatMoney(item.price)}</td>
+                    <td>{formatMoney(item.price * item.quantity)}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
-                  <td>{cartItems.reduce((total, item) => total + item.price * item.quantity, 0)}đ</td>
+                  <td>
+                    {formatMoney(
+                      cartItems.reduce(
+                        (total, item) => total + item.price * productCount,
+                        0
+                      )
+                    )}
+                  </td>
                 </tr>
               </tfoot>
             </table>
@@ -269,10 +293,13 @@ const OrderConfirmation = () => {
               <div className="product-details">
                 <h3>Chi tiết sản phẩm</h3>
                 <div className="product-card">
-                  <img src={product.productImage?.publicUrl} alt={product.name} />
+                  <img
+                    src={product.productImage?.publicUrl}
+                    alt={product.name}
+                  />
                   <div className="product-info">
                     <h4>{product.name}</h4>
-                    <p>Giá: {product.productPrice}đ</p>
+                    <p>Giá: {formatMoney(product.productPrice)}</p>
                   </div>
                 </div>
               </div>
@@ -280,7 +307,9 @@ const OrderConfirmation = () => {
           </div>
         </div>
         <div className="confirmation-buttons">
-          <button className="confirm-button" onClick={handleConfirmOrder}>Xác nhận hoàn tất và tạo đơn hàng</button>
+          <button className="confirm-button" onClick={handleConfirmOrder}>
+            Xác nhận hoàn tất và tạo đơn hàng
+          </button>
         </div>
       </div>
     </div>

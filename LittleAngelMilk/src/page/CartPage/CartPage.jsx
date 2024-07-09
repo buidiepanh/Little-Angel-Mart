@@ -168,10 +168,6 @@ const CartPage = () => {
             <span>Thông tin khách hàng</span>
           </div>
           <div className="step">
-            <div className="icon"><GoCreditCard /></div>
-            <span>Thanh toán</span>
-          </div>
-          <div className="step">
             <div className="icon"><FaCheck /></div>
             <span>Xác nhận đơn hàng</span>
           </div>

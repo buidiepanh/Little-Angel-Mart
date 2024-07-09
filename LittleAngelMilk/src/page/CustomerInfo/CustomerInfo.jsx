@@ -69,7 +69,7 @@ const CustomerInfo = () => {
 
     if (!emailError && !phoneNumberError && !nameError && !addressError) {
       console.log("Form is valid. Submitting...");
-      navigate("/PaymentPage");
+      navigate("/OrderConfirmation");
     }
   };
 
@@ -101,12 +101,6 @@ const CustomerInfo = () => {
               <RxPerson />
             </div>
             <div className="label">Thông tin khách hàng</div>
-          </div>
-          <div className="step">
-            <div className="icon">
-              <GoCreditCard />
-            </div>
-            <div className="label">Thanh toán</div>
           </div>
           <div className="step">
             <div className="icon">
