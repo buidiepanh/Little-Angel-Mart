@@ -43,10 +43,12 @@ const Header = () => {
     localStorage.removeItem("sessionToken");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userAddress");
     localStorage.removeItem("userId");
     localStorage.removeItem("cartItems");
-    localStorage.removeItem("cartId"); // Remove cartId
-    localStorage.removeItem("cartItemId"); // Remove cartItemId
+    localStorage.removeItem("cartId");
+    localStorage.removeItem("cartItemId");
+    localStorage.removeItem("username"); 
     setUsername("");
     navigate("/login");
   };
