@@ -43,6 +43,7 @@ const Header = () => {
     localStorage.removeItem("sessionToken");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
     localStorage.removeItem("userId");
     localStorage.removeItem("cartItems");
     localStorage.removeItem("cartId"); // Remove cartId
