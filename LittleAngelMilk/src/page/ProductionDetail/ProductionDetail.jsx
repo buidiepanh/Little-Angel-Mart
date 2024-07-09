@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SimilarProducts from "../SimilarProducts/SimilarProducts";
 import {
@@ -47,9 +47,7 @@ function ProductionDetail() {
   } = useQuery(GET_PRODUCT, {
     variables: { where: { id } },
   });
-  // const { data: productList } = useQuery(GET_PRODUCTS);
-  // const selectedProduct = productList?.products?.find((product) => product.id === id);
-  //useState
+
   const [inputFeedback, setInput] = useState({
     comment: "",
   });
@@ -61,7 +59,6 @@ function ProductionDetail() {
     return storedFeedbacks ? JSON.parse(storedFeedbacks) : [];
   });
 
-  // useQuery
   const { data: feedbackOfProduct, refetch: refetchFeedback } = useQuery(
     GET_PRODUCT_FEEDBACK,
     {
@@ -69,12 +66,11 @@ function ProductionDetail() {
     }
   );
 
-  //useEffect
   useEffect(() => {
     if (feedbackOfProduct?.feedbacks) {
       const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
         comment: fb.comment,
-        date: fb.date || new Date().toLocaleString(), // Use the date from feedback or current date for existing feedbacks
+        date: fb.date || new Date().toLocaleString(),
       }));
       setFeedbacks(initialFeedbacks);
     }
@@ -87,18 +83,20 @@ function ProductionDetail() {
     );
   }, [feedbacks, productDetail]);
 
-  // const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
-
-  // Lấy dữ liệu giỏ hàng từ API
   const { data: cartItemData, refetch } = useQuery(GET_CART_ITEM, {
     variables: {
       where: {
-        id: localStorage.getItem("cartItemId"),
+        cartId: {
+          id: {
+            equals: localStorage.getItem("cartId"),
+          },
+        },
       },
     },
-    skip: !localStorage.getItem("cartItemId"),
+    skip: !localStorage.getItem("cartId"),
   });
-
+  
+  console.log(cartItemData);
   const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
     variables: {
       where: {
@@ -111,11 +109,8 @@ function ProductionDetail() {
   const [createCart] = useMutation(CREATE_CART);
   const [createCartItem] = useMutation(CREATE_CART_ITEM);
 
-  console.log(productDetail);
-
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
-  // Handle event
   const handleFeedbackChange = (e) => {
     const { name, value } = e.target;
     setInput((prevInput) => ({
@@ -131,7 +126,7 @@ function ProductionDetail() {
       return;
     }
 
-    const currentDate = new Date().toLocaleString(); // Get the current date and time
+    const currentDate = new Date().toLocaleString();
 
     try {
       await createFeedback({
@@ -155,14 +150,11 @@ function ProductionDetail() {
     }
   };
 
-  // Xử lý thêm sản phẩm vào giỏ hàng
   const handleAddToCart = async () => {
     localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
     let itemsCount = cartData?.cart?.quantity || 0;
-    console.log(itemsCount);
-    console.log("product id:", productDetail.product.id )
-    console.log("product price:", productDetail.product.productPrice);
+
     if (!cartId) {
       try {
         const { data } = await createCart({
@@ -174,7 +166,7 @@ function ProductionDetail() {
                   id: userId,
                 },
               },
-              quantity: itemsCount + 1,
+              quantity: 1,
             },
           },
         });
@@ -185,48 +177,80 @@ function ProductionDetail() {
         toast.error(`Error creating cart: ${err.message}`);
         return;
       }
-    } else {
+    }
+
+    const existingCartItem = cartItemData?.cartItems?.find(
+      (item) => item.productId.id === productDetail.product.id
+    );
+    
+    console.log("cartitem: ", existingCartItem);
+    console.log("cartItemData:", cartItemData);
+    console.log("productDetail.product.id:", productDetail?.product?.id);
+    console.log(`productId:`, id);
+    if (cartItemData && cartItemData.cartItems) {
+      cartItemData.cartItems.forEach((item, index) => {
+        console.log(`Item ${index}:`, item.productId.id);
+        // cartItemData.cartItems.productId.forEach((productItem, index1) => {
+        //   console.log(`Item Product${index1}:`, productItem);
+        // })
+      });
+    }
+    if (existingCartItem) {
       try {
-        await updateCart({
+        await updateCartItemQuantity({
           variables: {
-            where: { id: cartId },
-            data: { quantity: itemsCount + 1 },
+            where: { id: existingCartItem.id },
+            data: { quantity: existingCartItem.quantity + 1 },
           },
         });
+        toast("Đã cập nhật giỏ hàng!", {
+          icon: "🛒",
+        });
       } catch (err) {
-        console.error("Error updating cart quantity:", err);
-        toast.error(`Error updating cart quantity: ${err.message}`);
-        return;
+        console.error("Error updating cart item quantity:", err);
+        toast.error(`Error updating cart item quantity: ${err.message}`);
+      }
+    } else {
+      try {
+        await createCartItem({
+          variables: {
+            data: {
+              cartId: {
+                connect: {
+                  id: cartId,
+                },
+              },
+              price: productDetail.product.productPrice,
+              productId: {
+                connect: {
+                  id: productDetail.product.id,
+                },
+              },
+              quantity: 1,
+            },
+          },
+        });
+        toast("Đã thêm vào giỏ hàng!", {
+          icon: "🛒",
+        });
+      } catch (err) {
+        console.error("Error adding to cart:", err);
+        toast.error(`Error adding to cart: ${err.message}`);
       }
     }
 
     try {
-      const { data } = await createCartItem({
+      await updateCart({
         variables: {
-          data: {
-            cartId: {
-              connect: {
-                id: cartId,
-              },
-            },
-            price: productDetail.product.productPrice,
-            productId: {
-              connect: {
-                id:productDetail.product.id,
-              },
-            },
-            quantity: 1,
-          },
+          where: { id: cartId },
+          data: { quantity: itemsCount + 1 },
         },
       });
-
-      toast("Đã thêm vào giỏ hàng!", {
-        icon: "🛒",
-      });
     } catch (err) {
-      console.error("Error adding to cart:", err);
-      toast.error(`Error adding to cart: ${err.message}`);
+      console.error("Error updating cart quantity:", err);
+      toast.error(`Error updating cart quantity: ${err.message}`);
     }
+    await refetch();
     await refetchCart();
   };
 
@@ -237,11 +261,11 @@ function ProductionDetail() {
   };
 
   const [visibleFeedbackCount, setVisibleFeedbackCount] = useState(2);
-  // Xử lý load thêm feedback
+
   const handleLoadMoreFeedback = () => {
     setVisibleFeedbackCount((prevCount) => prevCount + 2);
   };
-  // Xử lý giảm bớt feedback
+
   const handleLoadLessFeedback = () => {
     setVisibleFeedbackCount((prevCount) => Math.max(prevCount - 2, 2));
   };
@@ -279,7 +303,7 @@ function ProductionDetail() {
                   {formatMoney(productDetail.product.productPrice)}
                 </Typography>
                 <ProductCounter />
-                {username ? ( // Kiểm tra xem người dùng đã đăng nhập chưa
+                {username ? (
                   <Box
                     className="product-actions"
                     display="flex"
@@ -298,13 +322,12 @@ function ProductionDetail() {
                       variant="contained"
                       color="primary"
                       className="btn-cart"
-                      onClick={handleAddToCart} // Thêm sản phẩm vào giỏ hàng
+                      onClick={handleAddToCart}
                     >
                       Thêm vào giỏ hàng
                     </Button>
                   </Box>
                 ) : (
-                  //Nếu người dùng chưa đăng nhập, hiển thị các nút dẫn đến trang đăng nhập
                   <Box className="product-actions">
                     <Link to="/Login">
                       <Button
@@ -354,14 +377,13 @@ function ProductionDetail() {
               fullWidth
             />
             <Button
-              onClick={handleSubmit} // Xử lý submit feedback
+              onClick={handleSubmit}
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
             >
               Submit Comment
             </Button>
-            {/* Hiển thị feedbacks */}
             {feedbacks.slice(0, visibleFeedbackCount).map((feedback, index) => (
               <Box key={index} className="feedback-item">
                 <div className="icon-container">
@@ -380,7 +402,7 @@ function ProductionDetail() {
               {feedbacks.length > visibleFeedbackCount && (
                 <Button
                   variant="contained"
-                  onClick={handleLoadMoreFeedback} // Xử lý load thêm feedback
+                  onClick={handleLoadMoreFeedback}
                   className="load-more-button"
                 >
                   Xem thêm
@@ -389,7 +411,7 @@ function ProductionDetail() {
               {visibleFeedbackCount > 2 && (
                 <Button
                   variant="contained"
-                  onClick={handleLoadLessFeedback} // Xử lý giảm bớt feedback
+                  onClick={handleLoadLessFeedback}
                   className="load-less-button"
                 >
                   Giảm bớt

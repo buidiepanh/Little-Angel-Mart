@@ -52,6 +52,7 @@ const OrderConfirmation = () => {
   const [showCartStep, setShowCartStep] = useState(false);
   const [product, setProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [lastAction, setLastAction] = useState('');
   const navigate = useNavigate();
   const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
 
@@ -77,8 +78,10 @@ const OrderConfirmation = () => {
   }, [cartItemsData]);
 
   useEffect(() => {
-    const lastAction = localStorage.getItem("lastAction");
-    if (lastAction === "addToCart") {
+    const storedLastAction = localStorage.getItem("lastAction");
+    setLastAction(storedLastAction);
+
+    if (storedLastAction === "addToCart") {
       setShowCartStep(true);
     }
 
@@ -123,7 +126,9 @@ const OrderConfirmation = () => {
   };
 
   const handleConfirmOrder = async () => {
-    const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const totalPrice = lastAction === "addToCart" 
+      ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+      : product.productPrice;
 
     try {
       const response = await createOrder({
@@ -243,37 +248,42 @@ const OrderConfirmation = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map(item => (
-                  <tr key={item.id}>
-                    <td>{item.productId.name}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.price}đ</td>
-                    <td>{item.price * item.quantity}đ</td>
-                  </tr>
-                ))}
+                {lastAction === "addToCart" ? (
+                  cartItems.map(item => (
+                    <tr key={item.id}>
+                      <td>{item.productId.name}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.price}đ</td>
+                      <td>{item.price * item.quantity}đ</td>
+                    </tr>
+                  ))
+                ) : (
+                  product && (
+                    <tr>
+                      <td>{product.name}</td>
+                      <td>1</td>
+                      <td>{product.productPrice}đ</td>
+                      <td>{product.productPrice}đ</td>
+                    </tr>
+                  )
+                )}
               </tbody>
               <tfoot>
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
-                  <td>{cartItems.reduce((total, item) => total + item.price * item.quantity, 0)}đ</td>
+                  <td>
+                    {lastAction === "addToCart" 
+                      ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+                      : product ? product.productPrice : 0
+                    }đ
+                  </td>
                 </tr>
               </tfoot>
             </table>
-            {product && (
-              <div className="product-details">
-                <h3>Chi tiết sản phẩm</h3>
-                <div className="product-card">
-                  <img src={product.productImage?.publicUrl} alt={product.name} />
-                  <div className="product-info">
-                    <h4>{product.name}</h4>
-                    <p>Giá: {product.productPrice}đ</p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
         <div className="confirmation-buttons">
+          
           <button className="confirm-button" onClick={handleConfirmOrder}>Xác nhận hoàn tất và tạo đơn hàng</button>
         </div>
       </div>
