@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import './OrderConfirmation.css';
+import React, { useState, useEffect } from "react";
+import "./OrderConfirmation.css";
 import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
 import { PiShoppingCartLight } from "react-icons/pi";
-import { useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, gql } from '@apollo/client';
+import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, gql } from "@apollo/client";
 import toast, { Toaster } from "react-hot-toast";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import { formatMoney } from "../../utils/formatMoney";
 
 const CREATE_ORDER_MUTATION = gql`
   mutation Mutation($data: OrderCreateInput!) {
@@ -39,11 +41,13 @@ const GET_CART_ITEMS = gql`
 `;
 
 const OrderConfirmation = () => {
+  const productCount = useSelector((state) => state.counter.value);
+
   const initialCustomer = {
-    name: '',
-    address: '',
-    email: '',
-    phone: ''
+    name: "",
+    address: "",
+    email: "",
+    phone: "",
   };
 
   const [customer, setCustomer] = useState(initialCustomer);
@@ -58,15 +62,19 @@ const OrderConfirmation = () => {
 
   const cartId = localStorage.getItem("cartId");
 
-  const { data: cartItemsData, loading: cartItemsLoading, error: cartItemsError } = useQuery(GET_CART_ITEMS, {
+  const {
+    data: cartItemsData,
+    loading: cartItemsLoading,
+    error: cartItemsError,
+  } = useQuery(GET_CART_ITEMS, {
     variables: {
       where: {
         cartId: {
           id: {
-            equals: cartId || ""
-          }
-        }
-      }
+            equals: cartId || "",
+          },
+        },
+      },
     },
     skip: !cartId,
   });
@@ -91,10 +99,10 @@ const OrderConfirmation = () => {
     const storedAddress = localStorage.getItem("userAddress");
 
     const loadedCustomer = {
-      name: storedName || '',
-      email: storedEmail || '',
-      phone: storedPhone || '',
-      address: storedAddress || ''
+      name: storedName || "",
+      email: storedEmail || "",
+      phone: storedPhone || "",
+      address: storedAddress || "",
     };
 
     setCustomer(loadedCustomer);
@@ -224,15 +232,27 @@ const OrderConfirmation = () => {
                     onChange={handleInputChange}
                   />
                 </p>
-                <button className="save-button" onClick={handleSaveClick}>Lưu</button>
+                <button className="save-button" onClick={handleSaveClick}>
+                  Lưu
+                </button>
               </div>
             ) : (
               <div>
-                <p><strong>Tên:</strong> {customer.name}</p>
-                <p><strong>Địa chỉ:</strong> {customer.address}</p>
-                <p><strong>Email:</strong> {customer.email}</p>
-                <p><strong>Số điện thoại:</strong> {customer.phone}</p>
-                <button className="update-button" onClick={handleUpdateClick}>Cập nhật thông tin</button>
+                <p>
+                  <strong>Tên:</strong> {customer.name}
+                </p>
+                <p>
+                  <strong>Địa chỉ:</strong> {customer.address}
+                </p>
+                <p>
+                  <strong>Email:</strong> {customer.email}
+                </p>
+                <p>
+                  <strong>Số điện thoại:</strong> {customer.phone}
+                </p>
+                <button className="update-button" onClick={handleUpdateClick}>
+                  Cập nhật thông tin
+                </button>
               </div>
             )}
           </div>
@@ -272,10 +292,12 @@ const OrderConfirmation = () => {
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
                   <td>
-                    {lastAction === "addToCart" 
-                      ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
-                      : product ? product.productPrice : 0
-                    }đ
+                    {formatMoney(
+                      cartItems.reduce(
+                        (total, item) => total + item.price * productCount,
+                        0
+                      )
+                    )}
                   </td>
                 </tr>
               </tfoot>
@@ -283,8 +305,9 @@ const OrderConfirmation = () => {
           </div>
         </div>
         <div className="confirmation-buttons">
-          
-          <button className="confirm-button" onClick={handleConfirmOrder}>Xác nhận hoàn tất và tạo đơn hàng</button>
+          <button className="confirm-button" onClick={handleConfirmOrder}>
+            Xác nhận hoàn tất và tạo đơn hàng
+          </button>
         </div>
       </div>
     </div>
