@@ -48,6 +48,7 @@ const OrderConfirmation = () => {
   const [showCartStep, setShowCartStep] = useState(false);
   const [product, setProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [lastAction, setLastAction] = useState('');
   const navigate = useNavigate();
   // const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
 
@@ -77,8 +78,10 @@ const OrderConfirmation = () => {
   }, [cartItemsData]);
 
   useEffect(() => {
-    const lastAction = localStorage.getItem("lastAction");
-    if (lastAction === "addToCart") {
+    const storedLastAction = localStorage.getItem("lastAction");
+    setLastAction(storedLastAction);
+
+    if (storedLastAction === "addToCart") {
       setShowCartStep(true);
     }
 
@@ -124,35 +127,34 @@ const OrderConfirmation = () => {
   };
 
   const handleConfirmOrder = async () => {
-    navigate("/checkout");
-    // const totalPrice = cartItems.reduce(
-    //   (total, item) => total + item.price * item.quantity,
-    //   0
-    // );
-    // try {
-    //   const response = await createOrder({
-    //     variables: {
-    //       data: {
-    //         createdAt: new Date().toISOString(),
-    //         status: "published",
-    //         totalPrice: totalPrice,
-    //       },
-    //     },
-    //   });
-    //   const order = response.data.createOrder;
-    //   const orderIdCreated = response.data.createOrder.id;
-    //   console.log("Order created:", order);
-    //   console.log("OrderID:", orderIdCreated);
-    //   localStorage.setItem("orderId", orderIdCreated);
-    //   await Swal.fire({
-    //     title: "Khởi tạo đơn hàng thành công!",
-    //     icon: "success",
-    //   });
-    //   localStorage.setItem("CreatedOrder", JSON.stringify(order));
-    //   navigate("/");
-    // } catch (error) {
-    //   console.error("Error creating order:", error);
-    // }
+    const totalPrice = lastAction === "addToCart" 
+      ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+      : product.productPrice;
+
+    try {
+      const response = await createOrder({
+        variables: {
+          data: {
+            createdAt: new Date().toISOString(),
+            status: 'published',
+            totalPrice: totalPrice
+          }
+        }
+      });
+      const order = response.data.createOrder;
+      const orderIdCreated = response.data.createOrder.id;
+      console.log('Order created:', order);
+      console.log('OrderID:', orderIdCreated);
+      localStorage.setItem('orderId', orderIdCreated);
+      await Swal.fire({
+        title: "Khởi tạo đơn hàng thành công!",
+        icon: "success"
+      });
+      localStorage.setItem("CreatedOrder", JSON.stringify(order));
+      navigate('/');
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
   };
 
   return (
