@@ -47,6 +47,8 @@ const Header = () => {
     localStorage.removeItem("userAddress");
     localStorage.removeItem("userPhoneNumber");
     localStorage.removeItem("cartItems");
+    localStorage.removeItem("userPhoneNumber");
+    localStorage.removeItem("userAddress");
     localStorage.removeItem("cartId"); // Remove cartId
     localStorage.removeItem("cartItemId"); // Remove cartItemId
     setUsername("");
