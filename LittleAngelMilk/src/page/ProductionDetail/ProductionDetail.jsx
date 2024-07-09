@@ -94,6 +94,16 @@ function ProductionDetail() {
     localStorage.setItem(`feedbacks_${id}`, JSON.stringify(feedbacks));
   }, [feedbacks, id]);
 
+  useEffect(() => {
+    return () => {
+      // Clear the feedback data when navigating away from the ProductDetail page
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith(`feedbacks_${id}`)) {
+          localStorage.removeItem(key);
+        }
+      });
+    };
+  }, [id]);
 
   // const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
 
@@ -412,7 +422,7 @@ function ProductionDetail() {
                   onClick={handleLoadLessFeedback} // Xử lý giảm bớt feedback
                   className="load-less-button"
                 >
-                  Giảm bớt
+                  Thu Gọn
                 </Button>
               )}
             </Box>
