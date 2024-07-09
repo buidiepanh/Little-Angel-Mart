@@ -292,12 +292,12 @@ const OrderConfirmation = () => {
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
                   <td>
-                    {formatMoney(
+                    {lastAction === "addToCart" ? (formatMoney(
                       cartItems.reduce(
                         (total, item) => total + item.price * productCount,
                         0
                       )
-                    )}
+                    )): product ? product.productPrice : 0}đ
                   </td>
                 </tr>
               </tfoot>
