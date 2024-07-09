@@ -11,3 +11,12 @@ export const GET_PROFILE = gql`
     }
   }
 `;
+
+//get user id
+export const GET_USERID = gql`
+query Query($where: UserWhereUniqueInput!) {
+  user(where: $where) {
+    id
+  }
+}
+`;

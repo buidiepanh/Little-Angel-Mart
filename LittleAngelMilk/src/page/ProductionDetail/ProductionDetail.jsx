@@ -31,6 +31,8 @@ import {
   UPDATE_CART_ITEM_QUANTITY,
   UPDATE_CART,
 } from "../Mutations/cart";
+import { useDispatch } from "react-redux";
+import { saveProduct } from "../../store/product/productSlice";
 
 function ProductionDetail() {
   const { id } = useParams();
@@ -38,6 +40,7 @@ function ProductionDetail() {
   const username = localStorage.getItem("userName") || "";
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [updateCart] = useMutation(UPDATE_CART);
 
   const {
@@ -74,7 +77,7 @@ function ProductionDetail() {
     } else {
     // Nếu không có feedback được lưu trữ, thử lấy từ server và khởi tạo  
       if (feedbackOfProduct?.feedbacks) {
-        const initialFeedbacks = feedbackOfProduct.feedbacks.map(fb => ({
+        const initialFeedbacks = feedbackOfProduct.feedbacks.map((fb) => ({
           comment: fb.comment,
           date: fb.date || new Date().toLocaleString() // Sử dụng thời gian hiện tại nếu không có thời gian được cung cấp (lần tải ban đầu từ server)
         }));
@@ -84,7 +87,7 @@ function ProductionDetail() {
     }
   }, [id, feedbackOfProduct]);
 
-   // useEffect để lưu feedback vào localStorage khi feedback thay đổi
+  // useEffect để lưu feedback vào localStorage khi feedback thay đổi
   useEffect(() => {
     localStorage.setItem(`feedbacks_${id}`, JSON.stringify(feedbacks));
   }, [feedbacks, id]);
@@ -132,7 +135,7 @@ const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
 
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
-    // Xử lý thay đổi trong input feedback
+  // Xử lý thay đổi trong input feedback
   const handleFeedbackChange = (e) => {
     const { name, value } = e.target;
     setInput((prevInput) => ({
@@ -143,7 +146,7 @@ const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
 
   // Handle event
 
-   // Xử lý submit feedback
+  // Xử lý submit feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inputFeedback.comment.trim() === "") {
@@ -170,11 +173,14 @@ const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
       setInput({ comment: "" });
       setFeedbacks((prevFeedbacks) => [
         ...prevFeedbacks, // Giữ lại các phản hồi cũ
-        { comment: inputFeedback.comment, date: feedbackDate },// Thêm phản hồi mới với thời gian hiện tại
+        { comment: inputFeedback.comment, date: feedbackDate }, // Thêm phản hồi mới với thời gian hiện tại
       ]);
       localStorage.setItem(
         `feedbacks_${id}`,
-        JSON.stringify([...feedbacks, { comment: inputFeedback.comment, date: feedbackDate }])// Lưu phản hồi mới vào localStorage
+        JSON.stringify([
+          ...feedbacks,
+          { comment: inputFeedback.comment, date: feedbackDate },
+        ]) // Lưu phản hồi mới vào localStorage
       );
     } catch (err) {
       console.error("Error submitting feedback:", err);
@@ -289,11 +295,8 @@ const [updateCartItemQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY);
 
   const handleBuyNow = async () => {
     localStorage.setItem("lastAction", "buyNow");
-    //Parse object into string
-    localStorage.setItem(
-      "selectedProduct",
-      JSON.stringify(productDetail.product)
-    );
+    //Save data into redux
+    dispatch(saveProduct(productDetail.product));
     navigate("/CustomerCartInfo");
   };
 

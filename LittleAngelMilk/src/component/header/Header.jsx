@@ -46,13 +46,12 @@ const Header = () => {
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userAddress");
     localStorage.removeItem("userId");
-    localStorage.removeItem("cartItems");
-    localStorage.removeItem("cartId");
-    localStorage.removeItem("cartItemId");
-    localStorage.removeItem("feedbackId");
+    localStorage.removeItem("userEmail");
     localStorage.removeItem("userAddress");
     localStorage.removeItem("userPhoneNumber");
-    localStorage.removeItem("username");
+    localStorage.removeItem("cartItems");
+    localStorage.removeItem("cartId"); // Remove cartId
+    localStorage.removeItem("cartItemId"); // Remove cartItemId
     setUsername("");
     navigate("/login");
   };

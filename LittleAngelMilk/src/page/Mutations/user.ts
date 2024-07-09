@@ -47,3 +47,14 @@ export const UPDATE_PROFILE = gql`
     }
   }
 `;
+
+//Mutation for update password.
+export const CHANGE_PASSWORD = gql`
+   mutation UpdateUser($where: UserWhereUniqueInput!, $data: UserUpdateInput!) {
+    updateUser(where: $where, data: $data) {
+      userPassword {
+        isSet
+      }
+    }
+  }
+`;

@@ -11,17 +11,6 @@ import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { formatMoney } from "../../utils/formatMoney";
 
-const CREATE_ORDER_MUTATION = gql`
-  mutation Mutation($data: OrderCreateInput!) {
-    createOrder(data: $data) {
-      createdAt
-      id
-      status
-      totalPrice
-    }
-  }
-`;
-
 const GET_CART_ITEMS = gql`
   query GetCartItems($where: CartItemWhereInput!) {
     cartItems(where: $where) {
@@ -41,7 +30,10 @@ const GET_CART_ITEMS = gql`
 `;
 
 const OrderConfirmation = () => {
+  //Call data from redux
   const productCount = useSelector((state) => state.counter.value);
+  const productData = useSelector((state) => state.product.product);
+  console.log(productData);
 
   const initialCustomer = {
     name: "",
@@ -58,7 +50,7 @@ const OrderConfirmation = () => {
   const [cartItems, setCartItems] = useState([]);
   const [lastAction, setLastAction] = useState('');
   const navigate = useNavigate();
-  const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
+  // const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
 
   const cartId = localStorage.getItem("cartId");
 
@@ -107,12 +99,13 @@ const OrderConfirmation = () => {
 
     setCustomer(loadedCustomer);
     setUpdatedCustomer(loadedCustomer);
-
-    const storedProduct = localStorage.getItem("selectedProduct");
-    if (storedProduct) {
-      setProduct(JSON.parse(storedProduct));
-    }
   }, []);
+
+  // useEffect(() => {
+  //   if (!productData || Object.keys(productData).length === 0) {
+  //     navigate("/");
+  //   }
+  // }, [productData, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -190,6 +183,8 @@ const OrderConfirmation = () => {
             <div className="label">Xác nhận đơn hàng</div>
           </div>
         </div>
+
+        {/* Shopping cart section: Start */}
         <div className="shopping-cart-section">
           <h2>Xác nhận đơn hàng</h2>
           <div className="customer-info">
@@ -268,42 +263,46 @@ const OrderConfirmation = () => {
                 </tr>
               </thead>
               <tbody>
-                {lastAction === "addToCart" ? (
-                  cartItems.map(item => (
-                    <tr key={item.id}>
-                      <td>{item.productId.name}</td>
-                      <td>{item.quantity}</td>
-                      <td>{item.price}đ</td>
-                      <td>{item.price * item.quantity}đ</td>
-                    </tr>
-                  ))
-                ) : (
-                  product && (
-                    <tr>
-                      <td>{product.name}</td>
-                      <td>1</td>
-                      <td>{product.productPrice}đ</td>
-                      <td>{product.productPrice}đ</td>
-                    </tr>
-                  )
-                )}
+                <tr key={productData.id}>
+                  <td>{productData.name}</td>
+                  <td>{productCount}</td>
+                  <td>
+                    {formatMoney(productData.productPrice * productCount)}
+                  </td>
+                  <td>
+                    {formatMoney(productData.productPrice * productCount)}
+                  </td>
+                </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
                   <td>
-                    {lastAction === "addToCart" ? (formatMoney(
-                      cartItems.reduce(
-                        (total, item) => total + item.price * productCount,
-                        0
-                      )
-                    )): product ? product.productPrice : 0}đ
+                    {formatMoney(productData.productPrice * productCount)}
                   </td>
                 </tr>
               </tfoot>
             </table>
+
+            {/* Product detail: Start */}
+            <div className="product-details">
+              <h3>Chi tiết sản phẩm</h3>
+              <div className="product-card">
+                <img
+                  src={productData.productImage?.publicUrl}
+                  alt={productData.name}
+                />
+                <div className="product-info">
+                  <h4>{productData.name}</h4>
+                  <p>Giá: {formatMoney(productData.productPrice)}</p>
+                </div>
+              </div>
+            </div>
+            {/* Product detail: End */}
           </div>
         </div>
+        {/* Shopping cart section: End */}
+
         <div className="confirmation-buttons">
           <button className="confirm-button" onClick={handleConfirmOrder}>
             Xác nhận hoàn tất và tạo đơn hàng
