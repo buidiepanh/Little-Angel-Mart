@@ -41,17 +41,23 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("sessionToken");
+    localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userAddress");
     localStorage.removeItem("userId");
     localStorage.removeItem("cartItems");
-    localStorage.removeItem("cartId");
-    localStorage.removeItem("cartItemId");
-    localStorage.removeItem("username"); 
+    localStorage.removeItem("cartId"); // Remove cartId
+    localStorage.removeItem("cartItemId"); // Remove cartItemId
+    localStorage.removeItem("feedbackId");
+    localStorage.removeItem("userAddress");
+    localStorage.removeItem("userPhoneNumber");
+    localStorage.removeItem("username");
     setUsername("");
     navigate("/login");
   };
+
+
 
   const handleSearchValue = (event) => {
     setSearchValue(event.target.value);
