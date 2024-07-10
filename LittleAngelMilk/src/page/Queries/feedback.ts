@@ -6,6 +6,7 @@ export const GET_PRODUCT_FEEDBACK = gql`
     feedbacks(where: { product: { id: { equals: $productId } } }) {
       id
       comment
+      createdAt
     }
   }
 `;
