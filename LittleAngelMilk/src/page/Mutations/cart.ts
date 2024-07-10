@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-//Mutation to create cart
+// Mutation to create cart
 export const CREATE_CART = gql`
   mutation CreateCart($data: CartCreateInput!) {
     createCart(data: $data) {
@@ -14,7 +14,7 @@ export const CREATE_CART = gql`
   }
 `;
 
-//Mutation to create cart item
+// Mutation to create cart item
 export const CREATE_CART_ITEM = gql`
   mutation CreateCartItem($data: CartItemCreateInput!) {
     createCartItem(data: $data) {
@@ -25,6 +25,9 @@ export const CREATE_CART_ITEM = gql`
       productId {
         id
         name
+        productImage {
+          publicUrl
+        }
       }
       quantity
       price
@@ -32,7 +35,7 @@ export const CREATE_CART_ITEM = gql`
   }
 `;
 
-//Mutation update cart item quantity
+// Mutation to update cart item quantity
 export const UPDATE_CART_ITEM_QUANTITY = gql`
   mutation UpdateCartItem(
     $where: CartItemWhereUniqueInput!
@@ -45,7 +48,7 @@ export const UPDATE_CART_ITEM_QUANTITY = gql`
   }
 `;
 
-//Mutation update cart
+// Mutation to update cart
 export const UPDATE_CART = gql`
   mutation UpdateCart($where: CartWhereUniqueInput!, $data: CartUpdateInput!) {
     updateCart(where: $where, data: $data) {
