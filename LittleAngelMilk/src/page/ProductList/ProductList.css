@@ -32,7 +32,13 @@
     margin: auto; 
     
   }
-  
+  .no-products-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #666;
+    z-index: 100;
+  }
   
   
   @media (max-width: 768px) {
