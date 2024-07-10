@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "./ProductList.css";
 import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
@@ -6,14 +7,22 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/footer";
 import { GET_PRODUCTS } from "../Queries/product";
 import { GET_CATEGORYS } from "../Queries/category";
+import { setSearchResults } from "../../store/searchProduct/searchSlice";
 
 function ProductsList() {
   const { data } = useQuery(GET_PRODUCTS);
-  const products = data?.products;
 
-  console.log(products);
   const [productCategory, setProductCategory] = useState("");
   const [productPrice, setProductPrice] = useState("");
+
+  //get search value and results from redux
+  const { searchResults, searchTerm } = useSelector((state) => state.search);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (data && data.products && searchResults.length === 0) {
+      dispatch(setSearchResults(data.products));
+    }
+  }, [data, dispatch, searchResults.length]);
 
   const handleCategoryChange = (event) => {
     const category = event.target.value;
@@ -23,16 +32,13 @@ function ProductsList() {
     const price = event.target.value;
     setProductPrice(price);
   };
-  const filteredProducts = products?.filter((product) => {
+  const filteredProducts = searchResults?.filter((product) => {
     const priceCondition =
       productPrice === "" || product.productPrice <= parseInt(productPrice, 10);
     const categoryCondition =
       productCategory === "" || product.category.name === productCategory;
     return priceCondition && categoryCondition;
   });
-  useEffect(() => {
-    console.log(productCategory);
-  }, [productCategory]);
 
   const {
     data: categoryData,
@@ -73,7 +79,7 @@ function ProductsList() {
         </div>
         <div className="product-list-container">
           <div className="products">
-            {filteredProducts?.length > 0 &&
+            {filteredProducts?.length > 0 ? (
               filteredProducts.map((product) => (
                 <div key={product.id} className="product-card">
                   <Link to={`/ProductDetail/${product.id}`}>
@@ -87,7 +93,10 @@ function ProductsList() {
                     <div>{product.price}</div>
                   </Link>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p>Không tìm thấy sản phẩm.</p>
+            )}
           </div>
         </div>
       </div>

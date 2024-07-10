@@ -19,7 +19,7 @@
     margin-top: 40px;
     border-radius: 10px;
     margin-top: 200px;
-    margin-right: 130px;
+    margin-right: 20px;
   }
     
   .products {
@@ -32,7 +32,13 @@
     margin: auto; 
     
   }
-  
+  .no-products-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #666;
+    z-index: 100;
+  }
   
   
   @media (max-width: 768px) {

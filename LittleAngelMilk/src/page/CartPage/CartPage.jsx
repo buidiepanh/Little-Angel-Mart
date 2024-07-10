@@ -120,6 +120,7 @@ const CartPage = () => {
 
   const handleRemoveItem = async (id) => {
     let itemsCount = cartData?.cart?.quantity || 0;
+    if(itemsCount < 0) itemsCount = 0;
     console.log(itemsCount);
     const itemExists = items.find(item => item.id === id);
     if (!itemExists) {
