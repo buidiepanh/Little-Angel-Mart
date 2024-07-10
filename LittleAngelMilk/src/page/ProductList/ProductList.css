@@ -88,7 +88,7 @@
   }
 
   .product-list-page {
-    background-color: #80e2f8; 
+    background: linear-gradient(45deg, rgba(237,237,237,1), rgba(81,206,232,1));
     padding: 20px; 
 }
 

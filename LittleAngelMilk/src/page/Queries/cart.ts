@@ -41,3 +41,21 @@ export const GET_CART_ITEM = gql`
     }
   }
 `;
+
+export const GET_CART_ITEMS = gql`
+  query GetCartItems($where: CartItemWhereInput!) {
+    cartItems(where: $where) {
+      id
+      productId {
+        id
+        name
+        productImage {
+          publicUrl
+        }
+        productPrice
+      }
+      quantity
+      price
+    }
+  }
+`;
