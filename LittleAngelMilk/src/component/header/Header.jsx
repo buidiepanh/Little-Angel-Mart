@@ -8,13 +8,18 @@ import { useQuery } from "@apollo/client";
 import { GET_PRODUCTS } from "../../page/Queries/product";
 import "./Header.css";
 import logo from "/src/assets/raw_logo.png";
+import { useDispatch } from "react-redux";
+import {
+  setSearchResults,
+  setSearchTerm,
+} from "../../store/searchProduct/searchSlice";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [menuVisible, setMenuVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  const [productList, setProductList] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("sessionToken");
@@ -57,6 +62,7 @@ const Header = () => {
 
   const handleSearchValue = (event) => {
     setSearchValue(event.target.value);
+    dispatch(setSearchTerm(searchValue));
   };
 
   const { data, loading, error } = useQuery(GET_PRODUCTS);
@@ -66,17 +72,17 @@ const Header = () => {
       const availableProducts = data.products.filter((product) =>
         product.name.toLowerCase().includes(searchValue.toLowerCase())
       );
-      setProductList(availableProducts);
+      dispatch(setSearchResults(availableProducts));
     }
-  }, [data, searchValue, loading, error]);
+  }, [data, searchValue, loading, error, dispatch]);
 
   const handleSearch = () => {
     if (data && !loading && !error) {
       const availableProducts = data.products.filter((product) =>
         product.name.toLowerCase().includes(searchValue.toLowerCase())
       );
-      setProductList(availableProducts);
-      console.log(productList);
+      dispatch(setSearchTerm(searchValue));
+      dispatch(setSearchResults(availableProducts));
     }
   };
 
