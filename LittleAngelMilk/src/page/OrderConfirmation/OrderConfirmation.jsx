@@ -30,7 +30,7 @@ const OrderConfirmation = () => {
     const { product, cartItems, lastAction } = state.product;
     return lastAction === "buyNow" ? product : cartItems;
   });
-  // console.log(productData);
+  console.log(productData);
   // console.log(productCount);
 
   const initialCustomer = {

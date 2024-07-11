@@ -379,7 +379,7 @@ function ProductionDetail() {
                 </div>
                 <div className="feedback-content">
                   <div className="feedback-header">
-                    <span>{feedback.user?.name || "User"}</span>
+                    <span>{"User"}</span>
                     <span style={{ marginLeft: "auto" }}>
                       {new Date(feedback.createdAt).toLocaleString()}
                     </span>
