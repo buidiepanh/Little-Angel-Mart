@@ -188,6 +188,7 @@ function ProductionDetail() {
     console.log(itemsCount);
     console.log("product id:", productDetail.product.id);
     console.log("product price:", productDetail.product.productPrice);
+    dispatch(saveProduct(productDetail.product));
     if (!cartId) {
       try {
         const { data } = await createCart({

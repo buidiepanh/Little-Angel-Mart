@@ -9,7 +9,8 @@ import { RxPerson } from "react-icons/rx";
 import { GoCreditCard } from "react-icons/go";
 import { FaCheck } from "react-icons/fa";
 import { Pagination } from '@mui/material';
-
+import { saveProduct, setCartItems } from "../../store/product/productSlice";
+import { useDispatch } from "react-redux";
 const GET_CART = gql`
   query Cart($where: CartWhereUniqueInput!) {
     cart(where: $where) {
@@ -28,7 +29,7 @@ const GET_CART = gql`
         quantity
         price
       }
-        quantity
+      quantity
     }
   }
 `;
@@ -57,7 +58,20 @@ const GET_CART_ITEMS = gql`
 const UPDATE_CART = gql`
   mutation UpdateCart($where: CartWhereUniqueInput!, $data: CartUpdateInput!) {
     updateCart(where: $where, data: $data) {
+      cartId {
+        id
+      }
+      id
+      price
       quantity
+      productId {
+        id
+        name
+        productImage {
+          publicUrl
+        }
+        productPrice
+      }
     }
   }
 `;
@@ -73,6 +87,11 @@ const DELETE_CART_ITEM = gql`
       quantity
       productId {
         id
+        name
+        productImage {
+          publicUrl
+        }
+        productPrice
       }
     }
   }
@@ -92,7 +111,10 @@ const CartPage = () => {
   const [updateCart] = useMutation(UPDATE_CART);
   const cartId = localStorage.getItem("cartId");
   const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
   const itemsPerPage = 5;
+
+
 
   const { data, loading, error: queryError, refetch: refetchItems } = useQuery(GET_CART_ITEMS, {
     variables: {
@@ -115,6 +137,8 @@ const CartPage = () => {
     if (data && data.cartItems) {
       console.log("Fetched cart items:", data.cartItems);
       setItems(data.cartItems);
+      dispatch(setCartItems(data.cartItems))
+
     }
   }, [data]);
 
@@ -224,14 +248,14 @@ const CartPage = () => {
         <div className="contentCart">
           <div className="shopping-cart">
             <h2 className='titleCart'>Giỏ hàng</h2>
-            {error && <div className="error-message">{error}</div>}
+            
             {items.map(item => (
               <div key={item.id} className="cart-item">
-                {item.productId[0].productImage && (
+                {item.productId[0] && item.productId[0].productImage && (
                   <img src={item.productId[0].productImage.publicUrl} alt={item.productId[0].name} className="cart-item-image" />
                 )}
                 <div className="cart-item-details">
-                  <h3>{item.productId[0].name}</h3>
+                  <h3>{item.productId[0]?.name}</h3>
                   <p className="price">Giá: {item.price.toLocaleString("vi-VN")}đ</p>
                   <div className="cart-item-quantity">
                     <span>Số lượng:</span>

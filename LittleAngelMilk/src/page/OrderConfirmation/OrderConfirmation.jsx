@@ -26,7 +26,10 @@ const CREATE_ORDER_MUTATION = gql`
 
 const OrderConfirmation = () => {
   const productCount = useSelector((state) => state.counter.value);
-  //const productData = useSelector((state) => state.product.product);
+  const productData = useSelector((state) => {
+    const { product, cartItems, lastAction } = state.product;
+    return lastAction === "buyNow" ? product : cartItems;
+  });
   const initialCustomer = {
     name: "",
     address: "",
@@ -89,7 +92,6 @@ const OrderConfirmation = () => {
   //     navigate("/");
   //   }
   // }, [productData, navigate]);
-
   useEffect(() => {
     const storedLastAction = localStorage.getItem("lastAction");
     setLastAction(storedLastAction);
@@ -103,6 +105,9 @@ const OrderConfirmation = () => {
     }
     if (cartItemsData && cartItemsData.cartItems) {
       setCartItems(cartItemsData.cartItems);
+    }
+    if (!productData|| (toString(productData).length <= 0)) {
+      navigate("/");
     }
 
     const storedName = localStorage.getItem("userName");
@@ -126,24 +131,24 @@ const OrderConfirmation = () => {
     }
   }, [data, cartItemsData]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedCustomer({ ...updatedCustomer, [name]: value });
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setUpdatedCustomer({ ...updatedCustomer, [name]: value });
+  // };
 
-  const handleUpdateClick = () => {
-    setIsEditing(true);
-  };
+  // const handleUpdateClick = () => {
+  //   setIsEditing(true);
+  // };
 
-  const handleSaveClick = () => {
-    setCustomer(updatedCustomer);
-    setIsEditing(false);
+  // const handleSaveClick = () => {
+  //   setCustomer(updatedCustomer);
+  //   setIsEditing(false);
 
-    localStorage.setItem("userName", updatedCustomer.name);
-    localStorage.setItem("userEmail", updatedCustomer.email);
-    localStorage.setItem("userPhoneNumber", updatedCustomer.phone);
-    localStorage.setItem("userAddress", updatedCustomer.address);
-  };
+  //   localStorage.setItem("userName", updatedCustomer.name);
+  //   localStorage.setItem("userEmail", updatedCustomer.email);
+  //   localStorage.setItem("userPhoneNumber", updatedCustomer.phone);
+  //   localStorage.setItem("userAddress", updatedCustomer.address);
+  // };
 
   const handleConfirmOrder = async () => {
     const totalPrice = lastAction === "addToCart" 
@@ -170,7 +175,7 @@ const OrderConfirmation = () => {
         icon: "success"
       });
       localStorage.setItem("CreatedOrder", JSON.stringify(order));
-      navigate('/');
+      navigate('/checkout');
     } catch (error) {
       console.error('Error creating order:', error);
     }
@@ -300,7 +305,19 @@ const OrderConfirmation = () => {
                 </tr>
               </thead>
               <tbody>
-              {/* <tr key={productData.id}>
+              
+                {lastAction === "addToCart" ? (
+                  cartItems.map(item => (
+                    <tr key={item.id}>
+                      <td>{item.productId[0].name}</td>
+                      <td>{item.quantity}</td>
+                      <td>{formatMoney(item.price)}</td>
+                      <td>{formatMoney(item.price * item.quantity)}</td>
+                    </tr>
+                  ))
+                ) : (
+                  product && (
+                    <tr key={productData.id}>
                   <td>{productData.name}</td>
                   <td>{productCount}</td>
                   <td>
@@ -309,58 +326,33 @@ const OrderConfirmation = () => {
                   <td>
                     {formatMoney(productData.productPrice * productCount)}
                   </td>
-                </tr> */}
-                {lastAction === "addToCart" ? (
-                  cartItems.map(item => (
-                    <tr key={item.id}>
-                      <td>{item.productId[0].name}</td>
-                      <td>{item.quantity}</td>
-                      <td>{item.price}đ</td>
-                      <td>{item.price * item.quantity}đ</td>
-                    </tr>
-                  ))
-                ) : (
-                  product && (
-                    <tr>
-                      <td>{product.name}</td>
-                      <td>1</td>
-                      <td>{product.productPrice}đ</td>
-                      <td>{product.productPrice}đ</td>
-                    </tr>
+                </tr>
                   )
                 )}
               </tbody>
               <tfoot>
                 <tr>
                   <td colSpan="3">Tổng cộng</td>
-                  {/* {formatMoney(productData.productPrice * productCount)} */}
+                  {/* (formatMoney(productData.productPrice * productCount)) */}
                   <td>
                     {lastAction === "addToCart" ? (formatMoney(
                       cartItems.reduce(
                         (total, item) => total + item.price * productCount,
                         0
                       )
-                    )): product ? product.productPrice : 0}
-                  </td>
+                    )): (formatMoney(productData.productPrice * productCount))}
+                   </td>
                 </tr>
               </tfoot>
             </table>
             {/* Product detail: Start */}
             <div className="product-details">
               <h3>Chi tiết sản phẩm</h3>
-              {/*<div className="product-card">
-                <img
-                  src={productData.productImage?.publicUrl}
-                  alt={productData.name}
-                />
-                <div className="product-info">
-                  <h4>{productData.name}</h4>
-                  <p>Giá: {formatMoney(productData.productPrice)}</p>
-                </div> */}
+              
               <div className="product-card">
               <div className="shopping-cart">
             
-            {paginatedItems.map(item => (
+            {lastAction === "addToCart"?(paginatedItems.map(item => (
               <div key={item.id} className="cart-item">
                 {item.productId[0].productImage && (
                   <img src={item.productId[0].productImage.publicUrl} alt={item.productId[0].name} className="cart-item-image" />
@@ -370,7 +362,17 @@ const OrderConfirmation = () => {
                   <p className="price">Giá: {item.price.toLocaleString("vi-VN")}đ</p>
                 </div>
               </div>
-            ))}
+            ))):(
+            <div className="product-card">
+              <img
+                src={productData.productImage?.publicUrl}
+                alt={productData.name}
+              />
+              <div className="product-info">
+                <h4>{productData.name}</h4>
+                <p>Giá: {formatMoney(productData.productPrice)}</p>
+              </div>
+            </div>)}
           </div>
           
               </div>
