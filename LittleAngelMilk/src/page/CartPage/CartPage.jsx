@@ -114,8 +114,6 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const itemsPerPage = 5;
 
-
-
   const { data, loading, error: queryError, refetch: refetchItems } = useQuery(GET_CART_ITEMS, {
     variables: {
       where: {
