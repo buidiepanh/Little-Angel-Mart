@@ -201,7 +201,11 @@ const CartPage = () => {
       setError(`Error deleting cart item: ${err.message}`);
     }
   };
+  const calculateTotalQuantity = () => {
+    return items.reduce((total, item) => total + item.quantity, 0);
+  };
 
+  const totalQuantity = calculateTotalQuantity();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   if (!cartId) return <div>Error: cartId is missing. Please add items to your cart.</div>;
 
@@ -267,7 +271,7 @@ const CartPage = () => {
             ))}
           </div>
           <div className="total-section">
-            <p>Tổng cộng ({items.length} sản phẩm): <strong>{total.toLocaleString("vi-VN")}đ</strong></p>
+            <p>Tổng cộng ({totalQuantity} sản phẩm): <strong>{total.toLocaleString("vi-VN")}đ</strong></p>
             <div className='btns'>
               <Link to='/'><button className="back-button">Quay lại</button></Link>
               {items.length > 0 ? (
