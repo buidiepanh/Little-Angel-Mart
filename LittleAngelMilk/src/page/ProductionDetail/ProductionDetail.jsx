@@ -57,13 +57,17 @@ function ProductionDetail() {
   const [feedbacks, setFeedbacks] = useState([]);
 
   // Fetch feedback data from server
-  const { data: feedbackOfProduct, refetch: refetchFeedbacks } = useQuery(GET_PRODUCT_FEEDBACK, {
-    variables: { productId: productDetail?.product.id },
-    skip: !productDetail?.product.id,
-    onCompleted: (data) => {
-      setFeedbacks(data?.feedbacks || []);
+  const { data: feedbackOfProduct, refetch: refetchFeedbacks } = useQuery(
+    GET_PRODUCT_FEEDBACK,
+    {
+      variables: { productId: productDetail?.product.id },
+      skip: !productDetail?.product.id,
+      onCompleted: (data) => {
+        setFeedbacks(data?.feedbacks || []);
+      },
     }
-  });
+  );
+  console.log(feedbackOfProduct);
 
   // Handle change in feedback input
   const handleFeedbackChange = (e) => {
@@ -96,7 +100,6 @@ function ProductionDetail() {
 
       // Update feedback state with new feedback
       setFeedbacks((prevFeedbacks) => [...prevFeedbacks, data.createFeedback]);
-
     } catch (err) {
       console.error("Error submitting feedback:", err);
       toast.error(`Error submitting feedback: ${err.message}`);
@@ -289,7 +292,12 @@ function ProductionDetail() {
                 </Typography>
                 <ProductCounter />
                 {username ? (
-                  <Box className="product-actions" display="flex" gap={2} marginTop={2}>
+                  <Box
+                    className="product-actions"
+                    display="flex"
+                    gap={2}
+                    marginTop={2}
+                  >
                     <Button
                       variant="contained"
                       color="error"
@@ -310,12 +318,20 @@ function ProductionDetail() {
                 ) : (
                   <Box className="product-actions">
                     <Link to="/Login">
-                      <Button variant="contained" color="secondary" className="btn-buy">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className="btn-buy"
+                      >
                         Mua ngay
                       </Button>
                     </Link>
                     <Link to="/Login">
-                      <Button variant="contained" color="primary" className="btn-cart">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className="btn-cart"
+                      >
                         Thêm vào giỏ hàng
                       </Button>
                     </Link>
@@ -328,7 +344,9 @@ function ProductionDetail() {
         <Box className="product-lower">
           <Box className="product-description">
             <Typography variant="h6">Mô tả sản phẩm</Typography>
-            <Typography variant="body1">{productDetail.product.productDescription}</Typography>
+            <Typography variant="body1">
+              {productDetail.product.productDescription}
+            </Typography>
           </Box>
           <Box className="product-recommendations">
             <Typography variant="h6">Các sản phẩm khác</Typography>
