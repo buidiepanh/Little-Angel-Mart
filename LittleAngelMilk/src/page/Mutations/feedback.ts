@@ -6,6 +6,7 @@ export const FEEDBACK_MUTATION = gql`
     createFeedback(data: $data) {
       comment
       createdAt
+      
     }
   }
 `;

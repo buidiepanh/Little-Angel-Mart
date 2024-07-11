@@ -32,3 +32,16 @@ export const GET_PRODUCTS = gql`
     }
   }
 `;
+
+export const GET_PRODUCT_FEEDBACK = gql`
+  query GetProductFeedback($productId: ID!) {
+    feedbacks(where: { product: { id: { equals: $productId } } }) {
+      id
+      comment
+      createdAt
+      user {
+        name
+      }
+    }
+  }
+`;
