@@ -130,8 +130,10 @@ const CartPage = () => {
   });
 
   const [deleteCartItem] = useMutation(DELETE_CART_ITEM);
-
+  const userId = localStorage.getItem("userId");
   useEffect(() => {
+    console.log("cartdataid: ", cartData?.cart?.id);
+    console.log("userId: ", userId);
     if (data && data.cartItems) {
       console.log("Fetched cart items:", data.cartItems);
       setItems(data.cartItems);
