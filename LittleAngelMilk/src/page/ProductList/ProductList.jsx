@@ -20,7 +20,7 @@ function ProductsList() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (data && data.products && searchResults.length === 0) {
-      dispatch(setSearchResults(data.products));
+      dispatch(setSearchResults([])); //if searchResult = 0, setSearchResult = [] in order to display: "No product found!"
     }
   }, [data, dispatch, searchResults.length]);
 
