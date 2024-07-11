@@ -1,104 +1,136 @@
+/* File: ProductList.css */
 
 .sort-container {
   position: absolute;
   left: 60px; 
   top: 200px; 
-  height: 260px;
-  width: 160px;
-  background-color: #5082bf;
+  height: auto;
+  width: 200px;
+  background-color: #ffffff;
   margin-top: 20px;
   padding: 20px;
   border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sort-container select, .sort-container label {
+  margin-bottom: 10px;
+}
+
+.sort-container label {
+  font-family: 'Roboto', sans-serif;
+  color: #333333;
+  margin-top: 7px;
+}
+
+.sort-container select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  transition: border-color 0.3s ease;
+}
+
+.sort-container select:focus {
+  border-color: #5082bf;
+  outline: none;
 }
 
 .product-list-container {
-    max-width: 1000px; 
-    margin: 0 auto; 
-    padding: 20px; 
-    background-color: #c9eff9; 
-    margin-top: 40px;
-    border-radius: 10px;
-    margin-top: 200px;
-    margin-right: 20px;
-  }
-    
+  max-width: 1000px; 
+  margin: 0 auto; 
+  padding: 20px; 
+  background-color: #c9eff9; 
+  margin-top: 40px;
+  border-radius: 10px;
+  margin-top: 200px;
+  margin-right: 20px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  grid-gap: 20px;
+  justify-content: space-around; 
+  align-items: center; 
+  width: 100%; 
+  margin: auto; 
+}
+
+.no-products-message {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #666;
+  z-index: 100;
+}
+
+@media (max-width: 768px) {
   .products {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); 
-    grid-gap: 20px;
-    justify-content: space-around; 
-    align-items: center; 
-    width: 100%; 
-    margin: auto; 
-    
-  }
-  .no-products-message {
-    text-align: center;
-    padding: 20px;
-    font-size: 18px;
-    color: #666;
-    z-index: 100;
-  }
-  
-  
-  @media (max-width: 768px) {
-    .products {
-      grid-template-columns: repeat(2, 1fr); 
-      grid-gap: 20px; 
-    }
-    .product-card {
-      margin: 10px; 
-    }
+    grid-template-columns: repeat(2, 1fr); 
+    grid-gap: 20px; 
   }
   .product-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    overflow: hidden;
-    height: 80%;
-    margin: 10px;
+    margin: 10px; 
   }
-  
-  .product-card img {
-    width: 100%; 
-    height: auto; 
-    object-fit: contain; 
-    max-height: 120px; 
-  }
-  
-  .product-card div { 
-    font-size: 0.9rem; 
-    text-align: center; 
-    margin-top: 5px; 
-  }
-  
+}
 
-  .sort-container select {
-    padding: 5px;
-    width: 159px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 7px;
-    margin-bottom: 10px;
-    background-color: white;
-  }
+.product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  height: 80%;
+  margin: 10px;
+}
 
-  .sort-container label{
-    margin-top: 7px;
-    font-family: 'Roboto', sans-serif;
-    color: white;
-  }
+.product-card img {
+  width: 100%; 
+  height: auto; 
+  object-fit: contain; 
+  max-height: 120px; 
+}
 
-  .product-list-page {
-    background-color: #80e2f8; 
-    padding: 20px; 
+.product-card div { 
+  font-size: 0.9rem; 
+  text-align: center; 
+  margin-top: 5px; 
+}
+
+.product-list-page {
+  background: linear-gradient(45deg, rgba(237,237,237,1), rgba(81,206,232,1));
+  padding: 20px; 
 }
 
 .product-card a {
   text-decoration: none; 
   color: inherit; 
+}
+
+.product-card {
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-height: 120px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card:hover img {
+  transform: scale(1.1);
 }
