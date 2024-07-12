@@ -120,7 +120,7 @@ const CartPage = () => {
     setItems(updatedItems);
   };
 
-  const handleRemoveItem = async (id) => {
+  const handleRemoveItem = (id) => {
     let itemsCount = cartData?.carts[0]?.quantity || 0;
     if(itemsCount < 0) itemsCount = 0;
     console.log(itemsCount);
@@ -131,7 +131,7 @@ const CartPage = () => {
     }
 
     try {
-      await deleteCartItem({
+      deleteCartItem({
         variables: {
           where: { id: id }
         }
@@ -140,7 +140,7 @@ const CartPage = () => {
       setItems(updatedItems);
 
       // Update the cart quantity
-      await updateCart({
+       updateCart({
         variables: {
           where: { id: cartId },
           data: { quantity: itemsCount - 1 },
@@ -148,8 +148,8 @@ const CartPage = () => {
       });
 
       // Refetch cart data and items
-      await refetchCart();
-      await refetchItems();
+       refetchCart();
+      refetchItems();
 
       // Recalculate the total number of pages
       const totalPages = Math.ceil((itemsCount - 1) / itemsPerPage);
