@@ -31,7 +31,8 @@ import {
   UPDATE_CART,
 } from "../Mutations/cart";
 import { useDispatch } from "react-redux";
-import { saveProduct } from "../../store/product/productSlice";
+import { saveProduct, setCartItems } from "../../store/product/productSlice";
+import { useSelector } from "react-redux";
 
 function ProductionDetail() {
   const { id } = useParams();
@@ -41,7 +42,7 @@ function ProductionDetail() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [updateCart] = useMutation(UPDATE_CART);
-
+  const productCount = useSelector((state) => state.counter.value);
   const {
     data: productDetail,
     loading,
@@ -142,7 +143,8 @@ function ProductionDetail() {
     console.log(itemsCount);
     console.log("product id:", productDetail.product.id);
     console.log("product price:", productDetail.product.productPrice);
-    dispatch(saveProduct(productDetail.product));
+    console.log("productCount: ", productCount);
+    dispatch(setCartItems(productDetail.product));
     if (!cartId) {
       try {
         const { data } = await createCart({
@@ -170,7 +172,6 @@ function ProductionDetail() {
     const existingCartItem = cartItemData?.cartItems?.find(
       (item) => item.productId[0].id === productDetail.product.id
     );
-
     console.log("productDetail.product.id:", productDetail?.product?.id);
     console.log(`productId:`, id);
     console.log("existing cart item: ", existingCartItem);
@@ -182,15 +183,17 @@ function ProductionDetail() {
         // })
       });
     }
+    //add(or update) the quantity of product with a quantity more than one
+    
     if (existingCartItem) {
       try {
         await updateCartItemQuantity({
           variables: {
             where: { id: existingCartItem.id },
-            data: { quantity: existingCartItem.quantity + 1 },
+            data: { quantity: existingCartItem.quantity + productCount},
           },
         });
-        toast("Đã cập nhật giỏ hàng!", {
+        toast("Đã thêm vào giỏ hàng!", {
           icon: "🛒",
         });
       } catch (err) {
@@ -213,7 +216,7 @@ function ProductionDetail() {
                   id: productDetail.product.id,
                 },
               },
-              quantity: 1,
+              quantity: productCount,
             },
           },
         });
@@ -230,7 +233,7 @@ function ProductionDetail() {
       await updateCart({
         variables: {
           where: { id: cartId },
-          data: { quantity: itemsCount + 1 },
+          data: { quantity: itemsCount + 1 }, //
         },
       });
     } catch (err) {

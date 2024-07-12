@@ -10,9 +10,9 @@ import toast, { Toaster } from "react-hot-toast";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
 import { formatMoney } from "../../utils/formatMoney";
-import { GET_CART, GET_CART_ITEM, GET_CART_ITEMS } from "../Queries/cart";
+import { GET_CART,GET_CARTS, GET_CART_ITEM, GET_CART_ITEMS } from "../Queries/cart";
 import Pagination from "@mui/material/Pagination";
-
+import {DELETE_CART} from "../Mutations/cart"
 const CREATE_ORDER_MUTATION = gql`
   mutation Mutation($data: OrderCreateInput!) {
     createOrder(data: $data) {
@@ -52,16 +52,22 @@ const OrderConfirmation = () => {
   const itemsPerPage = 3; // Number of items per page
   const navigate = useNavigate();
   const [createOrder] = useMutation(CREATE_ORDER_MUTATION);
+  const [deleteCart] = useMutation(DELETE_CART);
 
-  const cartId = localStorage.getItem("cartId");
-  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
+  const userLogInId = localStorage.getItem("userId");
+  const { data: cartData, refetch: refetchCart } = useQuery(GET_CARTS, {
     variables: {
       where: {
-        id: localStorage.getItem("cartId"),
+        user:{
+          id: {
+            equals: userLogInId,
+          }
+        }
       },
     },
-    skip: !localStorage.getItem("cartId"),
+    skip: !userLogInId,
   });
+  const cartId = cartData?.carts[0]?.id;
   const {
     data: cartItemsData,
     loading: cartItemsLoading,
@@ -187,13 +193,21 @@ const OrderConfirmation = () => {
         icon: "success",
       });
       localStorage.setItem("CreatedOrder", JSON.stringify(order));
+      await deleteCart({
+        variables: {
+          where: {
+            id: cartId,
+          },
+        },
+      });
       navigate("/checkout");
     } catch (error) {
       console.error("Error creating order:", error);
     }
+    
   };
 
-  const handleChangePage = (event, value) => {
+  const handlePageChange = (event, value) => {
     setPage(value);
   };
 
@@ -268,7 +282,7 @@ const OrderConfirmation = () => {
                         <td>{formatMoney(item.price * item.quantity)}</td>
                       </tr>
                     ))
-                  : product && (
+                  : productData && (
                       <tr key={productData.id}>
                         <td>{productData.name}</td>
                         <td>{productCount}</td>
@@ -338,7 +352,7 @@ const OrderConfirmation = () => {
               <Pagination
                 count={Math.ceil(items.length / itemsPerPage)}
                 page={page}
-                onChange={handleChangePage}
+                onChange={handlePageChange}
                 color="primary"
                 style={{
                   marginTop: "20px",

@@ -165,7 +165,6 @@ const Header = () => {
               {menuVisible && (
                 <div className="dropdown-menu">
                   <Link to="/profile">Tài khoản</Link>
-                  <Link to="/settings">Tùy chỉnh</Link>
                   <button onClick={handleLogout}>Đăng xuất</button>
                 </div>
               )}
