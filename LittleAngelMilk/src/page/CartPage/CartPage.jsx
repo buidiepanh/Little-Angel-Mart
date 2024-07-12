@@ -97,6 +97,7 @@ const CartPage = () => {
 
   const [deleteCartItem] = useMutation(DELETE_CART_ITEM);
   useEffect(() => {
+    
     console.log("cartdataid: ", cartData?.carts[0]?.id);
     console.log("userId: ", userLogInId);
     if (data && data.cartItems) {

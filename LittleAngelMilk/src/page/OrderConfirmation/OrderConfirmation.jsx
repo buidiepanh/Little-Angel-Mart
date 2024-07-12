@@ -166,33 +166,31 @@ const OrderConfirmation = () => {
 
   const handleConfirmOrder = async () => {
     const totalPrice =
-      lastAction === "addToCart"
-        ? cartItems.reduce(
-            (total, item) => total + item.price * item.quantity,
-            0
-          )
-        : product.productPrice;
+    lastAction === "addToCart"
+      ? cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+      : product.productPrice * productCount;
 
     try {
-      const response = await createOrder({
-        variables: {
-          data: {
-            createdAt: new Date().toISOString(),
-            status: "published",
-            totalPrice: totalPrice,
-          },
-        },
-      });
-      const order = response.data.createOrder;
-      const orderIdCreated = response.data.createOrder.id;
-      console.log("Order created:", order);
-      console.log("OrderID:", orderIdCreated);
-      localStorage.setItem("orderId", orderIdCreated);
-      await Swal.fire({
-        title: "Khởi tạo đơn hàng thành công!",
-        icon: "success",
-      });
-      localStorage.setItem("CreatedOrder", JSON.stringify(order));
+    //   const response = await createOrder({
+    //     variables: {
+    //       data: {
+    //         createdAt: new Date().toISOString(),
+    //         status: "published",
+    //         totalPrice: totalPrice,
+    //       },
+    //     },
+    //   });
+    //   const order = response.data?.createOrder;
+    //   const orderIdCreated = response.data?.createOrder?.id;
+    //   console.log("Order created:", order);
+    //   console.log("OrderID:", orderIdCreated);
+    //   localStorage.setItem("orderId", orderIdCreated);
+    //   await Swal.fire({
+    //     title: "Khởi tạo đơn hàng thành công!",
+    //     icon: "success",
+    //   });
+    //   localStorage.setItem("CreatedOrder", JSON.stringify(order));
+      if(lastAction === "addToCart"){
       await deleteCart({
         variables: {
           where: {
@@ -200,6 +198,7 @@ const OrderConfirmation = () => {
           },
         },
       });
+    }
       navigate("/checkout");
     } catch (error) {
       console.error("Error creating order:", error);

@@ -26,7 +26,7 @@ function ProductsList() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (data && data.products && searchResults.length === 0) {
-      dispatch(setSearchResults(data.products));
+      dispatch(setSearchResults([]));
     }
   }, [data, dispatch, searchResults.length]);
 
