@@ -7,14 +7,9 @@ import Footer from "../../component/footer/footer";
 import { GET_PRODUCTS } from "../Queries/product";
 import { GET_CATEGORYS } from "../Queries/category";
 import { setSearchResults } from "../../store/searchProduct/searchSlice";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Box,
-} from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, Box } from "@mui/material";
 import "./ProductList.css";
+import { formatMoney } from "../../utils/formatMoney";
 
 function ProductsList() {
   const { data } = useQuery(GET_PRODUCTS);
@@ -26,7 +21,7 @@ function ProductsList() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (data && data.products && searchResults.length === 0) {
-      dispatch(setSearchResults([]));
+      dispatch(setSearchResults([])); //if searchResult = 0, setSearchResult = [] in order to display: "No product found!"
     }
   }, [data, dispatch, searchResults.length]);
 
@@ -48,13 +43,15 @@ function ProductsList() {
     { value: "2000000", label: "Thấp hơn 2.000.000đ" },
     { value: "2500000", label: "Thấp hơn 2.500.000đ" },
     { value: "3000000", label: "Thấp hơn 3.000.000đ" },
+    { value: "5000000", label: "Thấp hơn 5.000.000đ" },
   ];
 
   const filteredProducts = searchResults?.filter((product) => {
     const priceCondition =
       productPrice === "" || product.productPrice <= parseInt(productPrice, 10);
     const categoryCondition =
-      productCategory === "" || product.category.name === productCategory;
+      productCategory === "" ||
+      (product.category && product.category.name === productCategory);
     return priceCondition && categoryCondition;
   });
 
@@ -71,7 +68,10 @@ function ProductsList() {
     <div>
       <Header />
       <div className="product-list-page">
-        <Box className="sort-container" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+          className="sort-container"
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
           <FormControl fullWidth>
             <InputLabel>Loại sản phẩm</InputLabel>
             <Select
@@ -115,7 +115,9 @@ function ProductsList() {
                       />
                     )}
                     <div className="product-name">{product.name}</div>
-                    <div className="product-price">{product.productPrice}</div>
+                    <div className="product-price">
+                      {formatMoney(product.productPrice)}
+                    </div>
                   </Link>
                 </div>
               ))
