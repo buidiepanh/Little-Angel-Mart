@@ -12,7 +12,7 @@ import { Pagination } from '@mui/material';
 import { saveProduct, setCartItems } from "../../store/product/productSlice";
 import { useDispatch } from "react-redux";
 import {GET_CARTS, GET_CART, GET_CART_ITEMS} from "../../page/Queries/cart"
-
+import Swal from "sweetalert2";
 
 
 
@@ -106,7 +106,12 @@ const CartPage = () => {
 
     }
   }, [data]);
-
+  const handleNotification = () =>{
+    Swal.fire({
+      icon: "error",
+      title: "Giỏ hàng của bạn đang rỗng!",
+    });
+  }
   const handleQuantityChange = (id, delta) => {
     const updatedItems = items.map(item =>
       item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
@@ -174,9 +179,9 @@ const CartPage = () => {
 
   const totalQuantity = calculateTotalQuantity();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  if (!cartId) return <div>Error: cartId is missing. Please add items to your cart.</div>;
+  // if (!cartId) return <div>Error: cartId is missing. Please add items to your cart.</div>;
 
-  if (loading) return <div>Loading...</div>;
+  
   if (queryError) return <div>Error loading cart items: {queryError.message}</div>;
 
   const handlePageChange = (event, value) => {
@@ -247,7 +252,7 @@ const CartPage = () => {
               {items.length > 0 ? (
                 <Link to='/CustomerCartInfo'><button className="continue-button">Tiếp tục</button></Link>
               ) : (
-                <button className="continue-button" disabled>Tiếp tục</button>
+                <button className="continue-button" onClick={handleNotification}>Tiếp tục</button>
               )}
             </div>
           </div>
