@@ -43,13 +43,15 @@ function ProductsList() {
     { value: "2000000", label: "Thấp hơn 2.000.000đ" },
     { value: "2500000", label: "Thấp hơn 2.500.000đ" },
     { value: "3000000", label: "Thấp hơn 3.000.000đ" },
+    { value: "5000000", label: "Thấp hơn 5.000.000đ" },
   ];
 
   const filteredProducts = searchResults?.filter((product) => {
     const priceCondition =
       productPrice === "" || product.productPrice <= parseInt(productPrice, 10);
     const categoryCondition =
-      productCategory === "" || product.category.name === productCategory;
+      productCategory === "" ||
+      (product.category && product.category.name === productCategory);
     return priceCondition && categoryCondition;
   });
 
