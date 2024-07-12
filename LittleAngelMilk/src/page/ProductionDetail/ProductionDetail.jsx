@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
@@ -75,7 +75,21 @@ function ProductionDetail() {
     const { name, value } = e.target;
     setInput((prevInput) => ({ ...prevInput, [name]: value }));
   };
+  
+// clear feedbacks from local storage
+  const clearFeedbacksFromLocalStorage = () => {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("feedbacks_")) {
+        localStorage.removeItem(key);
+      }
+    });
+  };
 
+  useEffect(() => {
+    clearFeedbacksFromLocalStorage();
+  }, []);
+  
+  
   // Submit feedback
   const handleSubmit = async (e) => {
     e.preventDefault();
