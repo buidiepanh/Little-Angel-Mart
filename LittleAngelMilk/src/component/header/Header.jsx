@@ -61,8 +61,6 @@ const Header = () => {
     navigate("/login");
   };
 
-
-
   const handleSearchValue = (event) => {
     setSearchValue(event.target.value);
     dispatch(setSearchTerm(searchValue));
@@ -112,7 +110,7 @@ const Header = () => {
         <div className="SearchBar">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Tìm kiếm..."
             onChange={handleSearchValue}
           />
           <div className="SearchBtn">
@@ -165,7 +163,6 @@ const Header = () => {
               {menuVisible && (
                 <div className="dropdown-menu">
                   <Link to="/profile">Tài khoản</Link>
-                  <Link to="/settings">Tùy chỉnh</Link>
                   <button onClick={handleLogout}>Đăng xuất</button>
                 </div>
               )}
@@ -191,7 +188,7 @@ const Header = () => {
           <div className="dropdown-content"></div>
         </div>
         <Link to="/#articles">Bài viết</Link>
-        <Link to="/">Shop chúng tôi</Link>
+        <Link to="/about">Shop chúng tôi</Link>
       </div>
     </div>
   );
