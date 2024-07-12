@@ -190,15 +190,15 @@ const OrderConfirmation = () => {
     //     icon: "success",
     //   });
     //   localStorage.setItem("CreatedOrder", JSON.stringify(order));
-      if(lastAction === "addToCart"){
-      await deleteCart({
-        variables: {
-          where: {
-            id: cartId,
-          },
-        },
-      });
-    }
+    //   if(lastAction === "addToCart"){
+    //   await deleteCart({
+    //     variables: {
+    //       where: {
+    //         id: cartId,
+    //       },
+    //     },
+    //   });
+    // }
       navigate("/checkout");
     } catch (error) {
       console.error("Error creating order:", error);

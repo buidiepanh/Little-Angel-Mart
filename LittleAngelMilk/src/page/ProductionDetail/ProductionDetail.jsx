@@ -150,7 +150,7 @@ function ProductionDetail() {
   const [createCartItem] = useMutation(CREATE_CART_ITEM);
   const [createFeedback] = useMutation(FEEDBACK_MUTATION);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart =  () => {
     localStorage.setItem("lastAction", "addToCart");
     let cartId = localStorage.getItem("cartId");
     let itemsCount = cartData?.cart?.quantity || 0;
@@ -161,7 +161,7 @@ function ProductionDetail() {
     dispatch(setCartItems(productDetail.product));
     if (!cartId) {
       try {
-        const { data } = await createCart({
+        const { data } =  createCart({
           variables: {
             data: {
               createdAt: new Date().toISOString(),
@@ -201,7 +201,7 @@ function ProductionDetail() {
     
     if (existingCartItem) {
       try {
-        await updateCartItemQuantity({
+         updateCartItemQuantity({
           variables: {
             where: { id: existingCartItem.id },
             data: { quantity: existingCartItem.quantity + productCount},
@@ -216,7 +216,7 @@ function ProductionDetail() {
       }
     } else {
       try {
-        await createCartItem({
+        createCartItem({
           variables: {
             data: {
               cartId: {
@@ -244,7 +244,7 @@ function ProductionDetail() {
     }
 
     try {
-      await updateCart({
+      updateCart({
         variables: {
           where: { id: cartId },
           data: { quantity: itemsCount + 1 }, //
@@ -254,8 +254,8 @@ function ProductionDetail() {
       console.error("Error updating cart quantity:", err);
       toast.error(`Error updating cart quantity: ${err.message}`);
     }
-    await refetch();
-    await refetchCart();
+     refetch();
+    refetchCart();
   };
 
   const handleBuyNow = async () => {
