@@ -7,9 +7,6 @@ export const GET_PRODUCT_FEEDBACK = gql`
       id
       comment
       createdAt
-      user {
-        name
-      }
     }
   }
 `;

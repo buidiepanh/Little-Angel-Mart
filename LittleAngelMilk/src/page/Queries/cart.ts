@@ -23,7 +23,28 @@ export const GET_CART = gql`
     }
   }
 `;
-
+export const GET_CARTS = gql`
+query Carts($where: CartWhereInput!) {
+  carts(where: $where) {
+  createdAt
+      id
+      itemsCount
+      user {
+        id
+      }
+      items {
+        id
+        productId {
+          id
+          name
+        }
+        quantity
+        price
+      }
+      quantity  
+  }
+}
+`
 // Query to get cart items
 export const GET_CART_ITEM = gql`
   query CartItem($where: CartItemWhereInput!) {

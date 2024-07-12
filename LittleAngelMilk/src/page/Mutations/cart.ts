@@ -56,3 +56,26 @@ export const UPDATE_CART = gql`
     }
   }
 `;
+
+export const DELETE_CART = gql `
+mutation Mutation($where: CartWhereUniqueInput!) {
+  deleteCart(where: $where) {
+    createdAt
+      id
+      itemsCount
+      user {
+        id
+      }
+      items {
+        id
+        productId {
+          id
+          name
+        }
+        quantity
+        price
+      }
+      quantity
+  }
+}
+`

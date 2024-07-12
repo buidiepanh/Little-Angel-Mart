@@ -11,49 +11,10 @@ import { FaCheck } from "react-icons/fa";
 import { Pagination } from '@mui/material';
 import { saveProduct, setCartItems } from "../../store/product/productSlice";
 import { useDispatch } from "react-redux";
-const GET_CART = gql`
-  query Cart($where: CartWhereUniqueInput!) {
-    cart(where: $where) {
-      createdAt
-      id
-      itemsCount
-      user {
-        id
-      }
-      items {
-        id
-        productId {
-          id
-          name
-        }
-        quantity
-        price
-      }
-      quantity
-    }
-  }
-`;
+import {GET_CARTS, GET_CART, GET_CART_ITEMS} from "../../page/Queries/cart"
 
-const GET_CART_ITEMS = gql`
-  query Query($where: CartItemWhereInput!, $skip: Int, $take: Int) {
-    cartItems(where: $where, skip: $skip, take: $take) {
-      cartId {
-        id
-      }
-      id
-      price
-      quantity
-      productId {
-        id
-        name
-        productImage {
-          publicUrl
-        }
-        productPrice
-      }
-    }
-  }
-`;
+
+
 
 const UPDATE_CART = gql`
   mutation UpdateCart($where: CartWhereUniqueInput!, $data: CartUpdateInput!) {
@@ -98,23 +59,26 @@ const DELETE_CART_ITEM = gql`
 `;
 
 const CartPage = () => {
-  const { data: cartData, refetch: refetchCart } = useQuery(GET_CART, {
+  const userLogInId = localStorage.getItem("userId");
+  const { data: cartData, refetch: refetchCart } = useQuery(GET_CARTS, {
     variables: {
       where: {
-        id: localStorage.getItem("cartId"),
+        user:{
+          id: {
+            equals: userLogInId,
+          }
+        }
       },
     },
-    skip: !localStorage.getItem("cartId"),
+    skip: !userLogInId,
   });
   const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
   const [updateCart] = useMutation(UPDATE_CART);
-  const cartId = localStorage.getItem("cartId");
+  const cartId = cartData?.carts[0]?.id;
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
-  const itemsPerPage = 5;
-
-
+  const itemsPerPage = 3;
 
   const { data, loading, error: queryError, refetch: refetchItems } = useQuery(GET_CART_ITEMS, {
     variables: {
@@ -132,8 +96,9 @@ const CartPage = () => {
   });
 
   const [deleteCartItem] = useMutation(DELETE_CART_ITEM);
-
   useEffect(() => {
+    console.log("cartdataid: ", cartData?.carts[0]?.id);
+    console.log("userId: ", userLogInId);
     if (data && data.cartItems) {
       console.log("Fetched cart items:", data.cartItems);
       setItems(data.cartItems);
@@ -150,7 +115,7 @@ const CartPage = () => {
   };
 
   const handleRemoveItem = async (id) => {
-    let itemsCount = cartData?.cart?.quantity || 0;
+    let itemsCount = cartData?.carts[0]?.quantity || 0;
     if(itemsCount < 0) itemsCount = 0;
     console.log(itemsCount);
     const itemExists = items.find(item => item.id === id);
@@ -203,7 +168,11 @@ const CartPage = () => {
       setError(`Error deleting cart item: ${err.message}`);
     }
   };
+  const calculateTotalQuantity = () => {
+    return items.reduce((total, item) => total + item.quantity, 0);
+  };
 
+  const totalQuantity = calculateTotalQuantity();
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   if (!cartId) return <div>Error: cartId is missing. Please add items to your cart.</div>;
 
@@ -226,7 +195,10 @@ const CartPage = () => {
       },
     });
   };
-
+  const paginatedItems = items.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
   return (
     <div className='shoppingCartPage'>
       <Header />
@@ -249,7 +221,7 @@ const CartPage = () => {
           <div className="shopping-cart">
             <h2 className='titleCart'>Giỏ hàng</h2>
             
-            {items.map(item => (
+            {paginatedItems.map(item => (
               <div key={item.id} className="cart-item">
                 {item.productId[0] && item.productId[0].productImage && (
                   <img src={item.productId[0].productImage.publicUrl} alt={item.productId[0].name} className="cart-item-image" />
@@ -269,7 +241,7 @@ const CartPage = () => {
             ))}
           </div>
           <div className="total-section">
-            <p>Tổng cộng ({items.length} sản phẩm): <strong>{total.toLocaleString("vi-VN")}đ</strong></p>
+            <p>Tổng cộng ({totalQuantity} sản phẩm): <strong>{total.toLocaleString("vi-VN")}đ</strong></p>
             <div className='btns'>
               <Link to='/'><button className="back-button">Quay lại</button></Link>
               {items.length > 0 ? (
@@ -280,7 +252,7 @@ const CartPage = () => {
             </div>
           </div>
         </div>
-        <Pagination count={Math.ceil(cartData?.cart?.itemsCount / itemsPerPage)} page={page} onChange={handlePageChange} />
+        <Pagination count={Math.ceil(items.length / itemsPerPage)} page={page} onChange={handlePageChange} />
       </div>
       <Footer />
     </div>
